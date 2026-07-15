@@ -7,7 +7,7 @@ class enemy : public gameObject {
 private:
 
 public:
-	enemy(int x, int y, int width, int height);
+	enemy(double x, double y, double width, double height);
 
 };
 

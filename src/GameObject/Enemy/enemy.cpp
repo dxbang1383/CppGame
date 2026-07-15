@@ -1,5 +1,5 @@
 #include "enemy.h"
 
-enemy::enemy(int x, int y, int width, int height) : gameObject(x, y, width, height) {
+enemy::enemy(double x, double y, double width, double height) : gameObject(x, y, width, height) {
 
 }

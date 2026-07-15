@@ -6,10 +6,15 @@
 
 class player : public gameObject {
 private:
-	const int speed = 20;
+	double speed = 20;
 public :
 	// Constructor
-	player(int x, int y, int width, int height);
+	player(double x, double y, double width, double height);
+
+	void setSpeed(double speed);
+
+	void render(SDL_Renderer* renderer) override;
+	void update(float deltaTime);
 };
 
 #endif // !PLAYER_H

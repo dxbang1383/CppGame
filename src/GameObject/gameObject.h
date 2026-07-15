@@ -8,7 +8,7 @@ class gameObject
 private: 
     int x, y;
     int width, height;
-    SDL_Rect rect;
+    SDL_FRect rect;
 
 public:
     // Constructor
