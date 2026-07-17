@@ -14,12 +14,28 @@ gameObject::gameObject(double x, double y, double width, double height)
 
 }
 
+gameObject::gameObject() {
+	this->x = 0;
+	this->y = 0;
+	this->width = 0;
+	this->height = 0;
+
+	rect.x = 0;
+	rect.y = 0;
+	rect.w = 0;
+	rect.h = 0;
+}
+
 double gameObject::getX() const {
 	return x;
 }
 
 double gameObject::getY() const {
 	return y;
+}
+
+SDL_FRect* gameObject::getRect() {
+	return &rect;
 }
 
 double gameObject::getHeight() const {
@@ -60,5 +76,11 @@ void gameObject::setSize(double newWidth, double newHeight) {
 	gameObject::setWidth(newWidth);
 }
 
-void 
+void gameObject::update(float deltaTime) {
+
+}
+
+void gameObject::render(SDL_Renderer* renderer) {
+
+}
 

@@ -13,19 +13,34 @@ target_sources(CppGame PRIVATE
 
 target_include_directories(CppGame PRIVATE
     SDL3/include
+    SDL3_image/include
     src
 )
 
 target_link_directories(CppGame PRIVATE
     SDL3/lib/x64
+    SDL3_image/lib/x64
 )
 
 target_link_libraries(CppGame PRIVATE
     SDL3
+    SDL3_image
 )
 
 add_custom_command(TARGET CppGame POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${PROJECT_SOURCE_DIR}/SDL3/lib/x64/SDL3.dll"
     "$<TARGET_FILE_DIR:CppGame>"
+)
+
+add_custom_command(TARGET CppGame POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${PROJECT_SOURCE_DIR}/SDL3_image/lib/x64/SDL3_image.dll"
+    "$<TARGET_FILE_DIR:CppGame>"
+)
+
+add_custom_command(TARGET CppGame POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${PROJECT_SOURCE_DIR}/assets"
+    "$<TARGET_FILE_DIR:CppGame>/assets"
 )

@@ -5,27 +5,29 @@
 
 class gameObject
 {
-private: 
-    int x, y;
-    int width, height;
-    SDL_FRect rect;
+private:
+    double x, y;
+    double width, height;
+    SDL_FRect rect ;
 
 public:
     // Constructor
-    gameObject(int x, int y, int width, int height);
-
+    gameObject(double x, double y, double width, double height);
+    gameObject();
     // 
-    int getWidth() const;
-    int getHeight() const;
-    int getX() const;
-    int getY() const;
+    double getWidth() const;
+    double getHeight() const;
+    double getX() const;
+    double getY() const;
+    SDL_FRect* getRect();
+
     //
-    void setX(int newX);
-    void setY(int newY);
-    void setPosition(int newX, int newY);
-    void setWidth(int newWidth);
-    void setHeight(int newHeight);
-    void setSize(int newWidth, int newHeight);
+    void setX(double newX);
+    void setY(double newY);
+    void setPosition(double newX, double newY);
+    void setWidth(double newWidth);
+    void setHeight(double newHeight);
+    void setSize(double newWidth, double newHeight);
     //
     virtual void update(float deltaTime);
     virtual void render(SDL_Renderer *renderer);
