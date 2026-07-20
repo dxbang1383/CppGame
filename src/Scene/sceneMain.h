@@ -8,13 +8,16 @@
 
 #include "../GameObject/Platform/platform.h"
 #include "../GameObject/Player/player.h"
+#include "../engine/resourceManager.h"
 
 class sceneMain {
 private:
 	player player01;
 	std::vector<platform> plat;
 	SDL_Texture* bkg;
+	SDL_Texture* p1;
 public: 
+	// constructor
 	sceneMain();
 	void loadLevel();
 	void preLoad(SDL_Renderer *renderer);

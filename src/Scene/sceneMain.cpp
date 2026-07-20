@@ -1,44 +1,77 @@
 #include "sceneMain.h"
 
+// constructor
 sceneMain::sceneMain() {
 	player01 = player(20, 20, 20, 20);
-	platform p1 = platform(20, 50, 20, 20);
-	platform p2 = platform(20, 80, 20, 20);
 
-	plat.push_back(p1);
-	plat.push_back(p2);
+	// Sample Map
+	for (int x = 0; x < 26; x++)
+		plat.emplace_back(x, 14, "P");
+
+	plat.emplace_back(3, 13, "P");
+	plat.emplace_back(4, 12, "P");
+	plat.emplace_back(5, 11, "P");
+	plat.emplace_back(6, 10, "P");
+
+	for (int x = 6; x <= 12; x++)
+		plat.emplace_back(x, 10, "P");
+
+	plat.emplace_back(13, 9, "P");
+	plat.emplace_back(14, 8, "P");
+	plat.emplace_back(15, 7, "P");
+
+	for (int x = 15; x <= 21; x++)
+		plat.emplace_back(x, 7, "P");
+
+	plat.emplace_back(22, 8, "P");
+	plat.emplace_back(23, 9, "P");
+	plat.emplace_back(24, 10, "P");
+
+	for (int x = 21; x <= 25; x++)
+		plat.emplace_back(x, 11, "P");
+
 
 	bkg = nullptr;
+	p1 = nullptr;
 }
 
+// tải trước các gói tài nguyên trước khi vào game 
 void sceneMain::preLoad(SDL_Renderer* renderer) {
-	bkg = IMG_LoadTexture(renderer, "assets/kenney_pixel-platformer/SampleA.png");
-	if (!bkg) {
-		SDL_Log("Load anh THAT BAI: %s", SDL_GetError());   // in ra lý do
+	bkg = resourceManager::loadImage(renderer, "default");
+	p1 = resourceManager::loadImage(renderer, "P");
+
+	for (platform &x : plat) {
+		if (x.getType() == "P") {
+			x.setTexture(p1);
+			std::cout << "da load p1" << std::endl;
+		}
 	}
-	SDL_SetTextureScaleMode(bkg, SDL_SCALEMODE_NEAREST);
 }
 
+// load tài nguyên vào scene 
 void sceneMain::loadLevel() {
 	
 }
 
+// gọi mỗi vòng lặp để update vị trí 
 void sceneMain::update(float deltaTime) {
 	player01.update(deltaTime);
-	for (platform p : plat) {
+	for (platform &p : plat) {
 		p.update(deltaTime);
 	}
 }
 
+// Gọi hàm render của các đối tượng 
 void sceneMain::render(SDL_Renderer *renderer) {
 	SDL_FRect bkgRect = { 0, 0, 1280, 720 };
 	SDL_RenderTexture(renderer, bkg, nullptr, &bkgRect);
-	for (platform p : plat) {
+	for (platform &p : plat) {
 		p.render(renderer);
 	}
 	player01.render(renderer);
 }
 
+// xử lý input 
 void sceneMain::handleInput(SDL_Event& event) {
 	if (event.type == SDL_EVENT_KEY_DOWN) {
 		if (event.key.key == SDLK_A || event.key.key == SDLK_LEFT) {

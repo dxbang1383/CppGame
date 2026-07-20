@@ -46,39 +46,62 @@ double gameObject::getWidth() const {
 	return width;
 }
 
+SDL_Texture* gameObject::getTexture() const {
+	return tex;
+}
+
 void gameObject::setX(double newX) {
 	x = newX;
 	rect.x = x;
+	udpRect();
 }
 
 void gameObject::setY(double newY) {
 	y = newY;
 	rect.y = y;
+	udpRect();
 }
 
 void gameObject::setPosition(double newX, double newY) {
 	gameObject::setX(newX);
 	gameObject::setY(newY);
+	udpRect();
 }
 
 void gameObject::setHeight(double newHeight) {
 	height = newHeight;
 	rect.h = height;
+	udpRect();
 }
 
 void gameObject::setWidth(double newWidth) {
 	width = newWidth;
 	rect.w = width;
+	udpRect();
 }
 
 void gameObject::setSize(double newWidth, double newHeight) {
 	gameObject::setHeight(newHeight);
 	gameObject::setWidth(newWidth);
+	udpRect();
+}
+
+void gameObject::setTexture(SDL_Texture* texture) {
+	tex = texture;
+}
+
+void gameObject::udpRect() {
+	rect.x = x;
+	rect.y = y;
+	rect.w = width;
+	rect.h = height;
 }
 
 void gameObject::update(float deltaTime) {
 
 }
+
+
 
 void gameObject::render(SDL_Renderer* renderer) {
 

@@ -9,7 +9,26 @@ add_executable(CppGame)
 target_sources(CppGame PRIVATE
     src/main.cpp
     
-     "src/GameObject/Player/player.cpp" "src/GameObject/Enemy/enemy.cpp" "src/GameObject/Platform/platform.cpp" "src/GameObject/Platform/staticPlatform.cpp" "src/GameObject/Platform/movingPlatform.cpp" "src/Scene/scene.cpp" "src/Scene/sceneMain.cpp" "src/GameObject/Enemy/enemy.h" "src/GameObject/Platform/movingPlatform.h" "src/GameObject/Platform/platform.h" "src/GameObject/Platform/staticPlatform.h" "src/GameObject/Player/player.h" "src/Scene/scene.h" "src/Scene/sceneMain.h" "src/GameObject/gameObject.cpp"  "src/GameObject/gameObject.h" "src/GameObject/engine/render.h" "src/GameObject/engine/render.cpp")
+     "src/GameObject/Player/player.cpp" 
+     "src/GameObject/Enemy/enemy.cpp" 
+     "src/GameObject/Platform/platform.cpp" 
+     "src/GameObject/Platform/staticPlatform.cpp" 
+     "src/GameObject/Platform/movingPlatform.cpp" 
+     "src/Scene/scene.cpp" "src/Scene/sceneMain.cpp" 
+     "src/GameObject/Enemy/enemy.h" 
+     "src/GameObject/Platform/movingPlatform.h" 
+     "src/GameObject/Platform/platform.h" 
+     "src/GameObject/Platform/staticPlatform.h" 
+     "src/GameObject/Player/player.h" 
+     "src/Scene/scene.h" 
+     "src/Scene/sceneMain.h" 
+     "src/GameObject/gameObject.cpp"  
+     "src/GameObject/gameObject.h" 
+     "src/engine/camera.h"
+     "src/engine/camera.cpp"
+     "src/engine/resourceManager.h"
+     "src/engine/resourceManager.cpp"
+)
 
 target_include_directories(CppGame PRIVATE
     SDL3/include
