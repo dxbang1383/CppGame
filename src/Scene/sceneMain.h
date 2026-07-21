@@ -1,29 +1,21 @@
-#ifndef SCENEMAIN_H
-#define SCENEMAIN_H
+﻿#ifndef SCENE_MAIN_H
+#define SCENE_MAIN_H
 
-#include <SDL3/SDL.h>
-#include <vector>
-#include <iostream>
-#include <SDL3_image/SDL_image.h>
-
-#include "../GameObject/Platform/platform.h"
+#include "scene.h"
 #include "../GameObject/Player/player.h"
-#include "../engine/resourceManager.h"
 
-class sceneMain {
+class sceneMain : public scene {
 private:
-	player player01;
-	std::vector<platform> plat;
-	SDL_Texture* bkg;
-	SDL_Texture* p1;
-public: 
-	// constructor
-	sceneMain();
-	void loadLevel();
-	void preLoad(SDL_Renderer *renderer);
-	void update(float deltaTime);
-	void render(SDL_Renderer * renderer);
-	void handleInput(SDL_Event& event);
+    player mainPlayer;
+
+public:
+    sceneMain();
+    ~sceneMain() override;
+
+    void preLoad(SDL_Renderer* renderer) override;
+    void handleInput(const SDL_Event& event) override;
+    void update(float deltaTime) override;
+    void render(SDL_Renderer* renderer) override;
 };
 
-#endif // !SCENEMAIN_H
+#endif // !SCENE_MAIN_H
