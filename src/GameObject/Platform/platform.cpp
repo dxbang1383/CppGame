@@ -6,7 +6,7 @@ platform::platform(double x, double y, double width, double height)
 
 }
 
-//
+// Constructor theo dia chi map 
 platform::platform(int m, int n, std::string type) {
 	setX(m * TILE_SIZE);
 	setY(n * TILE_SIZE);

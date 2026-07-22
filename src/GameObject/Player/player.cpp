@@ -56,25 +56,21 @@ void player::handleInput(const SDL_Event& event) {
 }
 
 void player::update(float deltaTime) {
-    // A. Tính toán vận tốc ngang (X) dựa trên phím bấm
+
     velocityX = 0.0;
     if (isMovingLeft)  velocityX -= speed;
     if (isMovingRight) velocityX += speed;
 
-    // B. Tính toán trọng trường (Y)
     if (!onGround) {
         velocityY += gravity * deltaTime;
     }
     else {
-        if (velocityY > 0) velocityY = 0.0; // Reset vận tốc rơi khi đáp đất
+        if (velocityY > 0) velocityY = 0.0;
     }
 
-    // C. Cập nhật vị trí
     setX(getX() + velocityX * deltaTime);
     setY(getY() + velocityY * deltaTime);
 
-    // Đồng bộ với SDL_FRect
-    udpRect();
 }
 
 void player::render(SDL_Renderer* renderer) {
@@ -88,7 +84,6 @@ void player::render(SDL_Renderer* renderer) {
         SDL_RenderTextureRotated(renderer, tex, NULL, pRect, 0.0, NULL, flipMode);
     }
     else {
-        // Vẽ khối màu đỏ đại diện cho nhân vật
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         SDL_RenderFillRect(renderer, pRect);
     }

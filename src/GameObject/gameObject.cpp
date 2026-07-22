@@ -25,6 +25,9 @@ gameObject::gameObject() {
 	rect.y = 0;
 	rect.w = 0;
 	rect.h = 0;
+
+	this->tex = nullptr;
+	
 }
 
 double gameObject::getX() const {
@@ -101,8 +104,6 @@ void gameObject::udpRect() {
 void gameObject::update(float deltaTime) {
 
 }
-
-
 
 void gameObject::render(SDL_Renderer* renderer) {
 
