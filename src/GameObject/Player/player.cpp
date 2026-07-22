@@ -10,50 +10,21 @@ player::player(double x, double y, double width, double height)
     this->gravity = 980.0;
     this->jumpForce = 450.0;
     this->onGround = false;
+    setTexture(nullptr);
+}
+player::player(double x, double y) {
+
+    this->velocityX = 0.0;
+    this->velocityY = 0.0;
+    this->speed = 300.0;
+    this->direction = 1;
+    this->gravity = 980.0;
+    this->jumpForce = 450.0;
+    this->onGround = false;
+    setTexture(nullptr);
 }
 
 player::player() : player(0.0, 0.0, 32.0, 32.0) {}
-
-// --- XỬ LÝ PHÍM ĐIỀU KIỂN ---
-void player::handleInput(const SDL_Event& event) {
-    // 1. Khi BẤM phím down
-    if (event.type == SDL_EVENT_KEY_DOWN) {
-        switch (event.key.key) {
-        case SDLK_A:
-        case SDLK_LEFT:
-            isMovingLeft = true;
-            setDirection(-1);
-            break;
-        case SDLK_D:
-        case SDLK_RIGHT:
-            isMovingRight = true;
-            setDirection(1);
-            break;
-        case SDLK_SPACE:
-        case SDLK_W:
-        case SDLK_UP:
-            // Chỉ cho phép nhảy khi đang đứng trên mặt đất
-            if (onGround) {
-                velocityY = -jumpForce; // Dấu âm để đi lên trên
-                onGround = false;
-            }
-            break;
-        }
-    }
-    // 2. Khi THẢ phím up
-    else if (event.type == SDL_EVENT_KEY_UP) {
-        switch (event.key.key) {
-        case SDLK_A:
-        case SDLK_LEFT:
-            isMovingLeft = false;
-            break;
-        case SDLK_D:
-        case SDLK_RIGHT:
-            isMovingRight = false;
-            break;
-        }
-    }
-}
 
 void player::update(float deltaTime) {
 
@@ -80,8 +51,7 @@ void player::render(SDL_Renderer* renderer) {
     SDL_FRect* pRect = getRect();
 
     if (tex != nullptr) {
-        SDL_FlipMode flipMode = (direction < 0) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
-        SDL_RenderTextureRotated(renderer, tex, NULL, pRect, 0.0, NULL, flipMode);
+        SDL_RenderTexture(renderer, getTexture(), nullptr, getRect());
     }
     else {
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
@@ -95,3 +65,21 @@ void player::setDirection(int d) { if (d != 0) direction = (d > 0) ? 1 : -1; }
 void player::setSpeed(double speed) { this->speed = speed; }
 void player::setOnGround(bool grounded) { this->onGround = grounded; }
 bool player::isOnGround() const { return onGround; }
+void player::setMovingLeft(bool left) {
+    isMovingLeft = left;
+    //isMovingRight = !left;
+}
+void player::setMovingRight(bool right) {
+    isMovingRight = right;
+    //isMovingLeft = !right;
+}
+void player::setVelocityX(double x) {
+    velocityX = x;
+}
+void player::setVelocityY(double y) {
+    velocityY = y;
+}
+
+double player::getJumpForce() {
+    return jumpForce;
+}

@@ -16,6 +16,7 @@ private:
     std::vector<platform> plat;
     SDL_Texture* bkg = nullptr;
     SDL_Texture* p1 = nullptr;
+    SDL_Texture* p2 = nullptr;
 
 public:
     sceneMain();
@@ -26,7 +27,7 @@ public:
     void update(float deltaTime) override;
     void render(SDL_Renderer* renderer) override;
     void handleCollision();
-    
+
 };
 
 #endif // !SCENE_MAIN_H

@@ -6,6 +6,7 @@
 
 class player : public gameObject {
 private:
+    const int playerSize = 48;
     double velocityX = 0.0;
     double velocityY = 0.0;
     double speed = 300.0;
@@ -20,16 +21,19 @@ private:
 
 public:
     player(double x, double y, double width, double height);
+    player(double x, double y);
     player();
-
-    // Hàm nhận sự kiện bàn phím từ SDL3
-    void handleInput(const SDL_Event& event);
 
     int getDirection();
     void setSpeed(double speed);
     void setDirection(int d);
     void setOnGround(bool grounded);
     bool isOnGround() const;
+    void setMovingLeft(bool left);
+    void setMovingRight(bool right);
+    void setVelocityX(double x);
+    void setVelocityY(double y);
+    double getJumpForce();
 
     void render(SDL_Renderer* renderer) override;
     void update(float deltaTime) override;

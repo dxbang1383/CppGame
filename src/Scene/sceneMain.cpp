@@ -36,15 +36,13 @@ sceneMain::~sceneMain() {
 void sceneMain::preLoad(SDL_Renderer* renderer) {
     bkg = resourceManager::loadImage(renderer, "default");
     p1 = resourceManager::loadImage(renderer, "P");
+    p2 = resourceManager::loadImage(renderer, "player");
 
     for (platform& x : plat) {
         if (x.getType() == "P")
             x.setTexture(p1);
     }
-}
-
-void sceneMain::handleInput(const SDL_Event& event) {
-    mainPlayer.handleInput(event);
+    mainPlayer.setTexture(p2);
 }
 
 void sceneMain::update(float deltaTime) {
@@ -64,6 +62,7 @@ void sceneMain::update(float deltaTime) {
 }
 
 void sceneMain::render(SDL_Renderer* renderer) {
+    //std::cout << "ground :" << mainPlayer.isOnGround() << std::endl;
     
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_FRect groundRect = { 0.0f, 500.0f, 1280.0f, 220.0f };
@@ -86,9 +85,50 @@ void sceneMain::handleCollision() {
             && mainPlayer.getY() < p.getY() + p.getHeight()
             && mainPlayer.getY() + mainPlayer.getHeight() > p.getY();
         if (check == true) {
-            std::cout << "co va cham nguoi choi voi platform di vao xu ly va cham" << std::endl;
+            //std::cout << "co va cham nguoi choi voi platform di vao xu ly va cham" << std::endl;
             // neu va cham theo phuong thang dung
             mainPlayer.setY(p.getY() - mainPlayer.getHeight());
+            mainPlayer.setOnGround(true);
+            return;
+        }
+    }
+    mainPlayer.setOnGround(false);
+}
+
+void sceneMain::handleInput(const SDL_Event& event) {
+    if (event.type == SDL_EVENT_KEY_DOWN) {
+        switch (event.key.key) {
+        case SDLK_A:
+        case SDLK_LEFT:
+            mainPlayer.setMovingLeft(true);
+            mainPlayer.setDirection(-1);
+            break;
+        case SDLK_D:
+        case SDLK_RIGHT:
+            mainPlayer.setMovingRight(true);
+            mainPlayer.setDirection(1);
+            break;
+        case SDLK_SPACE:
+        case SDLK_W:
+        case SDLK_UP:
+            if (mainPlayer.isOnGround()) {
+                mainPlayer.setVelocityY(- mainPlayer.getJumpForce());
+                mainPlayer.setOnGround(false);
+            }
+            break;
+        }
+    }
+
+    else if (event.type == SDL_EVENT_KEY_UP) {
+        switch (event.key.key) {
+        case SDLK_A:
+        case SDLK_LEFT:
+            mainPlayer.setMovingLeft(false);
+            break;
+        case SDLK_D:
+        case SDLK_RIGHT:
+            mainPlayer.setMovingRight(false);
+            break;
         }
     }
 }
