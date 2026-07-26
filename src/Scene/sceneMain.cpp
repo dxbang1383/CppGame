@@ -15,7 +15,10 @@ sceneMain::sceneMain()
         plat.emplace_back(x, 10, "map1", 2, 4);
 
     plat.emplace_back(13, 9, "P");
-    plat.emplace_back(14, 8, "map1", 8, 8);
+    plat.emplace_back(14, 8, "map1", 14, 1, "x++");
+    plat.emplace_back(14, 9, "map1", 14, 2, "x++");
+    plat.emplace_back(14, 10, "map1", 14, 2, "x++");
+    decorList.emplace_back(9, 9, "map1", 11, 7, "x++");
     plat.emplace_back(15, 7, "P");
 
     for (int x = 15; x <= 21; x++)
@@ -35,24 +38,49 @@ sceneMain::~sceneMain() {
 
 // tải tài nguyên trước khi vào màn 
 void sceneMain::preLoad(SDL_Renderer* renderer) {
+    /*
     bkg = resourceManager::loadImage(renderer, "default");
     p1 = resourceManager::loadImage(renderer, "P");
     p2 = resourceManager::loadImage(renderer, "player");
     map1 = resourceManager::loadImage(renderer, "map1");
+    */
 
+    // Backgrond
+    bkg = resourceManager::getTexture(renderer, "bkg");
+
+    // platform
     for (platform& x : plat) {
+        /*
         if (x.getType() == "P") {
             x.setTexture(p1);
         }
         else if (x.getType() == "map1") {
             x.setTexture(map1);
         }
+        */
+
+        x.setTexture(resourceManager::getTexture(renderer, x.getType()));
     }
-    mainPlayer.setTexture(p2);
+
+    for (decor& d : decorList) {
+        d.setTexture(resourceManager::getTexture(renderer, d.getType()));
+    }
+
+    mainPlayer.setTexture(resourceManager::getTexture(renderer, "player"));
+
+    // mainPlayer.setTexture(p2);
 }
 
 // cập nhật mỗi vòng lặp 
 void sceneMain::update(float deltaTime) {
+
+    for (platform& x : plat) {
+        x.update(deltaTime);
+    }
+
+    for (decor& d : decorList) {
+        d.update(deltaTime);
+    }
   
     mainPlayer.update(deltaTime);
     /* 
@@ -82,7 +110,31 @@ void sceneMain::render(SDL_Renderer* renderer) {
     for (platform& p : plat)
         p.render(renderer);
 
+    for (decor& d : decorList) {
+        d.render(renderer);
+    }
+
     mainPlayer.render(renderer);
+
+
+    // vẽ dường kẻ 
+
+    // kẻ
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 50);
+    for (int c = 0; c <= COLS; c++)
+        SDL_RenderLine(renderer, c * TILE, 0.0f, c * TILE, H);
+    for (int r = 0; r <= ROWS; r++)
+        SDL_RenderLine(renderer, 0.0f, r * TILE, W, r * TILE);
+
+    // toa do
+    char buf[16];
+    SDL_SetRenderDrawColor(renderer, 0 , 0, 0, 160);
+    for (int c = 0; c < COLS; c++) {
+        for (int r = 0; r < ROWS; r++) {
+            SDL_snprintf(buf, sizeof(buf), "%d,%d", c % 10, r % 10);
+            SDL_RenderDebugText(renderer, c * TILE + 2.0f, r * TILE + 2.0f, buf);
+        }
+    }
 }
 
 // xử lý va chạm 

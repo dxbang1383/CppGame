@@ -30,6 +30,23 @@ platform::platform(int m, int n, std::string type, int srcX, int srcY) {
 	setType(type);
 }
 
+platform::platform(int m, int n, std::string type, int srcX, int srcY, std::string animationType) {
+	// hình chữ nhật là địa chỉ trên scene 
+	setX(m * TILE_SIZE);
+	setY(n * TILE_SIZE);
+	setWidth(TILE_SIZE);
+	setHeight(TILE_SIZE);
+
+	// hình chữ nhật địa chỉ hình vẽ trên sheet 
+	srcRect = { srcX * TILE_MAP, srcY * TILE_MAP, TILE_MAP, TILE_MAP };
+
+	setType(type);
+
+	typeFrame = animationType;
+
+	animationEnable = true;
+}
+
 std::string platform::platform::getType() {
 	return type;
 }
@@ -45,10 +62,36 @@ void platform::render(SDL_Renderer *renderer) {
 	}
 	else 
 	{
-		SDL_RenderTexture(renderer, getTexture(), &srcRect, getRect());
+		SDL_FRect temp = srcRect;
+
+		if (animationEnable == true) {
+			
+			if (frame == 1) {
+				// chon hinh chu nhat mac dinh
+			}
+			else {
+				if (typeFrame == "x++") {
+					temp.x = temp.x + TILE_MAP;
+				}
+				else if (typeFrame == "y++") {
+					temp.y = temp.y + TILE_MAP;
+				}
+			}
+		}
+
+		SDL_RenderTexture(renderer, getTexture(), &temp, getRect());
 	}
 }
 
 void platform::update(float deltaTime) {
+	if (animationEnable == false) return;
 
+	time = deltaTime + time;
+	
+	if (time >= 0.25f) {
+		if (frame == 1) frame = 2;
+		else frame = 1;
+		time = 0.0f;
+	}
+	
 }

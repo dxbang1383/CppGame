@@ -8,17 +8,19 @@
 #include "scene.h"
 #include "../GameObject/Player/player.h"
 #include "../GameObject/Platform/platform.h"
+#include "../GameObject/Platform/decor.h"
 #include "../engine/resourceManager.h"
 
 class sceneMain : public scene {
 private:
     player mainPlayer;
     std::vector<platform> plat;
+    std::vector<decor> decorList;
     SDL_Texture* bkg = nullptr;
-    SDL_Texture* p1 = nullptr;
-    SDL_Texture* p2 = nullptr;
-    SDL_Texture* map1 = nullptr;
-
+    const float TILE = 36.0f;
+    const float W = 1280.0f, H = 720.0f;
+    const int COLS = (int)(W / TILE);   // 35
+    const int ROWS = (int)(H / TILE);
 public:
     sceneMain();
     ~sceneMain() override;

@@ -15,7 +15,8 @@ public:
     // Constructor
     gameObject(double x, double y, double width, double height);
     gameObject();
-    // 
+
+    // getter
     double getWidth() const;
     double getHeight() const;
     double getX() const;
@@ -23,7 +24,7 @@ public:
     SDL_FRect* getRect();
     SDL_Texture* getTexture() const;
 
-    //
+    //setter
     void setX(double newX);
     void setY(double newY);
     void setPosition(double newX, double newY);
@@ -31,6 +32,7 @@ public:
     void setHeight(double newHeight);
     void setSize(double newWidth, double newHeight);
     void setTexture(SDL_Texture* tex);
+
     //
     void udpRect();
     virtual void update(float deltaTime);

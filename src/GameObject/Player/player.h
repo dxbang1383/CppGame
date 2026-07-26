@@ -20,10 +20,11 @@ private:
     bool isMovingRight = false;
 
 public:
+    // Constructor
     player(double x, double y, double width, double height);
     player(double x, double y);
     player();
-
+    //
     int getDirection();
     void setSpeed(double speed);
     void setDirection(int d);

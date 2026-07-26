@@ -4,18 +4,25 @@
 #include <SDL3/SDL.h>
 #include <string>
 #include "../src/GameObject/gameObject.h";
+#include <vector>
 
 class platform : public gameObject {
 private:
 	std::string type = "P";
 	SDL_FRect srcRect = { 0.0f, 0.0f, 0.0f, 0.0f };
+	bool animationEnable = false;
+	float timeFrame = 0.25f;
+	float time = 0.0f;
+	int frame = 1;
+	std::string typeFrame = "";
 public:
-	const float TILE_SIZE = 48;
+	const float TILE_SIZE = 36;
 	const float TILE_MAP = 18;
 
 	platform(double x, double y, double width, double height);
 	platform(int m, int n, std::string t);
 	platform(int m, int n, std::string t, int srcX, int srcY);
+	platform(int m, int n, std::string t, int srcX, int srcY, std::string typeAni);
 
 	std::string getType();
 
