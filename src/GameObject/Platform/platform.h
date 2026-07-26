@@ -8,15 +8,21 @@
 class platform : public gameObject {
 private:
 	std::string type = "P";
+	SDL_FRect srcRect = { 0.0f, 0.0f, 0.0f, 0.0f };
 public:
 	const float TILE_SIZE = 48;
+	const float TILE_MAP = 18;
 
 	platform(double x, double y, double width, double height);
 	platform(int m, int n, std::string t);
+	platform(int m, int n, std::string t, int srcX, int srcY);
 
 	std::string getType();
 
 	void setType(std::string t);
+	void setSrcRect(SDL_FRect rect) {
+		srcRect = rect;
+	}
 
 	void update(float deltaTime);
 	void render(SDL_Renderer* renderer) override;

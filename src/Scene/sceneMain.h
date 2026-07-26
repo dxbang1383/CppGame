@@ -17,16 +17,18 @@ private:
     SDL_Texture* bkg = nullptr;
     SDL_Texture* p1 = nullptr;
     SDL_Texture* p2 = nullptr;
+    SDL_Texture* map1 = nullptr;
 
 public:
     sceneMain();
     ~sceneMain() override;
-
+    // Hàm load tài nguyên trước level 
     void preLoad(SDL_Renderer* renderer) override;
     void handleInput(const SDL_Event& event) override;
     void update(float deltaTime) override;
     void render(SDL_Renderer* renderer) override;
     void handleCollision();
+    void switchScene() override;
 
 };
 

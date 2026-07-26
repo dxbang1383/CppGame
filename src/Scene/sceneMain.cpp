@@ -12,10 +12,10 @@ sceneMain::sceneMain()
     plat.emplace_back(6, 10, "P");
 
     for (int x = 6; x <= 12; x++)
-        plat.emplace_back(x, 10, "P");
+        plat.emplace_back(x, 10, "map1", 2, 4);
 
     plat.emplace_back(13, 9, "P");
-    plat.emplace_back(14, 8, "P");
+    plat.emplace_back(14, 8, "map1", 8, 8);
     plat.emplace_back(15, 7, "P");
 
     for (int x = 15; x <= 21; x++)
@@ -33,18 +33,25 @@ sceneMain::~sceneMain() {
 
 }
 
+// tải tài nguyên trước khi vào màn 
 void sceneMain::preLoad(SDL_Renderer* renderer) {
     bkg = resourceManager::loadImage(renderer, "default");
     p1 = resourceManager::loadImage(renderer, "P");
     p2 = resourceManager::loadImage(renderer, "player");
+    map1 = resourceManager::loadImage(renderer, "map1");
 
     for (platform& x : plat) {
-        if (x.getType() == "P")
+        if (x.getType() == "P") {
             x.setTexture(p1);
+        }
+        else if (x.getType() == "map1") {
+            x.setTexture(map1);
+        }
     }
     mainPlayer.setTexture(p2);
 }
 
+// cập nhật mỗi vòng lặp 
 void sceneMain::update(float deltaTime) {
   
     mainPlayer.update(deltaTime);
@@ -61,6 +68,7 @@ void sceneMain::update(float deltaTime) {
     handleCollision();
 }
 
+// in ra bên ngoài 
 void sceneMain::render(SDL_Renderer* renderer) {
     //std::cout << "ground :" << mainPlayer.isOnGround() << std::endl;
     
@@ -77,6 +85,7 @@ void sceneMain::render(SDL_Renderer* renderer) {
     mainPlayer.render(renderer);
 }
 
+// xử lý va chạm 
 void sceneMain::handleCollision() {
     for (platform& p : plat) {
         // bien nay chi check xem co va cham khong
@@ -95,6 +104,7 @@ void sceneMain::handleCollision() {
     mainPlayer.setOnGround(false);
 }
 
+// xử lý input 
 void sceneMain::handleInput(const SDL_Event& event) {
     if (event.type == SDL_EVENT_KEY_DOWN) {
         switch (event.key.key) {
@@ -131,4 +141,8 @@ void sceneMain::handleInput(const SDL_Event& event) {
             break;
         }
     }
+}
+
+void sceneMain::switchScene() {
+    //sau nay khoi tao nhan sk ban phim 
 }

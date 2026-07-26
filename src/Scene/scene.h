@@ -16,6 +16,8 @@ public:
     virtual void update(float deltaTime) = 0;
 
     virtual void render(SDL_Renderer* renderer) = 0;
+
+    virtual void switchScene() = 0;
 };
 
 #endif // !SCENE_H

@@ -12,6 +12,9 @@ SDL_Texture* resourceManager::loadImage(SDL_Renderer* renderer, std::string s) {
 	if (s == "player") {
 		path = "assets/kenney_pixel-platformer/Tiles/Characters/tile_0000.png";
 	}
+	if (s == "map1") {
+		path = "assets/kenney_pixel-platformer/Tilemap/tilemap_packed.png";
+	}
 
 	SDL_Texture* texture = IMG_LoadTexture(renderer, path.c_str());
 	if (!texture) {
@@ -21,3 +24,4 @@ SDL_Texture* resourceManager::loadImage(SDL_Renderer* renderer, std::string s) {
 
 	return texture;
 }
+
