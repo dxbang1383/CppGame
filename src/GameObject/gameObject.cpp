@@ -1,18 +1,27 @@
 #include "gameObject.h"
 
+// x, y, width, height là các biến của hình chữ nhật trong thế giới game
+// tạm thời đồng bộ renderRect với rect
 gameObject::gameObject(double x, double y, double width, double height)
 {
 	this->x = x;
 	this->y = y;
 	this->width = width;
 	this->height = height;
+	// tex chưa được nạp mà được gọi trong scene để nạp
 	this->tex = nullptr;
 
+	// khởi tạo hình chữ nhật trong không gian tọa độ
 	rect.x = x;
 	rect.y = y;
 	rect.w = width;
 	rect.h = height;
 
+	// khởi tạo renderRect
+	renderRect.x = rect.x;
+	renderRect.y = rect.y;
+	renderRect.w = rect.w;
+	renderRect.h = rect.h;
 }
 
 gameObject::gameObject() {
@@ -21,10 +30,17 @@ gameObject::gameObject() {
 	this->width = 0;
 	this->height = 0;
 
+
 	rect.x = 0;
 	rect.y = 0;
 	rect.w = 0;
 	rect.h = 0;
+
+	// khởi tạo renderRect
+	renderRect.x = rect.x;
+	renderRect.y = rect.y;
+	renderRect.w = rect.w;
+	renderRect.h = rect.h;
 
 	this->tex = nullptr;
 	
@@ -52,6 +68,10 @@ double gameObject::getWidth() const {
 
 SDL_Texture* gameObject::getTexture() const {
 	return tex;
+}
+
+SDL_FRect* gameObject::getRenderRect() {
+	return &renderRect;
 }
 
 void gameObject::setX(double newX) {
@@ -94,11 +114,22 @@ void gameObject::setTexture(SDL_Texture* texture) {
 	tex = texture;
 }
 
+void gameObject::setRenderRect(SDL_FRect* rec) {
+	renderRect = *rec;
+}
+
 void gameObject::udpRect() {
 	rect.x = x;
 	rect.y = y;
 	rect.w = width;
 	rect.h = height;
+}
+
+void gameObject::updRenderRect(const camera &cam) {
+	renderRect.x = (rect.x - cam.getX()) * cam.getScale();
+	renderRect.y = (rect.y - cam.getY()) * cam.getScale();
+	renderRect.w = rect.w * cam.getScale();
+	renderRect.h = rect.h * cam.getScale();
 }
 
 void gameObject::update(float deltaTime) {

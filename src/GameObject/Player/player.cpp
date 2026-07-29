@@ -48,10 +48,10 @@ void player::render(SDL_Renderer* renderer) {
     if (renderer == nullptr) return;
 
     SDL_Texture* tex = getTexture();
-    SDL_FRect* pRect = getRect();
+    SDL_FRect* pRect = getRenderRect();
 
     if (tex != nullptr) {
-        SDL_RenderTexture(renderer, getTexture(), nullptr, getRect());
+        SDL_RenderTexture(renderer, getTexture(), nullptr, getRenderRect());
     }
     else {
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);

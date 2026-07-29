@@ -17,6 +17,7 @@ platform::platform(int m, int n, std::string type) {\
 	setType(type);
 }
 
+// khởi tạo được gán theo sprite sheet.
 platform::platform(int m, int n, std::string type, int srcX, int srcY) {
 	// hình chữ nhật là địa chỉ trên scene 
 	setX(m * TILE_SIZE);
@@ -30,6 +31,7 @@ platform::platform(int m, int n, std::string type, int srcX, int srcY) {
 	setType(type);
 }
 
+// khởi tạo có animation.
 platform::platform(int m, int n, std::string type, int srcX, int srcY, std::string animationType) {
 	// hình chữ nhật là địa chỉ trên scene 
 	setX(m * TILE_SIZE);
@@ -58,7 +60,7 @@ void platform::setType(std::string t) {
 void platform::render(SDL_Renderer *renderer) {
 	if (srcRect.w == 0 || srcRect.h == 0) 
 	{
-		SDL_RenderTexture(renderer, getTexture(), nullptr, getRect());
+		SDL_RenderTexture(renderer, getTexture(), nullptr, getRenderRect());
 	}
 	else 
 	{
@@ -79,7 +81,7 @@ void platform::render(SDL_Renderer *renderer) {
 			}
 		}
 
-		SDL_RenderTexture(renderer, getTexture(), &temp, getRect());
+		SDL_RenderTexture(renderer, getTexture(), &temp, getRenderRect());
 	}
 }
 

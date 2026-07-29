@@ -1,37 +1,39 @@
 #include "sceneMain.h"
 
+// Constructor ( tạm thời khởi tạo map tại đây )
 sceneMain::sceneMain()
     : mainPlayer(100.0, 100.0, 50.0, 50.0) 
 {
     for (int x = 0; x < 26; x++)
-        plat.emplace_back(x, 14, "P");
+        plat.emplace_back(x, 14, "map1", 2, 4);
 
-    plat.emplace_back(3, 13, "P");
-    plat.emplace_back(4, 12, "P");
-    plat.emplace_back(5, 11, "P");
-    plat.emplace_back(6, 10, "P");
+    plat.emplace_back(3, 13, "map1", 2, 4);
+    plat.emplace_back(4, 12, "map1", 2, 4);
+    plat.emplace_back(5, 11, "map1", 2, 4);
+    plat.emplace_back(6, 10, "map1", 2, 4);
 
     for (int x = 6; x <= 12; x++)
         plat.emplace_back(x, 10, "map1", 2, 4);
 
-    plat.emplace_back(13, 9, "P");
+    plat.emplace_back(13, 9, "map1", 2, 4);
     plat.emplace_back(14, 8, "map1", 14, 1, "x++");
     plat.emplace_back(14, 9, "map1", 14, 2, "x++");
     plat.emplace_back(14, 10, "map1", 14, 2, "x++");
     decorList.emplace_back(9, 9, "map1", 11, 7, "x++");
-    plat.emplace_back(15, 7, "P");
+    plat.emplace_back(15, 7, "map1", 2, 4);
 
     for (int x = 15; x <= 21; x++)
-        plat.emplace_back(x, 7, "P");
+        plat.emplace_back(x, 7, "map1", 2, 4);
 
-    plat.emplace_back(22, 8, "P");
-    plat.emplace_back(23, 9, "P");
-    plat.emplace_back(24, 10, "P");
+    plat.emplace_back(22, 8, "map1", 2, 4);
+    plat.emplace_back(23, 9, "map1", 2, 4);
+    plat.emplace_back(24, 10, "map1", 2, 4);
 
     for (int x = 21; x <= 25; x++)
-        plat.emplace_back(x, 11, "P");
+        plat.emplace_back(x, 11, "map1", 2, 4);
 }
 
+// Destruction 
 sceneMain::~sceneMain() {
 
 }
@@ -40,7 +42,7 @@ sceneMain::~sceneMain() {
 void sceneMain::preLoad(SDL_Renderer* renderer) {
     /*
     bkg = resourceManager::loadImage(renderer, "default");
-    p1 = resourceManager::loadImage(renderer, "P");
+    p1 = resourceManager::loadImage(renderer, "map1", 2, 4);
     p2 = resourceManager::loadImage(renderer, "player");
     map1 = resourceManager::loadImage(renderer, "map1");
     */
@@ -51,7 +53,7 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     // platform
     for (platform& x : plat) {
         /*
-        if (x.getType() == "P") {
+        if (x.getType() == "map1", 2, 4) {
             x.setTexture(p1);
         }
         else if (x.getType() == "map1") {
@@ -73,27 +75,19 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
 
 // cập nhật mỗi vòng lặp 
 void sceneMain::update(float deltaTime) {
-
-    for (platform& x : plat) {
-        x.update(deltaTime);
-    }
-
-    for (decor& d : decorList) {
-        d.update(deltaTime);
-    }
-  
+    // cập nhật vị trí trong thế giới
+    for (platform& x : plat) x.update(deltaTime);
+    for (decor& d : decorList) d.update(deltaTime);
     mainPlayer.update(deltaTime);
-    /* 
-    float groundLevel = 500.0f - mainPlayer.getHeight();
 
-    if (mainPlayer.getY() >= groundLevel) {
-        mainPlayer.setY(groundLevel);      
-        mainPlayer.setOnGround(true);    
-    }
-    else {
-        mainPlayer.setOnGround(false);      
-    }*/
     handleCollision();
+
+    focusPlayer(); // camera chốt vị trí
+
+    // rồi mới tính lại renderRect cho mọi object
+    for (platform& x : plat) x.updRenderRect(cam);
+    for (decor& d : decorList) d.updRenderRect(cam);
+    mainPlayer.updRenderRect(cam);
 }
 
 // in ra bên ngoài 
@@ -118,7 +112,7 @@ void sceneMain::render(SDL_Renderer* renderer) {
 
 
     // vẽ dường kẻ 
-
+    /*
     // kẻ
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 50);
     for (int c = 0; c <= COLS; c++)
@@ -127,6 +121,7 @@ void sceneMain::render(SDL_Renderer* renderer) {
         SDL_RenderLine(renderer, 0.0f, r * TILE, W, r * TILE);
 
     // toa do
+    
     char buf[16];
     SDL_SetRenderDrawColor(renderer, 0 , 0, 0, 160);
     for (int c = 0; c < COLS; c++) {
@@ -134,7 +129,7 @@ void sceneMain::render(SDL_Renderer* renderer) {
             SDL_snprintf(buf, sizeof(buf), "%d,%d", c % 10, r % 10);
             SDL_RenderDebugText(renderer, c * TILE + 2.0f, r * TILE + 2.0f, buf);
         }
-    }
+    }*/
 }
 
 // xử lý va chạm 
@@ -193,6 +188,10 @@ void sceneMain::handleInput(const SDL_Event& event) {
             break;
         }
     }
+}
+
+void sceneMain::focusPlayer() {
+    cam.focus(mainPlayer.getX(), mainPlayer.getY(), W, H);
 }
 
 void sceneMain::switchScene() {

@@ -10,9 +10,11 @@
 #include "../GameObject/Platform/platform.h"
 #include "../GameObject/Platform/decor.h"
 #include "../engine/resourceManager.h"
+#include "../engine/camera.h"
 
 class sceneMain : public scene {
 private:
+    camera cam = camera();
     player mainPlayer;
     std::vector<platform> plat;
     std::vector<decor> decorList;
@@ -30,6 +32,8 @@ public:
     void update(float deltaTime) override;
     void render(SDL_Renderer* renderer) override;
     void handleCollision();
+
+    void focusPlayer();
     void switchScene() override;
 
 };
