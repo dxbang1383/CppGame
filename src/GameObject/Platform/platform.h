@@ -3,7 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include <string>
-#include "../src/GameObject/gameObject.h";
+#include "../src/GameObject/gameObject.h"
 #include <vector>
 
 class platform : public gameObject {

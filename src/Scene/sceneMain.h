@@ -31,7 +31,8 @@ public:
     void handleInput(const SDL_Event& event) override;
     void update(float deltaTime) override;
     void render(SDL_Renderer* renderer) override;
-    void handleCollision();
+    void handleCollision(float deltaTime);
+    bool overlaps(platform& p);
 
     void focusPlayer();
     void switchScene() override;

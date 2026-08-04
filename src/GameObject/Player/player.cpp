@@ -12,7 +12,7 @@ player::player(double x, double y, double width, double height)
     this->onGround = false;
     setTexture(nullptr);
 }
-player::player(double x, double y) {
+player::player(double x, double y) : gameObject(x, y, 32.0, 32.0) {
 
     this->velocityX = 0.0;
     this->velocityY = 0.0;
@@ -38,9 +38,6 @@ void player::update(float deltaTime) {
     else {
         if (velocityY > 0) velocityY = 0.0;
     }
-
-    setX(getX() + velocityX * deltaTime);
-    setY(getY() + velocityY * deltaTime);
 
 }
 
@@ -82,4 +79,14 @@ void player::setVelocityY(double y) {
 
 double player::getJumpForce() {
     return jumpForce;
+}
+
+double player::getVelocityX() const { return velocityX; }
+double player::getVelocityY() const { return velocityY; }
+
+void player::moveX(float deltaTime) {
+    setX(getX() + velocityX * deltaTime);
+}
+void player::moveY(float deltaTime) {
+    setY(getY() + velocityY * deltaTime);
 }

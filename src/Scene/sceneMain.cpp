@@ -80,7 +80,7 @@ void sceneMain::update(float deltaTime) {
     for (decor& d : decorList) d.update(deltaTime);
     mainPlayer.update(deltaTime);
 
-    handleCollision();
+    handleCollision(deltaTime);
 
     focusPlayer(); // camera chốt vị trí
 
@@ -132,24 +132,41 @@ void sceneMain::render(SDL_Renderer* renderer) {
     }*/
 }
 
-// xử lý va chạm 
-void sceneMain::handleCollision() {
+bool sceneMain::overlaps(platform& p) {
+    return mainPlayer.getX() < p.getX() + p.getWidth()
+        && mainPlayer.getX() + mainPlayer.getWidth() > p.getX()
+        && mainPlayer.getY() < p.getY() + p.getHeight()
+        && mainPlayer.getY() + mainPlayer.getHeight() > p.getY();
+}
+
+void sceneMain::handleCollision(float deltaTime) {
+    //Ngang
+    mainPlayer.moveX(deltaTime);
     for (platform& p : plat) {
-        // bien nay chi check xem co va cham khong
-        bool check = mainPlayer.getX() < p.getX() + p.getWidth()
-            && mainPlayer.getX() + mainPlayer.getWidth() > p.getX()
-            && mainPlayer.getY() < p.getY() + p.getHeight()
-            && mainPlayer.getY() + mainPlayer.getHeight() > p.getY();
-        if (check == true) {
-            //std::cout << "co va cham nguoi choi voi platform di vao xu ly va cham" << std::endl;
-            // neu va cham theo phuong thang dung
+        if (!overlaps(p)) continue;
+        if (mainPlayer.getVelocityX() > 0)
+            mainPlayer.setX(p.getX() - mainPlayer.getWidth());
+        else if (mainPlayer.getVelocityX() < 0)
+            mainPlayer.setX(p.getX() + p.getWidth());
+        mainPlayer.setVelocityX(0);
+    }
+
+    //Dọc
+    mainPlayer.moveY(deltaTime);
+    mainPlayer.setOnGround(false);
+    for (platform& p : plat) {
+        if (!overlaps(p)) continue;
+        if (mainPlayer.getVelocityY() > 0) {
             mainPlayer.setY(p.getY() - mainPlayer.getHeight());
             mainPlayer.setOnGround(true);
-            return;
         }
+        else if (mainPlayer.getVelocityY() < 0) {
+            mainPlayer.setY(p.getY() + p.getHeight());
+        }
+        mainPlayer.setVelocityY(0);
     }
-    mainPlayer.setOnGround(false);
 }
+
 
 // xử lý input 
 void sceneMain::handleInput(const SDL_Event& event) {

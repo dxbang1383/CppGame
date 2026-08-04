@@ -36,6 +36,11 @@ public:
     void setVelocityY(double y);
     double getJumpForce();
 
+    double getVelocityX() const;
+    double getVelocityY() const;
+    void moveX(float deltaTime);
+    void moveY(float deltaTime);
+
     void render(SDL_Renderer* renderer) override;
     void update(float deltaTime) override;
 };
