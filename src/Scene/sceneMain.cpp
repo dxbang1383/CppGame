@@ -31,6 +31,11 @@ sceneMain::sceneMain()
 
     for (int x = 21; x <= 25; x++)
         plat.emplace_back(x, 11, "map1", 2, 4);
+
+    SDL_srand(0);
+    double ex = 100.0 + SDL_rand(700);
+    double ey = 50.0  + SDL_rand(250);
+    enemies.emplace_back(ex, ey, 40.0, 40.0);
 }
 
 // Destruction 
@@ -70,6 +75,9 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
 
     mainPlayer.setTexture(resourceManager::getTexture(renderer, "player"));
 
+    for (enemy& e : enemies)
+        e.setTexture(resourceManager::getTexture(renderer, "enemy"));
+
     // mainPlayer.setTexture(p2);
 }
 
@@ -79,6 +87,7 @@ void sceneMain::update(float deltaTime) {
     for (platform& x : plat) x.update(deltaTime);
     for (decor& d : decorList) d.update(deltaTime);
     mainPlayer.update(deltaTime);
+    for (enemy& e : enemies) e.update(deltaTime);
 
     handleCollision(deltaTime);
 
@@ -88,6 +97,7 @@ void sceneMain::update(float deltaTime) {
     for (platform& x : plat) x.updRenderRect(cam);
     for (decor& d : decorList) d.updRenderRect(cam);
     mainPlayer.updRenderRect(cam);
+    for (enemy& e : enemies) e.updRenderRect(cam);
 }
 
 // in ra bên ngoài 
@@ -108,6 +118,7 @@ void sceneMain::render(SDL_Renderer* renderer) {
         d.render(renderer);
     }
 
+    for (enemy& e : enemies) e.render(renderer);
     mainPlayer.render(renderer);
 
 

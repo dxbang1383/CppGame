@@ -8,6 +8,7 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{ "P",       "assets/kenney_pixel-platformer/Tiles/tile_0002.png" },
 	{ "player",  "assets/kenney_pixel-platformer/Tiles/Characters/tile_0000.png" },
 	{ "map1",    "assets/kenney_pixel-platformer/Tilemap/tilemap_packed.png" },
+	{ "enemy",   "assets/kenney_pixel-platformer/Tiles/Characters/tile_0024.png" },
 };
 
 

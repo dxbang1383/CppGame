@@ -5,6 +5,10 @@
 #include "../src/GameObject/gameObject.h"
 class enemy : public gameObject {
 private:
+	double velocityX;
+	double speed;
+	int direction;
+	double minX, maxX;
 
 public:
 	enemy(double x, double y, double width, double height);

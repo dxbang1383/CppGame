@@ -7,6 +7,7 @@
 
 #include "scene.h"
 #include "../GameObject/Player/player.h"
+#include "../GameObject/Enemy/enemy.h"
 #include "../GameObject/Platform/platform.h"
 #include "../GameObject/Platform/decor.h"
 #include "../engine/resourceManager.h"
@@ -16,6 +17,7 @@ class sceneMain : public scene {
 private:
     camera cam = camera();
     player mainPlayer;
+    std::vector<enemy> enemies;
     std::vector<platform> plat;
     std::vector<decor> decorList;
     SDL_Texture* bkg = nullptr;
