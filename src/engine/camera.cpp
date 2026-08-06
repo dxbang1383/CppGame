@@ -22,14 +22,37 @@ void camera::setScale(float s) {
 }
 
 void camera::zoomIn() {
-	scale = scale + 0.05f;
+	scale = scale * 1.05f;
+	
 }
 
 void camera::zoomOut() {
-	scale = scale - 0.05f;
+	scale = scale / 1.05f;
 }
 
 void camera::focus(float drawX, float drawY, float screenW, float screenH) {
 	x = drawX - screenW / (2.0f * scale);
 	y = drawY - screenH / (2.0f * scale);
+}
+
+void camera::getInfo() {
+	std::cout << "Camera :(" << x <<
+		"," << y << ") scale = " << scale;
+	std::cout << std::endl;
+}
+
+void camera::moveLeft() {
+	x = x - 5;
+}
+
+void camera::moveRight() {
+	x = x + 5;
+}
+
+void camera::moveUp() {
+	y = y - 5;
+}
+
+void camera::moveDown() {
+	y = y + 5;
 }

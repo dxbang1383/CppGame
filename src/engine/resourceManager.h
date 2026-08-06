@@ -19,7 +19,7 @@ public :
 	static SDL_Texture* getTexture (SDL_Renderer* renderer, const std::string& key);
 
 	// ham nay duoc goi khi ket thuc o main 
-	void clearAll();
+	static void clearAll();
 };
 
 #endif // !RESOURCEMANAGER_H

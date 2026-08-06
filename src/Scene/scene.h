@@ -4,7 +4,12 @@
 #include <SDL3/SDL.h>
 
 class scene {
+
 public:
+    static const float SCREEN_WIDTH;
+    static const float SCREEN_HEIGHT;
+    static const float TILE_MAP;
+
  
     scene();
     virtual ~scene();

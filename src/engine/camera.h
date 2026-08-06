@@ -1,6 +1,8 @@
 ﻿#ifndef CAMERA_H
 #define CAMERA_H
 
+#include <iostream>
+
 class camera {
 private:
     /*
@@ -8,17 +10,24 @@ private:
         scale 
     */
 
-    float x = 0.0f;
-    float y = 0.0f;
-    float scale = 1.0f;
+    float x = 10.0f;
+    float y = 10.0f;
+    float scale = 2.0f;
+    float velocityX = 0.0f;
+    float velocityY = 0.0f;
 
 public :
     camera() = default;
     float getX() const;
     float getY() const;
     float getScale() const;
-    void  setPosition(float nx, float ny);
-    void  setScale(float s);
+    void setPosition(float nx, float ny);
+    void setScale(float s);
+    void moveLeft();
+    void moveRight();
+    void moveUp();
+    void moveDown();
+    void getInfo();
 
     // Tăng scale thêm 0.05 
     void zoomIn();
@@ -30,5 +39,6 @@ public :
     void focus(float drawX, float drawY, float screenW, float screenH);
 
 };
+
 
 #endif // !CAMERA_H

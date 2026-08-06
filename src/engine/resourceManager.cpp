@@ -1,7 +1,5 @@
 #include "resourceManager.h"
 
-
-
 // default 
 std::map<std::string, std::string> resourceManager::pathTable = {
 	{ "bkg", "assets/kenney_pixel-platformer/bkg.png" },
@@ -11,12 +9,7 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{ "enemy",   "assets/kenney_pixel-platformer/Tiles/Characters/tile_0024.png" },
 };
 
-
-
 std::map<std::string, SDL_Texture*> resourceManager::cache;
-
-
-
 
 /*
 SDL_Texture* resourceManager::loadImage(SDL_Renderer* renderer, std::string s) {
@@ -45,9 +38,6 @@ SDL_Texture* resourceManager::loadImage(SDL_Renderer* renderer, std::string s) {
 }
 */
 
-
-
-
 SDL_Texture* resourceManager::getTexture(SDL_Renderer* renderer, const std::string& key) {
 	// check trong cache co chua neu co return luon 
 	auto c = cache.find(key);
@@ -73,8 +63,6 @@ SDL_Texture* resourceManager::getTexture(SDL_Renderer* renderer, const std::stri
 	cache[key] = tex;
 	return tex;
 }
-
-
 
 void resourceManager::clearAll() {
 	for (auto& [key, tex] : cache)

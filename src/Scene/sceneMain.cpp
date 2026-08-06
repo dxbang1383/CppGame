@@ -45,27 +45,12 @@ sceneMain::~sceneMain() {
 
 // tải tài nguyên trước khi vào màn 
 void sceneMain::preLoad(SDL_Renderer* renderer) {
-    /*
-    bkg = resourceManager::loadImage(renderer, "default");
-    p1 = resourceManager::loadImage(renderer, "map1", 2, 4);
-    p2 = resourceManager::loadImage(renderer, "player");
-    map1 = resourceManager::loadImage(renderer, "map1");
-    */
 
     // Backgrond
     bkg = resourceManager::getTexture(renderer, "bkg");
 
     // platform
     for (platform& x : plat) {
-        /*
-        if (x.getType() == "map1", 2, 4) {
-            x.setTexture(p1);
-        }
-        else if (x.getType() == "map1") {
-            x.setTexture(map1);
-        }
-        */
-
         x.setTexture(resourceManager::getTexture(renderer, x.getType()));
     }
 
@@ -78,7 +63,6 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     for (enemy& e : enemies)
         e.setTexture(resourceManager::getTexture(renderer, "enemy"));
 
-    // mainPlayer.setTexture(p2);
 }
 
 // cập nhật mỗi vòng lặp 
@@ -181,6 +165,8 @@ void sceneMain::handleCollision(float deltaTime) {
 
 // xử lý input 
 void sceneMain::handleInput(const SDL_Event& event) {
+
+
     if (event.type == SDL_EVENT_KEY_DOWN) {
         switch (event.key.key) {
         case SDLK_A:
@@ -216,6 +202,7 @@ void sceneMain::handleInput(const SDL_Event& event) {
             break;
         }
     }
+
 }
 
 void sceneMain::focusPlayer() {
