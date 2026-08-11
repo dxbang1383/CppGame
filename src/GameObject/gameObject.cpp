@@ -8,6 +8,7 @@ gameObject::gameObject(double x, double y, double width, double height)
 	this->y = y;
 	this->width = width;
 	this->height = height;
+
 	// tex chưa được nạp mà được gọi trong scene để nạp
 	this->tex = nullptr;
 
@@ -29,7 +30,6 @@ gameObject::gameObject() {
 	this->y = 0;
 	this->width = 0;
 	this->height = 0;
-
 
 	rect.x = 0;
 	rect.y = 0;
@@ -126,8 +126,8 @@ void gameObject::udpRect() {
 }
 
 void gameObject::updRenderRect(const camera &cam) {
-	renderRect.x = (rect.x - cam.getX()) * cam.getScale();
-	renderRect.y = (rect.y - cam.getY()) * cam.getScale();
+	renderRect.x = cam.xWorldToScreen(x);
+	renderRect.y = cam.yWorldToScreen(y);
 	renderRect.w = rect.w * cam.getScale();
 	renderRect.h = rect.h * cam.getScale();
 }

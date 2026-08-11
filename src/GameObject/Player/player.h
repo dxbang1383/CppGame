@@ -24,6 +24,7 @@ public:
     player(double x, double y, double width, double height);
     player(double x, double y);
     player();
+
     //
     int getDirection();
     void setSpeed(double speed);

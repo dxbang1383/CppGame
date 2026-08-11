@@ -56,3 +56,23 @@ void camera::moveUp() {
 void camera::moveDown() {
 	y = y + 5;
 }
+
+float camera::xWorldToScreen(float xWorld) const {
+	float res = xWorld * this->getScale() - this->getX() * this->getScale();
+	return res;
+}
+
+float camera::yWorldToScreen(float yWorld) const {
+	float res = yWorld * getScale() - getY() * getScale();
+	return res;
+}
+
+float camera::xScreenToWorld(float xS) const {
+	float res = (xS + getX() * getScale()) / getScale();
+	return res;
+}
+
+float camera::yScreenToWorld(float yS) const {
+	float res = (yS + getY() * getScale()) / getScale();
+	return res;
+}

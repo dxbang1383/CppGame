@@ -28,7 +28,12 @@ target_sources(CppGame PRIVATE
      "src/engine/camera.cpp"
      "src/engine/resourceManager.h"
      "src/engine/resourceManager.cpp"
- "src/Scene/sceneEditor.cpp" "src/Scene/sceneEditor.h" "src/GameObject/Platform/decor.h" "src/GameObject/Platform/decor.cpp")
+     "src/Scene/sceneEditor.cpp" 
+     "src/Scene/sceneEditor.h" 
+     "src/GameObject/Platform/decor.h" 
+     "src/GameObject/Platform/decor.cpp" 
+     "src/engine/UI/Palette.h" 
+     "src/engine/UI/Palette.cpp")
 
 target_include_directories(CppGame PRIVATE
     SDL3/include

@@ -12,15 +12,27 @@ private:
 
     float x = 10.0f;
     float y = 10.0f;
-    float scale = 2.0f;
+    float scale = 1.0f;
     float velocityX = 0.0f;
     float velocityY = 0.0f;
 
 public :
+    
     camera() = default;
+
+    // chỉnh các thông số của camera 
     float getX() const;
     float getY() const;
     float getScale() const;
+
+    //chuyển x y sang giữa 2 chế độ 
+    float xWorldToScreen(float xWorld) const;
+    float yWorldToScreen(float yWorld) const;
+    float xScreenToWorld(float xS) const;
+    float yScreenToWorld(float yS) const;
+
+
+
     void setPosition(float nx, float ny);
     void setScale(float s);
     void moveLeft();

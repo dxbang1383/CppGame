@@ -11,6 +11,7 @@
 #include "../GameObject/Platform/decor.h"
 #include "../engine/resourceManager.h"
 #include "../engine/camera.h"
+#include "../engine/UI/Palette.h"
 
 class sceneEditor : public scene {
 private:
@@ -20,8 +21,11 @@ private:
     std::vector<decor> decorList;
 
     SDL_Texture* bkg = nullptr;
-    bool paletteOpen = false;
+    Palette tileMap = Palette(50, 50);
+
+    bool menuOpen = false;
     bool pauseMenu = false;
+    bool rendergrid = false;
 
 public :
 
@@ -34,7 +38,7 @@ public :
     void render(SDL_Renderer* renderer) override;
     void switchScene() override;
     void renderGrid(SDL_Renderer * renderer);
-    void renderPallete(SDL_Renderer* renderer);
+    void renderPalette(SDL_Renderer* renderer);
 };
 
 

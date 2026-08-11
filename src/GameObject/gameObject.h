@@ -2,7 +2,7 @@
 #define GAMEOBJECT_H
 
 #include "SDL3/SDL.h"
-#include "SDL3_image/SDl_image.h"
+#include "SDL3_image/SDL_image.h"
 #include "../engine/camera.h"
 
 class gameObject

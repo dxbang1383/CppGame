@@ -76,7 +76,7 @@ void sceneMain::update(float deltaTime) {
     handleCollision(deltaTime);
 
     focusPlayer(); // camera chốt vị trí
-
+    
     // rồi mới tính lại renderRect cho mọi object
     for (platform& x : plat) x.updRenderRect(cam);
     for (decor& d : decorList) d.updRenderRect(cam);

@@ -16,8 +16,8 @@ private:
 	int frame = 1;
 	std::string typeFrame = "";
 public:
-	const float TILE_SIZE = 36;
-	const float TILE_MAP = 18;
+	static constexpr float TILE_SIZE = 36;
+	static constexpr float TILE_MAP = 18;
 
 	platform(double x, double y, double width, double height);
 	platform(int m, int n, std::string t);

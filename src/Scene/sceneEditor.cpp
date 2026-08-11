@@ -27,11 +27,15 @@ void sceneEditor::preLoad(SDL_Renderer* renderer) {
         d.setTexture(resourceManager::getTexture(renderer, d.getType()));
     }
 
+    tileMap.setTexture(resourceManager::getTexture(renderer, tileMap.getType()));
+
     // mainPlayer.setTexture(resourceManager::getTexture(renderer, "player"));
 }
 
 // cập nhật mỗi vòng lặp 
 void sceneEditor::update(float deltaTime) {
+
+    tileMap.update(deltaTime);
     // cập nhật vị trí trong thế giới
     for (platform& x : plat) x.update(deltaTime);
     for (decor& d : decorList) d.update(deltaTime);
@@ -46,7 +50,12 @@ void sceneEditor::update(float deltaTime) {
 // in ra bên ngoài 
 void sceneEditor::render(SDL_Renderer* renderer) {
     //std::cout << "ground :" << mainPlayer.isOnGround() << std::endl;
-    cam.getInfo();
+    //cam.getInfo();
+
+    // dong nay them tam de add tai nguyeen 
+    // ---------------------------------------------------------------------------------------------jlll
+    plat[plat.size() - 1].setTexture(resourceManager::getTexture(renderer, plat[plat.size() - 1].getType()));
+
     SDL_FRect bkgRect = { 0, 0, 1280, 720 };
     SDL_RenderTexture(renderer, bkg, nullptr, &bkgRect);
 
@@ -56,10 +65,13 @@ void sceneEditor::render(SDL_Renderer* renderer) {
     for (decor& d : decorList) {
         d.render(renderer);
     }
-    renderGrid(renderer);
 
-    if (paletteOpen == true) {
-        renderPallete(renderer);
+    if (rendergrid == true) {
+        renderGrid(renderer);
+    }
+
+    if (menuOpen == true) {
+        renderPalette(renderer);
     }
     
 }
@@ -68,7 +80,7 @@ void sceneEditor::render(SDL_Renderer* renderer) {
 void sceneEditor::handleInput(const SDL_Event& event) {
 
     // xử lý input trong game 
-    if (paletteOpen == false) {
+    if (menuOpen == false) {
         if (event.type == SDL_EVENT_KEY_DOWN) {
             switch (event.key.key) {
             case SDLK_A:
@@ -91,7 +103,12 @@ void sceneEditor::handleInput(const SDL_Event& event) {
                 break;
 
             case SDLK_TAB:
-                paletteOpen = true;
+                menuOpen = true;
+                break;
+                break;
+            case SDLK_F3:
+                rendergrid = !rendergrid;
+                break;
             }
 
         }
@@ -119,17 +136,47 @@ void sceneEditor::handleInput(const SDL_Event& event) {
                 cam.zoomOut();
             }
         }
+        else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                float mouseClickX = event.button.x;
+                float mouseClickY = event.button.y;
+
+                std::cout << "Nhan chuot trai: " << mouseClickX << " " << mouseClickY << std::endl;
+
+                int convertX = cam.xScreenToWorld(mouseClickX) / platform::TILE_SIZE;
+                int convertY = cam.yScreenToWorld(mouseClickY) / platform::TILE_SIZE;
+
+                    std::cout << "Chuyen ve (x,y) trong he toa do la :"
+                    << convertX
+                    << " " << convertY << std::endl;
+                    if (tileMap.getTypeTile() == 1) {
+                        plat.emplace_back(convertX, convertY, tileMap.getType(), tileMap.getSrcX(), tileMap.getSrcY());
+                    }
+
+            }
+        }
     }
 
     // xử lý input palette
-    else if (paletteOpen == true) {
+    else if (menuOpen == true) {
         if (event.type == SDL_EVENT_KEY_DOWN) {
             switch (event.key.key) {
             case SDLK_TAB:
-                paletteOpen = false;
+                menuOpen = false;
+                break;
+            case SDLK_F3:
+                rendergrid = !rendergrid;
                 break;
             }
+        }
+        else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                float mouseClickX = event.button.x;
+                float mouseClickY = event.button.y;
 
+                std::cout << "Nhan chuot trai: " << mouseClickX << " " << mouseClickY << std::endl;
+                tileMap.mouseClick(mouseClickX, mouseClickY);
+            }
         }
     }
 
@@ -165,7 +212,7 @@ void sceneEditor::renderGrid(SDL_Renderer * renderer) {
 
 }
 
-void sceneEditor::renderPallete(SDL_Renderer* renderer) {
+void sceneEditor::renderPalette(SDL_Renderer* renderer) {
     // bong mo 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
@@ -176,5 +223,6 @@ void sceneEditor::renderPallete(SDL_Renderer* renderer) {
 
     // in hinh anh tile map 
 
+    tileMap.render(renderer);
     
 }
