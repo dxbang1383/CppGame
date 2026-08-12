@@ -44,15 +44,13 @@ player::player(double x, double y) : gameObject(x, y, 32.0, 32.0) {
 player::player() : player(0.0, 0.0, 32.0, 32.0) {}
 
 void player::update(float deltaTime) {
-   
+
     velocityX = 0.0;
     if (isMovingLeft) {
-        velocityX -= speed;
-        direction = 1; 
+        velocityX = - speed;
     }
     if (isMovingRight) {
         velocityX += speed;
-        direction = -1;  
     }
     if (!isTouchingLadder) {
         isClimbing = false;
@@ -77,7 +75,7 @@ void player::update(float deltaTime) {
         return;
     }
 
-    //Áp dụng Trọng lực trước khi xét State
+    // Áp dụng Trọng lực trước khi xét State
     if (!onGround) {
         velocityY += gravity * deltaTime;
     }
@@ -89,7 +87,7 @@ void player::update(float deltaTime) {
     setX(getX() + velocityX * deltaTime);
     setY(getY() + velocityY * deltaTime);
 
-    
+
     if (!onGround && abs(velocityY) > 1.0) {
         if (currentState != PlayerState::STATE_JUMP) {
             currentState = PlayerState::STATE_JUMP;
@@ -132,7 +130,7 @@ void player::update(float deltaTime) {
             currentFrame = 0;
         }
     }
- }
+}
 
 void player::render(SDL_Renderer* renderer) {
     if (renderer == nullptr) return;

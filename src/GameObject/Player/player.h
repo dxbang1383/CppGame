@@ -13,20 +13,20 @@ enum PlayerState {
 
 class player : public gameObject {
 private:
-    const int playerSize = 48;
-    double velocityX = 0.0;
-    double velocityY = 0.0;
-    double speed = 300.0;
-    int direction = 1;
-    double gravity = 980.0;
-    double jumpForce = 450.0;
-    bool onGround = false;
+    const int playerSize = 48; // kich cỡ nhân vật
+    double velocityX = 0.0; // vận tốc theo trục x 
+    double velocityY = 0.0; // vận tốc theo trục y 
+    double speed = 300.0; // tốc độ của nhân vật
+    int direction = 1; // hướng của nhân vật 
+    double gravity = 980.0; // tốc độ của trọng lực
+    double jumpForce = 450.0; // tốc độ nhảy 
+    bool onGround = false; // trêm mặt đất hay không 
     // Luu sheet dang lam
     SDL_Texture* idleTexture = nullptr; 
     SDL_Texture* runTexture = nullptr;
     SDL_Texture* jumpTexture = nullptr;
     //Trang thai xu li frame cho nhan vat
-    PlayerState currentState;
+    PlayerState currentState; // lựa chọn các trạng thái trong enum để chạy animation
     int currentFrame;
     int totalFrame;
     float frameTime;
@@ -40,6 +40,7 @@ private:
     bool isMovingRight = false;
     bool isMovingUp = false;
     bool isMovingDown = false;
+
     // Trạng thái cầu thang
     bool isClimbing = false;
     bool isTouchingLadder = false;

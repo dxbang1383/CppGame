@@ -78,11 +78,6 @@ bool sceneMain::overlapsLadder(ladder& l) {
 void sceneMain::handleCollision(float deltaTime) {
     player& p = map.getPlayer();
 
-    // Di chuyen theo van toc truoc, roi moi giai va cham.
-    // Dung deltaTime de toc do khong phu thuoc FPS.
-    p.moveX(deltaTime);
-    p.moveY(deltaTime);
-
     bool onAnyGround = false;
 
     for (platform& pl : map.getPlatforms()) {
@@ -149,6 +144,7 @@ void sceneMain::handleInput(const SDL_Event& event) {
         case SDLK_A:
         case SDLK_LEFT:
             map.getPlayer().setDirection(-1);
+            map.getPlayer().setMovingLeft(true);
             break;
         case SDLK_D:
         case SDLK_RIGHT:
