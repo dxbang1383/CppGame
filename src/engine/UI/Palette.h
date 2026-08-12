@@ -1,6 +1,7 @@
 #ifndef PALETTE_H
 #define PALETTE_H
 
+#include <iostream>
 #include <vector>
 #include <string>
 #include "SDL3/SDL.h"

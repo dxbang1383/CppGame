@@ -13,23 +13,30 @@ Palette::Palette(float x, float y, std::string type) {
 	rect.w = this->width;
 	texRect = rect;
 
-	srcX = -1;
-	srcY = -1;
+	srcX = 1;
+	srcY = 1;
 
 	this->type = type;
 	this->tex = nullptr;
 }
 
 void Palette::setSize() {
-	float w, h = 0;
-	SDL_GetTextureSize(tex, &w, &h);
-	this->width = w * 2;
-	rect.w = this->width;
-	texRect.w = this->width;
 
-	this->height = h * 2;
-	rect.h = this->height;
-	texRect.h = this->height;
+	if (tex == nullptr) {
+		return;
+	}
+
+	else {
+		float w, h = 0;
+		SDL_GetTextureSize(tex, &w, &h);
+		this->width = w * 2;
+		rect.w = this->width;
+		texRect.w = this->width;
+
+		this->height = h * 2;
+		rect.h = this->height;
+		texRect.h = this->height;
+	}
 }
 
 void Palette::renderGrid(SDL_Renderer* renderer) {
@@ -48,11 +55,19 @@ void Palette::update(float deltaTime) {
 }
 
 void Palette::mouseClick(int x, int y) {
+	std::cout << "Mouse click left" << std::endl;
 	x = x - this->x;
 	y = y - this->y;
 
-	if (x < this->width && y < this->height) {
+	if (x < this->width 
+		&& y < this->height 
+		&& 0 < x && 0 < y) {
+		std::cout << "chuyen doi sang srcTile" << std::endl;
 		srcX = x / 36;
 		srcY = y / 36;
+
+		return;
 	}
+
+	std::cout << "Click nay khong nam trong tileMap" << std::endl;
 }

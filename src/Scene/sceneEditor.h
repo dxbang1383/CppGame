@@ -16,6 +16,7 @@
 class sceneEditor : public scene {
 private:
     camera cam = camera();
+    SDL_Renderer* rend = nullptr;
 
     std::vector<platform> plat;
     std::vector<decor> decorList;

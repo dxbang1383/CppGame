@@ -2,40 +2,7 @@
 
 // Constructor ( tạm thời khởi tạo map tại đây )
 sceneMain::sceneMain()
-    : mainPlayer(100.0, 100.0, 50.0, 50.0) 
 {
-    for (int x = 0; x < 26; x++)
-        plat.emplace_back(x, 14, "map1", 2, 4);
-
-    plat.emplace_back(3, 13, "map1", 2, 4);
-    plat.emplace_back(4, 12, "map1", 2, 4);
-    plat.emplace_back(5, 11, "map1", 2, 4);
-    plat.emplace_back(6, 10, "map1", 2, 4);
-
-    for (int x = 6; x <= 12; x++)
-        plat.emplace_back(x, 10, "map1", 2, 4);
-
-    plat.emplace_back(13, 9, "map1", 2, 4);
-    plat.emplace_back(14, 8, "map1", 14, 1, "x++");
-    plat.emplace_back(14, 9, "map1", 14, 2, "x++");
-    plat.emplace_back(14, 10, "map1", 14, 2, "x++");
-    decorList.emplace_back(9, 9, "map1", 11, 7, "x++");
-    plat.emplace_back(15, 7, "map1", 2, 4);
-
-    for (int x = 15; x <= 21; x++)
-        plat.emplace_back(x, 7, "map1", 2, 4);
-
-    plat.emplace_back(22, 8, "map1", 2, 4);
-    plat.emplace_back(23, 9, "map1", 2, 4);
-    plat.emplace_back(24, 10, "map1", 2, 4);
-
-    for (int x = 21; x <= 25; x++)
-        plat.emplace_back(x, 11, "map1", 2, 4);
-
-    SDL_srand(0);
-    double ex = 100.0 + SDL_rand(700);
-    double ey = 50.0  + SDL_rand(250);
-    enemies.emplace_back(ex, ey, 40.0, 40.0);
 }
 
 // Destruction 
@@ -45,43 +12,23 @@ sceneMain::~sceneMain() {
 
 // tải tài nguyên trước khi vào màn 
 void sceneMain::preLoad(SDL_Renderer* renderer) {
-
-    // Backgrond
-    bkg = resourceManager::getTexture(renderer, "bkg");
-
-    // platform
-    for (platform& x : plat) {
-        x.setTexture(resourceManager::getTexture(renderer, x.getType()));
-    }
-
-    for (decor& d : decorList) {
-        d.setTexture(resourceManager::getTexture(renderer, d.getType()));
-    }
-
-    mainPlayer.setTexture(resourceManager::getTexture(renderer, "player"));
-
-    for (enemy& e : enemies)
-        e.setTexture(resourceManager::getTexture(renderer, "enemy"));
-
+    map.addTextures(renderer);
 }
 
 // cập nhật mỗi vòng lặp 
 void sceneMain::update(float deltaTime) {
     // cập nhật vị trí trong thế giới
-    for (platform& x : plat) x.update(deltaTime);
-    for (decor& d : decorList) d.update(deltaTime);
-    mainPlayer.update(deltaTime);
-    for (enemy& e : enemies) e.update(deltaTime);
+    for (platform& x : map.getPlatforms()) x.update(deltaTime);
+    for (decor& d : map.getDecors()) d.update(deltaTime);
+    map.getPlayer().update(deltaTime);
+    for (enemy& e : map.getEnemies()) e.update(deltaTime);
 
     handleCollision(deltaTime);
 
     focusPlayer(); // camera chốt vị trí
     
     // rồi mới tính lại renderRect cho mọi object
-    for (platform& x : plat) x.updRenderRect(cam);
-    for (decor& d : decorList) d.updRenderRect(cam);
-    mainPlayer.updRenderRect(cam);
-    for (enemy& e : enemies) e.updRenderRect(cam);
+    map.updateRenderRect();
 }
 
 // in ra bên ngoài 
@@ -93,98 +40,76 @@ void sceneMain::render(SDL_Renderer* renderer) {
     SDL_RenderFillRect(renderer, &groundRect);
 
     SDL_FRect bkgRect = { 0, 0, 1280, 720 };
-    SDL_RenderTexture(renderer, bkg, nullptr, &bkgRect);
+    SDL_RenderTexture(renderer, map.getBkg(), nullptr, &bkgRect);
 
-    for (platform& p : plat)
+    for (platform& p : map.getPlatforms())
         p.render(renderer);
 
-    for (decor& d : decorList) {
+    for (decor& d : map.getDecors()) {
         d.render(renderer);
     }
 
-    for (enemy& e : enemies) e.render(renderer);
-    mainPlayer.render(renderer);
+    for (enemy& e : map.getEnemies()) e.render(renderer);
+    map.getPlayer().render(renderer);
 
-
-    // vẽ dường kẻ 
-    /*
-    // kẻ
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 50);
-    for (int c = 0; c <= COLS; c++)
-        SDL_RenderLine(renderer, c * TILE, 0.0f, c * TILE, H);
-    for (int r = 0; r <= ROWS; r++)
-        SDL_RenderLine(renderer, 0.0f, r * TILE, W, r * TILE);
-
-    // toa do
-    
-    char buf[16];
-    SDL_SetRenderDrawColor(renderer, 0 , 0, 0, 160);
-    for (int c = 0; c < COLS; c++) {
-        for (int r = 0; r < ROWS; r++) {
-            SDL_snprintf(buf, sizeof(buf), "%d,%d", c % 10, r % 10);
-            SDL_RenderDebugText(renderer, c * TILE + 2.0f, r * TILE + 2.0f, buf);
-        }
-    }*/
 }
 
 bool sceneMain::overlaps(platform& p) {
-    return mainPlayer.getX() < p.getX() + p.getWidth()
-        && mainPlayer.getX() + mainPlayer.getWidth() > p.getX()
-        && mainPlayer.getY() < p.getY() + p.getHeight()
-        && mainPlayer.getY() + mainPlayer.getHeight() > p.getY();
+    return map.getPlayer().getX() < p.getX() + p.getWidth()
+        && map.getPlayer().getX() + map.getPlayer().getWidth() > p.getX()
+        && map.getPlayer().getY() < p.getY() + p.getHeight()
+        && map.getPlayer().getY() + map.getPlayer().getHeight() > p.getY();
 }
 
 void sceneMain::handleCollision(float deltaTime) {
     //Ngang
-    mainPlayer.moveX(deltaTime);
-    for (platform& p : plat) {
+    map.getPlayer().moveX(deltaTime);
+    for (platform& p : map.getPlatforms()) {
         if (!overlaps(p)) continue;
-        if (mainPlayer.getVelocityX() > 0)
-            mainPlayer.setX(p.getX() - mainPlayer.getWidth());
-        else if (mainPlayer.getVelocityX() < 0)
-            mainPlayer.setX(p.getX() + p.getWidth());
-        mainPlayer.setVelocityX(0);
+        if (map.getPlayer().getVelocityX() > 0)
+            map.getPlayer().setX(p.getX() - map.getPlayer().getWidth());
+        else if (map.getPlayer().getVelocityX() < 0)
+            map.getPlayer().setX(p.getX() + p.getWidth());
+        map.getPlayer().setVelocityX(0);
     }
 
     //Dọc
-    mainPlayer.moveY(deltaTime);
-    mainPlayer.setOnGround(false);
-    for (platform& p : plat) {
+    map.getPlayer().moveY(deltaTime);
+    map.getPlayer().setOnGround(false);
+    for (platform& p : map.getPlatforms()) {
         if (!overlaps(p)) continue;
-        if (mainPlayer.getVelocityY() > 0) {
-            mainPlayer.setY(p.getY() - mainPlayer.getHeight());
-            mainPlayer.setOnGround(true);
+        if (map.getPlayer().getVelocityY() > 0) {
+            map.getPlayer().setY(p.getY() - map.getPlayer().getHeight());
+            map.getPlayer().setOnGround(true);
         }
-        else if (mainPlayer.getVelocityY() < 0) {
-            mainPlayer.setY(p.getY() + p.getHeight());
+        else if (map.getPlayer().getVelocityY() < 0) {
+            map.getPlayer().setY(p.getY() + p.getHeight());
         }
-        mainPlayer.setVelocityY(0);
+        map.getPlayer().setVelocityY(0);
     }
 }
 
 
 // xử lý input 
 void sceneMain::handleInput(const SDL_Event& event) {
-
-
     if (event.type == SDL_EVENT_KEY_DOWN) {
         switch (event.key.key) {
         case SDLK_A:
         case SDLK_LEFT:
-            mainPlayer.setMovingLeft(true);
-            mainPlayer.setDirection(-1);
+            map.getPlayer().setMovingLeft(true);
+            map.getPlayer().setDirection(-1);
             break;
         case SDLK_D:
         case SDLK_RIGHT:
-            mainPlayer.setMovingRight(true);
-            mainPlayer.setDirection(1);
+            map.getPlayer().setMovingRight(true);
+            map.getPlayer().setDirection(1);
             break;
         case SDLK_SPACE:
         case SDLK_W:
         case SDLK_UP:
-            if (mainPlayer.isOnGround()) {
-                mainPlayer.setVelocityY(- mainPlayer.getJumpForce());
-                mainPlayer.setOnGround(false);
+            if (map.getPlayer().isOnGround()) {
+                map.getPlayer().setVelocityY(-map.getPlayer().getJumpForce());
+                map.getPlayer().setOnGround(false);
             }
             break;
         }
@@ -194,11 +119,11 @@ void sceneMain::handleInput(const SDL_Event& event) {
         switch (event.key.key) {
         case SDLK_A:
         case SDLK_LEFT:
-            mainPlayer.setMovingLeft(false);
+            map.getPlayer().setMovingLeft(false);
             break;
         case SDLK_D:
         case SDLK_RIGHT:
-            mainPlayer.setMovingRight(false);
+            map.getPlayer().setMovingRight(false);
             break;
         }
     }
@@ -206,7 +131,7 @@ void sceneMain::handleInput(const SDL_Event& event) {
 }
 
 void sceneMain::focusPlayer() {
-    cam.focus(mainPlayer.getX(), mainPlayer.getY(), W, H);
+    map.getCam().focus(map.getPlayer().getX(), map.getPlayer().getY(), W, H);
 }
 
 void sceneMain::switchScene() {

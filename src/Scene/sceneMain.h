@@ -12,19 +12,16 @@
 #include "../GameObject/Platform/decor.h"
 #include "../engine/resourceManager.h"
 #include "../engine/camera.h"
+#include "../Map/Map.h"
 
 class sceneMain : public scene {
 private:
-    camera cam = camera();
-    player mainPlayer;
-    std::vector<enemy> enemies;
-    std::vector<platform> plat;
-    std::vector<decor> decorList;
-    SDL_Texture* bkg = nullptr;
+    Map map = Map();
     const float TILE = 36.0f;
     const float W = 1280.0f, H = 720.0f;
     const int COLS = (int)(W / TILE);   // 35
     const int ROWS = (int)(H / TILE);
+
 public:
     sceneMain();
     ~sceneMain() override;

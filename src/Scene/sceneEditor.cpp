@@ -14,7 +14,7 @@ sceneEditor::~sceneEditor() {
 }
 
 void sceneEditor::preLoad(SDL_Renderer* renderer) {
-
+    rend = renderer;
     // Backgrond
     bkg = resourceManager::getTexture(renderer, "bkg");
 
@@ -151,8 +151,8 @@ void sceneEditor::handleInput(const SDL_Event& event) {
                     << " " << convertY << std::endl;
                     if (tileMap.getTypeTile() == 1) {
                         plat.emplace_back(convertX, convertY, tileMap.getType(), tileMap.getSrcX(), tileMap.getSrcY());
+                        plat.back().setTexture(resourceManager::getTexture(rend, tileMap.getType()));
                     }
-
             }
         }
     }
@@ -176,6 +176,13 @@ void sceneEditor::handleInput(const SDL_Event& event) {
 
                 std::cout << "Nhan chuot trai: " << mouseClickX << " " << mouseClickY << std::endl;
                 tileMap.mouseClick(mouseClickX, mouseClickY);
+            }
+            else if (event.button.button == SDL_BUTTON_RIGHT) {
+                float mouseClickX = event.button.x;
+                float mouseClickY = event.button.y;
+
+                std::cout << "Nhan chuot phai: " << mouseClickX << " " << mouseClickY << std::endl;
+
             }
         }
     }
