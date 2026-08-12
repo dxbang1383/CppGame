@@ -22,4 +22,4 @@ public :
 	static void clearAll();
 };
 
-#endif // !RESOURCEMANAGER_H
+#endif 

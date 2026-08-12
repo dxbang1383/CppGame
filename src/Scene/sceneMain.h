@@ -8,6 +8,7 @@
 #include "scene.h"
 #include "../GameObject/Player/player.h"
 #include "../GameObject/Enemy/enemy.h"
+#include "../GameObject/Platform/ladder.h"
 #include "../GameObject/Platform/platform.h"
 #include "../GameObject/Platform/decor.h"
 #include "../engine/resourceManager.h"
@@ -21,6 +22,17 @@ private:
     const float W = 1280.0f, H = 720.0f;
     const int COLS = (int)(W / TILE);   // 35
     const int ROWS = (int)(H / TILE);
+    player mainPlayer;
+    std::vector<platform> plat;
+    std::vector<ladder> ladders;
+    SDL_Texture* ladderTexture = nullptr;
+    SDL_Texture* bkg = nullptr;
+    SDL_Texture* p1 = nullptr;
+    SDL_Texture* p2 = nullptr;
+    SDL_Texture* p3 = nullptr;
+    SDL_Texture* p4 = nullptr;
+    SDL_Texture* p5 = nullptr;
+    SDL_Texture* p6 = nullptr;
 
 public:
     sceneMain();
@@ -35,6 +47,9 @@ public:
 
     void focusPlayer();
     void switchScene() override;
+
+    void handleCollision();
+   
 
 };
 

@@ -34,6 +34,8 @@ target_sources(CppGame PRIVATE
      "src/GameObject/Platform/decor.cpp" 
      "src/engine/UI/Palette.h" 
      "src/engine/UI/Palette.cpp" "src/Map/Map.cpp" "src/Map/Map.h")
+     "src/GameObject/Platform/ladder.h" 
+     "src/GameObject/Platform/ladder.cpp")
 
 target_include_directories(CppGame PRIVATE
     SDL3/include
