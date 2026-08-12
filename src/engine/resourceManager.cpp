@@ -6,13 +6,24 @@ SDL_Texture* resourceManager::loadImage(SDL_Renderer* renderer, std::string s) {
 	if (s == "default") {
 		path = "assets/kenney_pixel-platformer/bkg.png";
 	}
-	if (s == "P") {
+	else if (s == "P") {
 		path = "assets/kenney_pixel-platformer/Tiles/tile_0002.png";
 	}
-	if (s == "player") {
-		path = "assets/kenney_pixel-platformer/Tiles/Characters/tile_0000.png";
+	/*else if (s == "player") {
+		path = "assets/kenney_pixel-platformer/Tiles/Characters/tile_run.png";
+	}*/
+	else if (s == "player_idle") {
+		path = "assets/kenney_pixel-platformer/Tiles/Characters/tile_idle1.png";
 	}
-
+	else if (s == "player_run") {
+		path = "assets/kenney_pixel-platformer/Tiles/Characters/tile_run.png";
+	}
+	else if (s == "player_jump") {
+		path = "assets/kenney_pixel-platformer/Tiles/Characters/tile_0001.png";
+	}
+	else if (s == "ladder") {
+		path = "assets/kenney_pixel-platformer/Tiles/tile_0071.png";
+	}
 	SDL_Texture* texture = IMG_LoadTexture(renderer, path.c_str());
 	if (!texture) {
 		SDL_Log("Load anh Thatbai: %s", SDL_GetError());

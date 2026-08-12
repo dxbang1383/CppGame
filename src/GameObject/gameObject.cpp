@@ -109,3 +109,4 @@ void gameObject::render(SDL_Renderer* renderer) {
 
 }
 
+

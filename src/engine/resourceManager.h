@@ -14,4 +14,4 @@ public :
 
 };
 
-#endif // !RESOURCEMANAGER_H
+#endif 

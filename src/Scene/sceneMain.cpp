@@ -27,42 +27,48 @@ sceneMain::sceneMain()
 
     for (int x = 21; x <= 25; x++)
         plat.emplace_back(x, 11, "P");
+
+    int ladderX = 10;
+    for (int y = 9; y <= 13; y++) {
+        ladders.emplace_back(ladderX * 32, y * 32.0, 32.0, 32.0);
+    }
 }
 
 sceneMain::~sceneMain() {
-
+                
 }
 
 void sceneMain::preLoad(SDL_Renderer* renderer) {
     bkg = resourceManager::loadImage(renderer, "default");
     p1 = resourceManager::loadImage(renderer, "P");
     p2 = resourceManager::loadImage(renderer, "player");
+    p3 = resourceManager::loadImage(renderer, "player_idle");
+    p4 = resourceManager::loadImage(renderer, "player_run");
+    p5 = resourceManager::loadImage(renderer, "player_jump");
+    p6 = resourceManager::loadImage(renderer, "ladder");
 
+    // Gan truc tiep vao player
+    for (ladder& l : ladders) {
+        l.setTexture(p6);
+    }
     for (platform& x : plat) {
         if (x.getType() == "P")
             x.setTexture(p1);
     }
-    mainPlayer.setTexture(p2);
+
+    mainPlayer.setIdleTexture(p3 != nullptr ? p3 : p2);
+    mainPlayer.setRunTexture(p4 != nullptr ? p4 : p2);
+    mainPlayer.setJumpTexture(p5 != nullptr ? p5 : p2);
+    mainPlayer.setTexture(p3 != nullptr ? p3 : p2);
 }
 
 void sceneMain::update(float deltaTime) {
   
     mainPlayer.update(deltaTime);
-    /* 
-    float groundLevel = 500.0f - mainPlayer.getHeight();
-
-    if (mainPlayer.getY() >= groundLevel) {
-        mainPlayer.setY(groundLevel);      
-        mainPlayer.setOnGround(true);    
-    }
-    else {
-        mainPlayer.setOnGround(false);      
-    }*/
     handleCollision();
 }
 
 void sceneMain::render(SDL_Renderer* renderer) {
-    //std::cout << "ground :" << mainPlayer.isOnGround() << std::endl;
     
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_FRect groundRect = { 0.0f, 500.0f, 1280.0f, 220.0f };
@@ -73,26 +79,79 @@ void sceneMain::render(SDL_Renderer* renderer) {
 
     for (platform& p : plat)
         p.render(renderer);
+    for (ladder& l : ladders)
+        l.render(renderer);
 
     mainPlayer.render(renderer);
 }
 
 void sceneMain::handleCollision() {
+    bool onAnyGround = false;
+
     for (platform& p : plat) {
-        // bien nay chi check xem co va cham khong
-        bool check = mainPlayer.getX() < p.getX() + p.getWidth()
+        bool isColliding = mainPlayer.getX() < p.getX() + p.getWidth()
             && mainPlayer.getX() + mainPlayer.getWidth() > p.getX()
             && mainPlayer.getY() < p.getY() + p.getHeight()
             && mainPlayer.getY() + mainPlayer.getHeight() > p.getY();
-        if (check == true) {
-            //std::cout << "co va cham nguoi choi voi platform di vao xu ly va cham" << std::endl;
-            // neu va cham theo phuong thang dung
-            mainPlayer.setY(p.getY() - mainPlayer.getHeight());
-            mainPlayer.setOnGround(true);
-            return;
+
+        if (isColliding) {
+            // Tinh khoang chong lap giua hai truc X va Y
+            float overlapLeft   = (mainPlayer.getX() + mainPlayer.getWidth()) - p.getX();
+            float overlapRight  = (p.getX() + p.getWidth()) - mainPlayer.getX();
+            float overlapTop    = (mainPlayer.getY() + mainPlayer.getHeight()) - p.getY();
+            float overlapBottom = (p.getY() + p.getHeight()) - mainPlayer.getY();
+
+            // Tim do sau va cham nho nhat o tung truc
+            float minOverlapX = std::min(overlapLeft, overlapRight);
+            float minOverlapY = std::min(overlapTop, overlapBottom);
+
+            // So sanh neu Overlap X nho hon overLap Y -> va cham Tuong
+
+            if (minOverlapX < minOverlapY) {
+                if (overlapLeft < overlapRight) {
+                    mainPlayer.setX(p.getX() - mainPlayer.getWidth());
+                }
+                else {
+                    mainPlayer.setX(p.getX() + p.getWidth());
+                }
+                mainPlayer.setVelocityX(0);
+            }
+            // Va cham doc san tran 
+            else {
+                if (overlapTop < overlapBottom) {
+                    mainPlayer.setY(p.getY() - mainPlayer.getHeight());
+                    mainPlayer.setVelocityY(0);
+                    onAnyGround = true;
+                }
+                else {
+                    mainPlayer.setY(p.getY() + p.getHeight());
+                    mainPlayer.setVelocityY(0);
+                }
+            }
         }
     }
-    mainPlayer.setOnGround(false);
+
+    bool touchingLadder = false;
+    for (ladder& l : ladders) {
+        bool isOverlap = mainPlayer.getX() < l.getX() + l.getWidth()
+            && mainPlayer.getX() + mainPlayer.getWidth() > l.getX()
+            && mainPlayer.getY() < l.getY() + l.getHeight()
+            && mainPlayer.getY() + mainPlayer.getHeight() > l.getY();
+
+        if (isOverlap) {
+            touchingLadder = true;
+            break; // Ch? c?n ch?m vào 1 n?c là ??
+        }
+    }
+    //Cap nhat trang thai cho Player
+    mainPlayer.setIsTouchingLadder(touchingLadder);
+
+    //Neu dang treo thang khong can xu li voi platform cung
+    if (mainPlayer.getIsClimbing()) {
+        return;
+    }
+    // Cap nhat lai trang thai dung tren mat dat cho player
+    mainPlayer.setOnGround(onAnyGround);
 }
 
 void sceneMain::handleInput(const SDL_Event& event) {
@@ -111,9 +170,19 @@ void sceneMain::handleInput(const SDL_Event& event) {
         case SDLK_SPACE:
         case SDLK_W:
         case SDLK_UP:
-            if (mainPlayer.isOnGround()) {
-                mainPlayer.setVelocityY(- mainPlayer.getJumpForce());
+            if (mainPlayer.IsTouchingLadder()) {
+                mainPlayer.setIsClimbing(true);
+                mainPlayer.setMovingUp(true);
+            } else if (mainPlayer.isOnGround()) {
+                mainPlayer.setVelocityY(-mainPlayer.getJumpForce());
                 mainPlayer.setOnGround(false);
+            }
+            break;  
+        case SDLK_S:
+        case SDLK_DOWN:
+            if (mainPlayer.IsTouchingLadder()) {
+                mainPlayer.setIsClimbing(true);
+                mainPlayer.setMovingUp(true);
             }
             break;
         }

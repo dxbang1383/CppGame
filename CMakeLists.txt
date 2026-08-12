@@ -28,7 +28,7 @@ target_sources(CppGame PRIVATE
      "src/engine/camera.cpp"
      "src/engine/resourceManager.h"
      "src/engine/resourceManager.cpp"
-)
+ "src/GameObject/Platform/ladder.h" "src/GameObject/Platform/ladder.cpp")
 
 target_include_directories(CppGame PRIVATE
     SDL3/include

@@ -15,7 +15,7 @@ public:
     // Constructor
     gameObject(double x, double y, double width, double height);
     gameObject();
-    // 
+    
     double getWidth() const;
     double getHeight() const;
     double getX() const;
