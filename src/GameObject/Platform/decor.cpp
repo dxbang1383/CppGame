@@ -1,11 +1,5 @@
 #include "decor.h"
 
-decor::decor(double x, double y, double width, double height) :
-	platform(x, y, width, height)
-{
-
-}
-
 decor::decor(int m, int n, std::string t) :
 	platform(m, n, t)
 {

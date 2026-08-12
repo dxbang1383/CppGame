@@ -2,10 +2,6 @@
 
 sceneEditor::sceneEditor() {
 
-    plat.emplace_back(3, 13, "map1", 2, 4);
-    plat.emplace_back(4, 12, "map1", 2, 4);
-    plat.emplace_back(5, 11, "map1", 2, 4);
-    plat.emplace_back(6, 10, "map1", 2, 4);
 }
 
 // Destruction 
@@ -14,22 +10,8 @@ sceneEditor::~sceneEditor() {
 }
 
 void sceneEditor::preLoad(SDL_Renderer* renderer) {
-    rend = renderer;
-    // Backgrond
-    bkg = resourceManager::getTexture(renderer, "bkg");
-
-    // platform
-    for (platform& x : plat) {
-        x.setTexture(resourceManager::getTexture(renderer, x.getType()));
-    }
-
-    for (decor& d : decorList) {
-        d.setTexture(resourceManager::getTexture(renderer, d.getType()));
-    }
-
     tileMap.setTexture(resourceManager::getTexture(renderer, tileMap.getType()));
-
-    // mainPlayer.setTexture(resourceManager::getTexture(renderer, "player"));
+    map.addTextures(renderer);
 }
 
 // cập nhật mỗi vòng lặp 
@@ -37,34 +19,41 @@ void sceneEditor::update(float deltaTime) {
 
     tileMap.update(deltaTime);
     // cập nhật vị trí trong thế giới
-    for (platform& x : plat) x.update(deltaTime);
-    for (decor& d : decorList) d.update(deltaTime);
+    for (platform& x : map.getPlatforms()) x.update(deltaTime);
+    for (decor& d : map.getDecors()) d.update(deltaTime);
+    for (enemy& e : map.getEnemies()) e.update(deltaTime);
 
-    // camera chốt vị trí
+    // Camera chốt vị trí
 
     // rồi mới tính lại renderRect cho mọi object
-    for (platform& x : plat) x.updRenderRect(cam);
-    for (decor& d : decorList) d.updRenderRect(cam);
+    for (platform& x : map.getPlatforms()) x.updRenderRect(map.getCam());
+    for (decor& d : map.getDecors()) d.updRenderRect(map.getCam());
+    //for (enemy& e : map.getEnemies()) e.udpRenderRect(map.getCam());
 }
 
 // in ra bên ngoài 
 void sceneEditor::render(SDL_Renderer* renderer) {
     //std::cout << "ground :" << mainPlayer.isOnGround() << std::endl;
-    //cam.getInfo();
+    //map.getCam().getInfo();
 
     // dong nay them tam de add tai nguyeen 
     // ---------------------------------------------------------------------------------------------jlll
-    plat[plat.size() - 1].setTexture(resourceManager::getTexture(renderer, plat[plat.size() - 1].getType()));
 
     SDL_FRect bkgRect = { 0, 0, 1280, 720 };
-    SDL_RenderTexture(renderer, bkg, nullptr, &bkgRect);
+    SDL_RenderTexture(renderer, map.getBkg(), nullptr, &bkgRect);
 
-    for (platform& p : plat)
+    for (platform& p : map.getPlatforms())
         p.render(renderer);
 
-    for (decor& d : decorList) {
+    for (decor& d : map.getDecors()) {
         d.render(renderer);
     }
+
+    /*
+    for (enemy& e : map.getEnemies()) {
+        e.render(renderer);
+    }
+    */
 
     if (rendergrid == true) {
         renderGrid(renderer);
@@ -85,21 +74,21 @@ void sceneEditor::handleInput(const SDL_Event& event) {
             switch (event.key.key) {
             case SDLK_A:
             case SDLK_LEFT:
-                cam.moveLeft();
+                map.getCam().moveLeft();
                 break;
             case SDLK_D:
             case SDLK_RIGHT:
-                cam.moveRight();
+                map.getCam().moveRight();
                 break;
             case SDLK_SPACE:
             case SDLK_W:
             case SDLK_UP:
-                cam.moveUp();
+                map.getCam().moveUp();
                 break;
 
             case SDLK_S:
             case SDLK_DOWN:
-                cam.moveDown();
+                map.getCam().moveDown();
                 break;
 
             case SDLK_TAB:
@@ -128,31 +117,42 @@ void sceneEditor::handleInput(const SDL_Event& event) {
             if (event.wheel.y > 0)
             {
                 // Lăn lên
-                cam.zoomIn();
+                map.getCam().zoomIn();
             }
             else if (event.wheel.y < 0)
             {
                 // Lăn xuống
-                cam.zoomOut();
+                map.getCam().zoomOut();
             }
         }
         else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+            float mouseClickX = event.button.x;
+            float mouseClickY = event.button.y;
             if (event.button.button == SDL_BUTTON_LEFT) {
-                float mouseClickX = event.button.x;
-                float mouseClickY = event.button.y;
-
                 std::cout << "Nhan chuot trai: " << mouseClickX << " " << mouseClickY << std::endl;
 
-                int convertX = cam.xScreenToWorld(mouseClickX) / platform::TILE_SIZE;
-                int convertY = cam.yScreenToWorld(mouseClickY) / platform::TILE_SIZE;
+                int convertX = floor(map.getCam().xScreenToWorld(mouseClickX) / platform::TILE_SIZE);
+                int convertY = floor(map.getCam().yScreenToWorld(mouseClickY) / platform::TILE_SIZE);
 
                     std::cout << "Chuyen ve (x,y) trong he toa do la :"
                     << convertX
                     << " " << convertY << std::endl;
                     if (tileMap.getTypeTile() == 1) {
-                        plat.emplace_back(convertX, convertY, tileMap.getType(), tileMap.getSrcX(), tileMap.getSrcY());
-                        plat.back().setTexture(resourceManager::getTexture(rend, tileMap.getType()));
+                        map.getPlatforms().emplace_back(convertX, convertY, tileMap.getType(), tileMap.getSrcX(), tileMap.getSrcY());
+                        map.getPlatforms().back().setTexture(resourceManager::getTexture(rend, tileMap.getType()));
                     }
+            }
+            else if (event.button.button == SDL_BUTTON_RIGHT) {
+                std::cout << "Nhan chuot phai: " << mouseClickX << " " << mouseClickY << std::endl;
+                int eRow = floor(map.getCam().xScreenToWorld(mouseClickX) / platform::TILE_SIZE);
+                int eCol = floor(map.getCam().yScreenToWorld(mouseClickY) / platform::TILE_SIZE);
+                
+                if (map.eraseAt(eRow, eCol, 'P')) {
+                    std::cout << "xoa 1 tile";
+                }
+                else {
+                    std::cout << "Khong xoa gi ca";
+                }
             }
         }
     }
@@ -177,13 +177,6 @@ void sceneEditor::handleInput(const SDL_Event& event) {
                 std::cout << "Nhan chuot trai: " << mouseClickX << " " << mouseClickY << std::endl;
                 tileMap.mouseClick(mouseClickX, mouseClickY);
             }
-            else if (event.button.button == SDL_BUTTON_RIGHT) {
-                float mouseClickX = event.button.x;
-                float mouseClickY = event.button.y;
-
-                std::cout << "Nhan chuot phai: " << mouseClickX << " " << mouseClickY << std::endl;
-
-            }
         }
     }
 
@@ -197,24 +190,24 @@ void sceneEditor::renderGrid(SDL_Renderer * renderer) {
     // chon mau
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     // ve Grid 
-    int colS = cam.getX() / (TILE_MAP * cam.getScale());
-    int colE = (cam.getX() + SCREEN_WIDTH) / (TILE_MAP * cam.getScale());
+    int colS = map.getCam().getX() / (TILE_MAP * map.getCam().getScale());
+    int colE = (map.getCam().getX() + SCREEN_WIDTH) / (TILE_MAP * map.getCam().getScale());
 
-    int rowS = cam.getY() / (TILE_MAP * cam.getScale());
-    int rowE = (cam.getY() + SCREEN_HEIGHT) / (TILE_MAP * cam.getScale());
+    int rowS = map.getCam().getY() / (TILE_MAP * map.getCam().getScale());
+    int rowE = (map.getCam().getY() + SCREEN_HEIGHT) / (TILE_MAP * map.getCam().getScale());
 
     for (int i = colS; i <= colE + 1; i++) {
         // kẻ đường thẳng đứng 
         SDL_RenderLine(renderer
-            , i * TILE_MAP * cam.getScale() - cam.getX() * cam.getScale(), 0
-            , i * TILE_MAP * cam.getScale() - cam.getX() * cam.getScale(), SCREEN_HEIGHT);
+            , i * TILE_MAP * map.getCam().getScale() - map.getCam().getX() * map.getCam().getScale(), 0
+            , i * TILE_MAP * map.getCam().getScale() - map.getCam().getX() * map.getCam().getScale(), SCREEN_HEIGHT);
     }
 
     for (int j = rowS; j <= rowE; j++) {
         // ke duong ngang
         SDL_RenderLine(renderer
-            , 0, j * TILE_MAP * cam.getScale() - cam.getY() * cam.getScale()
-            , SCREEN_WIDTH, j * TILE_MAP * cam.getScale() - cam.getY() * cam.getScale());
+            , 0, j * TILE_MAP * map.getCam().getScale() - map.getCam().getY() * map.getCam().getScale()
+            , SCREEN_WIDTH, j * TILE_MAP * map.getCam().getScale() - map.getCam().getY() * map.getCam().getScale());
     }
 
 }

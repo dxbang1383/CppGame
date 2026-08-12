@@ -1,13 +1,7 @@
 #include "platform.h"
 
-platform::platform(double x, double y, double width, double height) 
-	: gameObject(x, y, width, height)
-{
-
-}
-
 // Constructor theo dia chi map 
-platform::platform(int m, int n, std::string type) {\
+platform::platform(int m, int n, std::string type) {
 	// Set hình chữ nhật để in 
 	setX(m * TILE_SIZE);
 	setY(n * TILE_SIZE);
@@ -85,7 +79,7 @@ void platform::render(SDL_Renderer *renderer) {
 	}
 }
 
-void platform::update(float deltaTime) {
+void platform::update(float deltaTime){
 	if (animationEnable == false) return;
 
 	time = deltaTime + time;

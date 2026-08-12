@@ -71,6 +71,7 @@ public:
     camera& getCam() { return cam; }
 
     void updateRenderRect();
+    void addTile();
     bool isDirty() const { return dirty; }
 
 };

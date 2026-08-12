@@ -12,21 +12,17 @@
 #include "../engine/resourceManager.h"
 #include "../engine/camera.h"
 #include "../engine/UI/Palette.h"
+#include "../Map/Map.h"
 
 class sceneEditor : public scene {
 private:
-    camera cam = camera();
-    SDL_Renderer* rend = nullptr;
+    Map map = Map();
 
-    std::vector<platform> plat;
-    std::vector<decor> decorList;
-
-    SDL_Texture* bkg = nullptr;
     Palette tileMap = Palette(50, 50);
-
+    SDL_Renderer* rend = nullptr;
     bool menuOpen = false;
     bool pauseMenu = false;
-    bool rendergrid = false;
+    bool rendergrid = true;
 
 public :
 

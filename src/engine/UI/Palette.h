@@ -45,6 +45,7 @@ public:
 	void setTexRect(SDL_FRect texRect) { this->texRect = texRect; }
 	void setType(std::string type) { this->type = type; }
 
+
 	// hàm này sau này tính kích thươc palette dựa trên kích thước window
 	void setSize();
 	void renderGrid(SDL_Renderer* renderer);
