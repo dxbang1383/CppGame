@@ -21,8 +21,8 @@ private:
     double gravity = 980.0;
     double jumpForce = 450.0;
     bool onGround = false;
-    //Luu sheet dang lam
-    SDL_Texture* idleTexture = nullptr;
+    // Luu sheet dang lam
+    SDL_Texture* idleTexture = nullptr; 
     SDL_Texture* runTexture = nullptr;
     SDL_Texture* jumpTexture = nullptr;
     //Trang thai xu li frame cho nhan vat
@@ -51,22 +51,22 @@ public:
     player(double x, double y);
     player();
 
-    //
-    int getDirection();
-    void setSpeed(double speed);
-    void setDirection(int d);
-    void setOnGround(bool grounded);
-    bool isOnGround() const;
-    void setMovingLeft(bool left);
-    void setMovingRight(bool right);
+    // Getters & Setters
+    int getDirection() { return direction; }
+    void setSpeed(double speed) { this->speed = speed; }
+    void setDirection(int d) { if (d != 0) direction = (d > 0) ? 1 : -1; }
+    void setOnGround(bool grounded) { this->onGround = grounded; }
+    bool isOnGround() const { return onGround; }
+    void setMovingLeft(bool left) { isMovingLeft = left; }
+    void setMovingRight(bool right) { isMovingRight = right; }
     void setMovingUp(bool up) { isMovingUp = up; }
     void setMovingDown(bool down) { isMovingDown = down; }
-    void setVelocityX(double x);
-    void setVelocityY(double y);
-    double getVelocityX();
-    double getVelocityY();
-    double getJumpForce();
-    //Ham sceneMain nap anh vao cho player
+    void setVelocityX(double x) { velocityX = x; }
+    void setVelocityY(double y) { velocityY = y; }
+    double getVelocityX() const { return velocityX; }
+    double getVelocityY() const { return velocityY; }
+    double getJumpForce() { return jumpForce; }
+    // Ham sceneMain nap anh vao cho player
     void setIdleTexture(SDL_Texture* tex) {
         this->idleTexture = tex;
     }
@@ -75,7 +75,7 @@ public:
     }
     void setJumpTexture(SDL_Texture* tex) {
         this->jumpTexture = tex;
-    } 
+    }
     void setIsTouchingLadder(bool touch) { isTouchingLadder = touch; }
     bool IsTouchingLadder() const { return this->isTouchingLadder; }
     bool getIsClimbing() { return isClimbing; }
@@ -84,6 +84,11 @@ public:
     SDL_Texture* getIdleTexture() const { return idleTexture; }
     SDL_Texture* getRunTexture() const { return runTexture; }
     SDL_Texture* getJumpTexture() const { return jumpTexture; }
+
+    // Di chuyen theo tung truc, dung cho va cham tach truc trong sceneMain
+    void moveX(float deltaTime) { setX(getX() + velocityX * deltaTime); }
+    void moveY(float deltaTime) { setY(getY() + velocityY * deltaTime); }
+    
     void render(SDL_Renderer* renderer) override;
     void update(float deltaTime) override;
 };

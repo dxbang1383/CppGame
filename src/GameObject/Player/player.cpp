@@ -44,7 +44,6 @@ player::player(double x, double y) : gameObject(x, y, 32.0, 32.0) {
 player::player() : player(0.0, 0.0, 32.0, 32.0) {}
 
 void player::update(float deltaTime) {
-
    
     velocityX = 0.0;
     if (isMovingLeft) {
@@ -161,45 +160,5 @@ void player::render(SDL_Renderer* renderer) {
     }
 }
 
-// Getters & Setters
-int player::getDirection() { return direction; }
-void player::setDirection(int d) { if (d != 0) direction = (d > 0) ? 1 : -1; }
-void player::setSpeed(double speed) { this->speed = speed; }
-void player::setOnGround(bool grounded) { this->onGround = grounded; }
-bool player::isOnGround() const { return onGround; }
-void player::setMovingLeft(bool left) {
-    isMovingLeft = left;
-    //isMovingRight = !left;
-}
-double player::getVelocityX() {
-    return velocityX;
-}
 
-double player::getVelocityY() {
-    return velocityY;
-}
 
-void player::setMovingRight(bool right) {
-    isMovingRight = right;
-    //isMovingLeft = !right;
-}
-void player::setVelocityX(double x) {
-    velocityX = x;
-}
-void player::setVelocityY(double y) {
-    velocityY = y;
-}
-
-double player::getJumpForce() {
-    return jumpForce;
-}
-
-double player::getVelocityX() const { return velocityX; }
-double player::getVelocityY() const { return velocityY; }
-
-void player::moveX(float deltaTime) {
-    setX(getX() + velocityX * deltaTime);
-}
-void player::moveY(float deltaTime) {
-    setY(getY() + velocityY * deltaTime);
-}

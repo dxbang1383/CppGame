@@ -12,7 +12,9 @@ public:
 	
 	void render(SDL_Renderer* renderer) {
 		SDL_Texture* tex = getTexture();
-		SDL_FRect* pRect = getRect();
+		// getRenderRect() = toa do MAN HINH (da qua camera),
+		// getRect() la toa do THE GIOI -> dung getRect thi thang khong troi theo camera
+		SDL_FRect* pRect = getRenderRect();
 		if (tex != nullptr) {
 			SDL_RenderTexture(renderer, tex, nullptr, pRect);
 		}
