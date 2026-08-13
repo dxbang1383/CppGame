@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include <SDL3/SDL.h>
+#include <iostream>
 #include "../src/GameObject/gameObject.h"
 
 
@@ -44,7 +45,7 @@ private:
     // Trạng thái cầu thang
     bool isClimbing = false;
     bool isTouchingLadder = false;
-    float climbSpeed = 150.0f;
+    float climbSpeed = 300.0f;
 
 public:
     // Constructor
@@ -85,6 +86,11 @@ public:
     SDL_Texture* getIdleTexture() const { return idleTexture; }
     SDL_Texture* getRunTexture() const { return runTexture; }
     SDL_Texture* getJumpTexture() const { return jumpTexture; }
+    void updateState();
+    // hàm này chỉ cập nhật hcn vị trí in ảnh 
+    void updateAnimation(float deltaTime);
+    void updateVelocityX(float deltaTime);
+    void updateVelocityY(float deltaTime);
 
     // Di chuyen theo tung truc, dung cho va cham tach truc trong sceneMain
     void moveX(float deltaTime) { setX(getX() + velocityX * deltaTime); }

@@ -4,7 +4,7 @@
 sceneMain::sceneMain() {
     // Map da tu dung san trong constructor cua no
     int ladderCol = 10;
-    for (int row = 9; row <= 13; row++) {
+    for (int row = -3; row <= 9; row++) {
         ladders.emplace_back(ladderCol * platform::TILE_SIZE,
             row * platform::TILE_SIZE,
             platform::TILE_SIZE, platform::TILE_SIZE);
@@ -61,21 +61,22 @@ void sceneMain::render(SDL_Renderer* renderer) {
 }
 
 bool sceneMain::overlaps(platform& p) {
-    return map.getPlayer().getX() < p.getX() + p.getWidth()
-        && map.getPlayer().getX() + map.getPlayer().getWidth() > p.getX()
-        && map.getPlayer().getY() < p.getY() + p.getHeight()
-        && map.getPlayer().getY() + map.getPlayer().getHeight() > p.getY();
+    return map.getPlayer().getX() <= p.getX() + p.getWidth()
+        && map.getPlayer().getX() + map.getPlayer().getWidth() >= p.getX()
+        && map.getPlayer().getY() <= p.getY() + p.getHeight()
+        && map.getPlayer().getY() + map.getPlayer().getHeight() >= p.getY();
 }
 
 bool sceneMain::overlapsLadder(ladder& l) {
     player& p = map.getPlayer();
-    return p.getX() < l.getX() + l.getWidth()
-        && p.getX() + p.getWidth() > l.getX()
-        && p.getY() < l.getY() + l.getHeight()
-        && p.getY() + p.getHeight() > l.getY();
+    return p.getX() <= l.getX() + l.getWidth()
+        && p.getX() + p.getWidth() >= l.getX()
+        && p.getY() <= l.getY() + l.getHeight()
+        && p.getY() + p.getHeight() >= l.getY();
 }
 
 void sceneMain::handleCollision(float deltaTime) {
+
     player& p = map.getPlayer();
 
     bool onAnyGround = false;
@@ -156,6 +157,7 @@ void sceneMain::handleInput(const SDL_Event& event) {
         case SDLK_UP:
             if (map.getPlayer().IsTouchingLadder()) {
                 map.getPlayer().setIsClimbing(true);
+                map.getPlayer().setOnGround(false);
                 map.getPlayer().setMovingUp(true);
             } else if (map.getPlayer().isOnGround()) {
                 map.getPlayer().setVelocityY(-map.getPlayer().getJumpForce());
@@ -166,7 +168,7 @@ void sceneMain::handleInput(const SDL_Event& event) {
         case SDLK_DOWN:
             if (map.getPlayer().IsTouchingLadder()) {
                 map.getPlayer().setIsClimbing(true);
-                map.getPlayer().setMovingUp(true);
+                map.getPlayer().setMovingDown(true);
             }
             break;
         }
@@ -181,6 +183,19 @@ void sceneMain::handleInput(const SDL_Event& event) {
         case SDLK_D:
         case SDLK_RIGHT:
             map.getPlayer().setMovingRight(false);
+            break;
+        case SDLK_SPACE:
+        case SDLK_W:
+        case SDLK_UP:
+            if (map.getPlayer().IsTouchingLadder()) {
+                map.getPlayer().setMovingUp(false);
+            }
+            break;
+        case SDLK_S:
+        case SDLK_DOWN:
+            if (map.getPlayer().IsTouchingLadder()) {
+                map.getPlayer().setMovingDown(false);
+            }
             break;
         }
     }

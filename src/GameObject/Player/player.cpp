@@ -44,51 +44,48 @@ player::player(double x, double y) : gameObject(x, y, 32.0, 32.0) {
 player::player() : player(0.0, 0.0, 32.0, 32.0) {}
 
 void player::update(float deltaTime) {
-
-    velocityX = 0.0;
-    if (isMovingLeft) {
-        velocityX = - speed;
-    }
-    if (isMovingRight) {
-        velocityX += speed;
-    }
-    if (!isTouchingLadder) {
-        isClimbing = false;
-    }
-
-    if (isClimbing) {
-        velocityY = 0.0;
-
-        if (isMovingUp) {
-            velocityY = -climbSpeed;
-        }
-        else if (isMovingDown) {
-            velocityY = climbSpeed;
-        }
-
-        setX(getX() + velocityX * deltaTime);
-        setY(getY() + velocityY * deltaTime);
-
-        if (velocityX != 0 || velocityY != 0) {
-
-        }
-        return;
-    }
-
-    // Áp dụng Trọng lực trước khi xét State
-    if (!onGround) {
-        velocityY += gravity * deltaTime;
-    }
-    else {
-        if (velocityY > 0) velocityY = 0.0;
-    }
-
-    //Cập nhật vị trí
+    updateVelocityX(deltaTime);
     setX(getX() + velocityX * deltaTime);
+
+    updateVelocityY(deltaTime);
     setY(getY() + velocityY * deltaTime);
 
+    //std::cout << isOnGround() << " " << std::endl;
+    //std::cout << IsTouchingLadder() << " " << getIsClimbing() << std::endl;
 
-    if (!onGround && abs(velocityY) > 1.0) {
+    updateState();
+    updateAnimation(deltaTime);
+}
+
+void player::render(SDL_Renderer* renderer) {
+    if (renderer == nullptr) return;
+
+    SDL_Texture* tex = getTexture();
+    SDL_FRect* pRect = getRenderRect();
+
+    if (tex != nullptr) {
+        SDL_FRect srcRect = {
+            (float)(currentFrame * frameWidth),
+            (float)(aniRow * frameHeight),
+            (float)(frameWidth),
+            (float)(frameHeight)
+        };
+        if (getDirection() == 1) {
+            SDL_RenderTextureRotated(renderer, tex, &srcRect, pRect, 0.0, nullptr, SDL_FLIP_HORIZONTAL);
+        }
+        else {
+            SDL_RenderTexture(renderer, tex, &srcRect, pRect);
+        }
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_RenderFillRect(renderer, pRect);
+    }
+}
+
+void player::updateState() {
+    // không trên mặt đất
+    if (!onGround ) {
         if (currentState != PlayerState::STATE_JUMP) {
             currentState = PlayerState::STATE_JUMP;
             setTexture(jumpTexture);
@@ -98,6 +95,7 @@ void player::update(float deltaTime) {
             frameTime = 0.1f;
         }
     }
+    // nếu trên mặt đất
     else {
         if (velocityX == 0.0) {
             if (currentState != PlayerState::STATE_IDLE) {
@@ -120,8 +118,10 @@ void player::update(float deltaTime) {
             }
         }
     }
+}
 
-    //Cập nhật animation Frame 
+void player::updateAnimation(float deltaTime) {
+    //Cập nhật animation Frame ( theo state)
     frameTimer += deltaTime;
     if (frameTimer >= frameTime) {
         frameTimer -= frameTime;
@@ -132,29 +132,32 @@ void player::update(float deltaTime) {
     }
 }
 
-void player::render(SDL_Renderer* renderer) {
-    if (renderer == nullptr) return;
+void player::updateVelocityX(float deltaTime) {
+    velocityX = 0.0;
+    if (isMovingLeft) {
+        velocityX = -speed;
+    }
+    if (isMovingRight) {
+        velocityX += speed;
+    }
+}
 
-    SDL_Texture* tex = getTexture();
-    SDL_FRect* pRect = getRenderRect();
-
-    if (tex != nullptr) {
-        SDL_FRect srcRect = {
-            (float)(currentFrame * frameWidth),
-            (float)(aniRow * frameHeight),
-            (float)(frameWidth),
-            (float)(frameHeight)
-        };
-        if (getDirection() == -1) {
-            SDL_RenderTextureRotated(renderer, tex, &srcRect, pRect, 0.0, nullptr, SDL_FLIP_HORIZONTAL);
+void player::updateVelocityY(float deltaTime) {
+    // update theo phương y 
+    if (getIsClimbing() || isOnGround()) {
+        // nếu đang trèo hoặc trên mặt đất thì không bị ảnh hưởng trọng lực 
+        if (isOnGround()) {
+            setVelocityY(0.0f);
         }
+        // nếu trên thang thì ảnh hưởng bởi input ng chơi
         else {
-            SDL_RenderTexture(renderer, tex, &srcRect, pRect);
+            velocityY = 0;
+            if (isMovingUp) setVelocityY(velocityY + -abs(climbSpeed));
+            if (isMovingDown) setVelocityY(velocityY + abs(climbSpeed));
         }
     }
     else {
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(renderer, pRect);
+        setVelocityY(velocityY + gravity * deltaTime);
     }
 }
 
