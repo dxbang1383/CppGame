@@ -1,6 +1,7 @@
 #include <SDL3/SDL.h>
 #include <iostream>
 
+#include "../src/Scene/sceneMenu.h"
 #include "../src/Scene/sceneMain.h"
 #include "../src/Scene/sceneEditor.h"
 
@@ -16,16 +17,18 @@ int main(int argc, char* argv[])
     bool running = true;
 
     // 
+    sceneMenu menuScene = sceneMenu();
     sceneMain mainScene = sceneMain();
     sceneEditor editorScene = sceneEditor();
 
-    scene *thisScene = &mainScene;
+    scene *thisScene = &menuScene;
 
     SDL_Event event;
     
     Uint64 last = SDL_GetTicks();
     
     // Khoi tao scene
+    menuScene.preLoad(renderer);
     mainScene.preLoad(renderer);
     editorScene.preLoad(renderer);
     
@@ -47,6 +50,14 @@ int main(int argc, char* argv[])
 
                 thisScene->handleInput(event);
             }
+        }
+
+        if (thisScene == &menuScene) {
+            int a = menuScene.getAction();
+            if (a == MENU_PLAY)        { thisScene = &mainScene;   menuScene.resetAction(); }
+            else if (a == MENU_EDITOR) { thisScene = &editorScene; menuScene.resetAction(); }
+            else if (a == MENU_QUIT)   { running = false; }
+            else if (a == MENU_GUIDE)  { menuScene.resetAction(); }
         }
 
         // update vi tri chuan bi in ra man
