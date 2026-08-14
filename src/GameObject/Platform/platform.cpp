@@ -39,8 +39,13 @@ platform::platform(int m, int n, std::string type, int srcX, int srcY, std::stri
 	setType(type);
 
 	typeFrame = animationType;
+	if (animationType == "x++" || animationType == "y++") {
+		animationEnable = true;
+	}
+	else {
+		animationEnable = false;
+	}
 
-	animationEnable = true;
 }
 
 std::string platform::platform::getType() {
@@ -52,31 +57,26 @@ void platform::setType(std::string t) {
 }
 
 void platform::render(SDL_Renderer *renderer) {
-	if (srcRect.w == 0 || srcRect.h == 0) 
-	{
-		SDL_RenderTexture(renderer, getTexture(), nullptr, getRenderRect());
-	}
-	else 
-	{
-		SDL_FRect temp = srcRect;
+	
+	SDL_FRect temp = srcRect;
 
-		if (animationEnable == true) {
+	if (animationEnable == true) {
 			
-			if (frame == 1) {
-				// chon hinh chu nhat mac dinh
+		if (frame == 1) {
+			// chon hinh chu nhat mac dinh
+		}
+		else {
+			if (typeFrame == "x++") {
+				temp.x = temp.x + TILE_MAP;
 			}
-			else {
-				if (typeFrame == "x++") {
-					temp.x = temp.x + TILE_MAP;
-				}
-				else if (typeFrame == "y++") {
-					temp.y = temp.y + TILE_MAP;
-				}
+			else if (typeFrame == "y++") {
+				temp.y = temp.y + TILE_MAP;
 			}
 		}
-
-		SDL_RenderTexture(renderer, getTexture(), &temp, getRenderRect());
 	}
+
+	SDL_RenderTexture(renderer, getTexture(), &temp, getRenderRect());
+
 }
 
 void platform::update(float deltaTime){

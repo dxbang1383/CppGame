@@ -78,7 +78,9 @@ void Map::addTextures(SDL_Renderer* renderer) {
 /// <returns> true nếu xóa được một cái gì đó </returns>
 bool Map::eraseAt(int col, int row, TileLayer layer ) {
     // platform 
-    if (layer == TileLayer::LAYER_PLATFORM) {
+    if (layer == TileLayer::LAYER_PLATFORM 
+        || layer == TileLayer::LAYER_PLATFORM_XPP
+        || layer == TileLayer::LAYER_PLATFORM_YPP) {
         for (int i = (int)plat.size() - 1; i >= 0; i--) {
             platform& p = plat[i];
 
@@ -93,7 +95,9 @@ bool Map::eraseAt(int col, int row, TileLayer layer ) {
         }
     }
     // decor
-    else if (layer == TileLayer::LAYER_DECOR) {
+    else if (layer == TileLayer::LAYER_DECOR
+            || layer == TileLayer::LAYER_DECOR_XPP
+            || layer == TileLayer::LAYER_DECOR_YPP) {
         for (int i = (int)decorList.size() - 1; i >= 0; i--) {
             decor& d = decorList[i];
 

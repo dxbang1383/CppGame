@@ -134,15 +134,31 @@ void sceneEditor::handleInput(const SDL_Event& event) {
             int row = map.yScreenToRow(mouseClickY);
 
             if (event.button.button == SDL_BUTTON_LEFT) {
-                if (tileMap.getLayer() == TileLayer::LAYER_PLATFORM) {
-                    map.addPlatform(col, row,
-                        tileMap.getType(), 
+                TileLayer layer = tileMap.getLayer();
+
+                if (layer == TileLayer::LAYER_PLATFORM) {
+                    map.addPlatform(col, row, tileMap.getType(),
                         tileMap.getSrcX(), tileMap.getSrcY(), "-");
                 }
-                else if (tileMap.getLayer() == TileLayer::LAYER_DECOR) {
-                    map.addDecor(col, row,
-                        tileMap.getType(), 
+                else if (layer == TileLayer::LAYER_PLATFORM_XPP) {
+                    map.addPlatform(col, row, tileMap.getType(),
+                        tileMap.getSrcX(), tileMap.getSrcY(), "x++");
+                }
+                else if (layer == TileLayer::LAYER_PLATFORM_YPP) {
+                    map.addPlatform(col, row, tileMap.getType(),
+                        tileMap.getSrcX(), tileMap.getSrcY(), "y++");
+                }
+                else if (layer == TileLayer::LAYER_DECOR) {
+                    map.addDecor(col, row, tileMap.getType(),
                         tileMap.getSrcX(), tileMap.getSrcY(), "-");
+                }
+                else if (layer == TileLayer::LAYER_DECOR_XPP) {
+                    map.addDecor(col, row, tileMap.getType(),
+                        tileMap.getSrcX(), tileMap.getSrcY(), "x++");
+                }
+                else if (layer == TileLayer::LAYER_DECOR_YPP) {
+                    map.addDecor(col, row, tileMap.getType(),
+                        tileMap.getSrcX(), tileMap.getSrcY(), "y++");
                 }
             }
 
@@ -172,6 +188,30 @@ void sceneEditor::handleInput(const SDL_Event& event) {
                 break;
             case SDLK_L:
                 map.save(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
+                break;
+            case SDLK_0:
+                tileMap.setLayer(TileLayer::LAYER_PLATFORM);
+                std::cout << "p -" << std::endl;
+                break;
+            case SDLK_1:
+                tileMap.setLayer(TileLayer::LAYER_DECOR);
+                std::cout << "d -" << std::endl;
+                break;
+            case SDLK_2:
+                tileMap.setLayer(TileLayer::LAYER_PLATFORM_XPP);
+                std::cout << "p x++" << std::endl;
+                break;
+            case SDLK_3:
+                tileMap.setLayer(TileLayer::LAYER_DECOR_XPP);
+                std::cout << "d x++" << std::endl;
+                break;
+            case SDLK_4:
+                tileMap.setLayer(TileLayer::LAYER_PLATFORM_YPP);
+                std::cout << "p y++" << std::endl;
+                break;
+            case SDLK_5:
+                tileMap.setLayer(TileLayer::LAYER_DECOR_YPP);
+                std::cout << "d y++" << std::endl;
                 break;
             }
         }

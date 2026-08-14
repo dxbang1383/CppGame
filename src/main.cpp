@@ -63,8 +63,6 @@ int main(int argc, char* argv[])
         // hien thi
         SDL_RenderPresent(renderer);
 
-        
-
     }
 
     SDL_DestroyWindow(window);
