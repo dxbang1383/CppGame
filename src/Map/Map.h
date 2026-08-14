@@ -12,7 +12,9 @@
 #include "../GameObject/Player/player.h"
 #include "../GameObject/Platform/decor.h"
 #include "../engine/resourceManager.h"
-
+#include "../engine/UI/Palette.h"
+#include <fstream>   // std::ofstream, std::ifstream
+#include <sstream>   // std::istringstream
 
 class Map {
 private:
@@ -46,11 +48,11 @@ public:
     void addTextures(SDL_Renderer* renderer);
 
     // sửa map (editor dùng)
-    void addPlatform(int col, int row, const std::string& texKey, int srcX, int srcY);
-    void addDecor(int col, int row, const std::string& texKey, int srcX, int srcY);
-    void addEnemy(int col, int row, const std::string& texKey, int srcX, int srcY);
+    void addPlatform(int col, int row, std::string texKey, int srcX, int srcY, std::string animType);
+    void addDecor(int col, int row, std::string texKey, int srcX, int srcY, std::string animType);
+    void addEnemy(int col, int row, std::string texKey, int srcX, int srcY);
 
-    bool eraseAt(int col, int row, char layer);
+    bool eraseAt(int col, int row, TileLayer layer);
 
     void setStart(int col, int row) {
         this->startCol = col;
@@ -69,8 +71,14 @@ public:
     float getStartX() const { return startCol * platform::TILE_SIZE; }
     float getStartY() const { return startRow * platform::TILE_SIZE; }
     camera& getCam() { return cam; }
-
+    int xScreenToCol(float mouseClickX) {
+        return floor(cam.xScreenToWorld(mouseClickX) / platform::TILE_SIZE);
+    }
+    int yScreenToRow(float mouseClickY) {
+        return floor(cam.yScreenToWorld(mouseClickY) / platform::TILE_SIZE);
+    }
     void updateRenderRect();
+    
     void addTile();
     bool isDirty() const { return dirty; }
 

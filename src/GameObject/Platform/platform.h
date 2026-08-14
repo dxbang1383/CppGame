@@ -14,7 +14,7 @@ private:
 	float timeFrame = 0.25f;
 	float time = 0.0f;
 	int frame = 1;
-	std::string typeFrame = "";
+	std::string typeFrame = "-";
 public:
 	static constexpr float TILE_SIZE = 36;
 	static constexpr float TILE_MAP = 18;
@@ -30,6 +30,12 @@ public:
 	void setSrcRect(SDL_FRect rect) {
 		srcRect = rect;
 	}
+
+	std::string getTypeFrame() { return typeFrame; }
+	int getCol() { return (int)getX() / TILE_SIZE; }
+	int getRow() { return (int)getY() / TILE_SIZE; }
+	int getSrcX() { return srcRect.x / TILE_MAP; }
+	int getSrcY() { return srcRect.y / TILE_MAP; }
 
 	void update(float deltaTime);
 	void render(SDL_Renderer* renderer) override;

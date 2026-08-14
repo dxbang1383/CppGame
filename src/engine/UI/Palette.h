@@ -6,6 +6,11 @@
 #include <string>
 #include "SDL3/SDL.h"
 #include "SDL3_image/SDL_image.h"
+enum class TileLayer {
+	LAYER_PLATFORM,
+	LAYER_DECOR,
+	LAYER_ENEMY
+};
 
 class Palette {
 private:
@@ -16,7 +21,7 @@ private:
 	SDL_FRect texRect;
 	std::string type; // type la ma map dung de cap nhat texture
 	bool gridState = true; // co in grid hay khong
-	int typeTile = 1; // 1 platform , 2 decor ( bien nay luu kieu cua tile hien tai de them vao map )
+	TileLayer selectedLayer = TileLayer::LAYER_PLATFORM;
 	int srcX, srcY;
 
 public:
@@ -32,10 +37,12 @@ public:
 	SDL_Texture* getTexture() { return tex; }
 	SDL_FRect* getTexRect() { return &texRect; }
 	std::string getType() { return type; }
-	int getTypeTile() { return typeTile; }
+	// trả về dạng tile được thêm 
+	TileLayer getLayer() { return selectedLayer; } 
 	int getSrcX() { return srcX; }
 	int getSrcY() { return srcY; }
 
+	void setLayer(TileLayer layer) { selectedLayer = layer; }
 	void setX(float x) { this->x = x; }
 	void setY(float y) { this->y = y; }
 	void setWidth(float width) { this->width = width; }

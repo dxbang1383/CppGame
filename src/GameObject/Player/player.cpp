@@ -44,6 +44,7 @@ player::player(double x, double y) : gameObject(x, y, 32.0, 32.0) {
 player::player() : player(0.0, 0.0, 32.0, 32.0) {}
 
 void player::update(float deltaTime) {
+
     updateVelocityX(deltaTime);
     setX(getX() + velocityX * deltaTime);
 
@@ -55,32 +56,6 @@ void player::update(float deltaTime) {
 
     updateState();
     updateAnimation(deltaTime);
-}
-
-void player::render(SDL_Renderer* renderer) {
-    if (renderer == nullptr) return;
-
-    SDL_Texture* tex = getTexture();
-    SDL_FRect* pRect = getRenderRect();
-
-    if (tex != nullptr) {
-        SDL_FRect srcRect = {
-            (float)(currentFrame * frameWidth),
-            (float)(aniRow * frameHeight),
-            (float)(frameWidth),
-            (float)(frameHeight)
-        };
-        if (getDirection() == 1) {
-            SDL_RenderTextureRotated(renderer, tex, &srcRect, pRect, 0.0, nullptr, SDL_FLIP_HORIZONTAL);
-        }
-        else {
-            SDL_RenderTexture(renderer, tex, &srcRect, pRect);
-        }
-    }
-    else {
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(renderer, pRect);
-    }
 }
 
 void player::updateState() {
@@ -161,5 +136,28 @@ void player::updateVelocityY(float deltaTime) {
     }
 }
 
+void player::render(SDL_Renderer* renderer) {
+    if (renderer == nullptr) return;
 
+    SDL_Texture* tex = getTexture();
+    SDL_FRect* pRect = getRenderRect();
 
+    if (tex != nullptr) {
+        SDL_FRect srcRect = {
+            (float)(currentFrame * frameWidth),
+            (float)(aniRow * frameHeight),
+            (float)(frameWidth),
+            (float)(frameHeight)
+        };
+        if (getDirection() == 1) {
+            SDL_RenderTextureRotated(renderer, tex, &srcRect, pRect, 0.0, nullptr, SDL_FLIP_HORIZONTAL);
+        }
+        else {
+            SDL_RenderTexture(renderer, tex, &srcRect, pRect);
+        }
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_RenderFillRect(renderer, pRect);
+    }
+}  

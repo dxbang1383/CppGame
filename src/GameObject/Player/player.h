@@ -6,7 +6,7 @@
 #include "../src/GameObject/gameObject.h"
 
 
-enum PlayerState {
+enum class PlayerState {
     STATE_IDLE,
     STATE_RUN,
     STATE_JUMP

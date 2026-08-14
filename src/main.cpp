@@ -10,6 +10,7 @@ int main(int argc, char* argv[])
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window* window = SDL_CreateWindow("Game", scene::SCREEN_WIDTH, scene::SCREEN_HEIGHT, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, nullptr);
+    SDL_SetRenderVSync(renderer, 1);
 
    
     // Bien vong lap
@@ -62,12 +63,7 @@ int main(int argc, char* argv[])
         // hien thi
         SDL_RenderPresent(renderer);
 
-        // gioi han 60 fps
-        const Uint64 targetFrameTime = 1000 / 60;
-        Uint64 frameTime = SDL_GetTicks() - now;
-        if (frameTime < targetFrameTime) {
-            SDL_Delay((Uint32)(targetFrameTime - frameTime));
-        }
+        
 
     }
 

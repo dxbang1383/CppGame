@@ -72,3 +72,5 @@ add_custom_command(TARGET CppGame POST_BUILD
     "${PROJECT_SOURCE_DIR}/assets"
     "$<TARGET_FILE_DIR:CppGame>/assets"
 )
+
+target_compile_definitions(CppGame PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")

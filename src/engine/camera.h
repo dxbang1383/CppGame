@@ -31,8 +31,6 @@ public :
     float xScreenToWorld(float xS) const;
     float yScreenToWorld(float yS) const;
 
-
-
     void setPosition(float nx, float ny);
     void setScale(float s);
     void moveLeft();

@@ -125,9 +125,9 @@ void gameObject::udpRect() {
 	rect.h = height;
 }
 
-void gameObject::updRenderRect(const camera &cam) {
-	renderRect.x = cam.xWorldToScreen(x);
-	renderRect.y = cam.yWorldToScreen(y);
+void gameObject::updRenderRect(const camera& cam) {
+	renderRect.x = SDL_roundf(cam.xWorldToScreen(x));
+	renderRect.y = SDL_roundf(cam.yWorldToScreen(y));
 	renderRect.w = rect.w * cam.getScale();
 	renderRect.h = rect.h * cam.getScale();
 }

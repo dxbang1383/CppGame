@@ -125,35 +125,38 @@ void sceneEditor::handleInput(const SDL_Event& event) {
                 map.getCam().zoomOut();
             }
         }
+
         else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
             float mouseClickX = event.button.x;
             float mouseClickY = event.button.y;
+
+            int col = map.xScreenToCol(mouseClickX);
+            int row = map.yScreenToRow(mouseClickY);
+
             if (event.button.button == SDL_BUTTON_LEFT) {
-                std::cout << "Nhan chuot trai: " << mouseClickX << " " << mouseClickY << std::endl;
-
-                int convertX = floor(map.getCam().xScreenToWorld(mouseClickX) / platform::TILE_SIZE);
-                int convertY = floor(map.getCam().yScreenToWorld(mouseClickY) / platform::TILE_SIZE);
-
-                    std::cout << "Chuyen ve (x,y) trong he toa do la :"
-                    << convertX
-                    << " " << convertY << std::endl;
-                    if (tileMap.getTypeTile() == 1) {
-                        map.getPlatforms().emplace_back(convertX, convertY, tileMap.getType(), tileMap.getSrcX(), tileMap.getSrcY());
-                        map.getPlatforms().back().setTexture(resourceManager::getTexture(rend, tileMap.getType()));
-                    }
+                if (tileMap.getLayer() == TileLayer::LAYER_PLATFORM) {
+                    map.addPlatform(col, row,
+                        tileMap.getType(), 
+                        tileMap.getSrcX(), tileMap.getSrcY(), "-");
+                }
+                else if (tileMap.getLayer() == TileLayer::LAYER_DECOR) {
+                    map.addDecor(col, row,
+                        tileMap.getType(), 
+                        tileMap.getSrcX(), tileMap.getSrcY(), "-");
+                }
             }
+
             else if (event.button.button == SDL_BUTTON_RIGHT) {
                 std::cout << "Nhan chuot phai: " << mouseClickX << " " << mouseClickY << std::endl;
-                int eRow = floor(map.getCam().xScreenToWorld(mouseClickX) / platform::TILE_SIZE);
-                int eCol = floor(map.getCam().yScreenToWorld(mouseClickY) / platform::TILE_SIZE);
                 
-                if (map.eraseAt(eRow, eCol, 'P')) {
-                    std::cout << "xoa 1 tile";
+                if (map.eraseAt(col, row, tileMap.getLayer())) {
+                    std::cout << "xoa 1 tile" << std::endl;
                 }
                 else {
-                    std::cout << "Khong xoa gi ca";
+                    std::cout << "Khong xoa gi ca" << std::endl;
                 }
             }
+
         }
     }
 
@@ -166,6 +169,9 @@ void sceneEditor::handleInput(const SDL_Event& event) {
                 break;
             case SDLK_F3:
                 rendergrid = !rendergrid;
+                break;
+            case SDLK_L:
+                map.save(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
                 break;
             }
         }

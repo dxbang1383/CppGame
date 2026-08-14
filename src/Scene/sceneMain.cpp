@@ -171,7 +171,11 @@ void sceneMain::handleInput(const SDL_Event& event) {
                 map.getPlayer().setMovingDown(true);
             }
             break;
+        case SDLK_L:
+            map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
+            break;
         }
+
     }
 
     else if (event.type == SDL_EVENT_KEY_UP) {
