@@ -4,17 +4,20 @@
 #include "../src/Scene/sceneMenu.h"
 #include "../src/Scene/sceneMain.h"
 #include "../src/Scene/sceneEditor.h"
+#include "../src/engine/soundManager.h"
 
 int main(int argc, char* argv[])
 {
     // Khoi tao sdl
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     SDL_Window* window = SDL_CreateWindow("Game", scene::SCREEN_WIDTH, scene::SCREEN_HEIGHT, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, nullptr);
 
-   
+    soundManager::init();
+
     // Bien vong lap
     bool running = true;
+    bool musicOn = false;
 
     // 
     sceneMenu menuScene = sceneMenu();
@@ -43,6 +46,11 @@ int main(int argc, char* argv[])
             }
 
             else {
+                if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
+                    && event.button.button == SDL_BUTTON_LEFT) {
+                    soundManager::playEffect("click");
+                }
+
                 if (event.type == SDL_EVENT_KEY_DOWN) {
                     if (event.key.key == SDLK_F1) { thisScene = &mainScene;   continue; }
                     if (event.key.key == SDLK_F2) { thisScene = &editorScene; continue; }
@@ -60,8 +68,14 @@ int main(int argc, char* argv[])
             else if (a == MENU_GUIDE)  { menuScene.resetAction(); }
         }
 
+        bool inGame = (thisScene == &mainScene || thisScene == &editorScene);
+        if (inGame && !musicOn) { soundManager::playMusic("bgm"); musicOn = true; }
+        else if (!inGame && musicOn) { soundManager::stopMusic(); musicOn = false; }
+
         // update vi tri chuan bi in ra man
         thisScene->update(dt);
+
+        soundManager::update();
 
         // xoa man hinh cu
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
@@ -81,6 +95,8 @@ int main(int argc, char* argv[])
         }
 
     }
+
+    soundManager::clearAll();
 
     SDL_DestroyWindow(window);
 
