@@ -34,6 +34,8 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     // Thang
     SDL_Texture* ladTex = resourceManager::getTexture(renderer, "ladder");
     for (ladder& l : ladders) l.setTexture(ladTex);
+
+    map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
 }
 
 void sceneMain::update(float deltaTime) {

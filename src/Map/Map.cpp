@@ -1,34 +1,6 @@
 #include "Map.h"
 
 Map::Map() : mainPlayer(100.0, 100.0, 50.0, 50.0) {
-    for (int x = 0; x < 26; x++)
-        plat.emplace_back(x, 14, "map1", 2, 4);
-
-    plat.emplace_back(3, 13, "map1", 2, 4);
-    plat.emplace_back(4, 12, "map1", 2, 4);
-    plat.emplace_back(5, 11, "map1", 2, 4);
-    plat.emplace_back(6, 10, "map1", 2, 4);
-
-    for (int x = 6; x <= 12; x++)
-        plat.emplace_back(x, 10, "map1", 2, 4);
-
-    plat.emplace_back(13, 9, "map1", 2, 4);
-    plat.emplace_back(14, 8, "map1", 14, 1, "x++");
-    plat.emplace_back(14, 9, "map1", 14, 2, "x++");
-    plat.emplace_back(14, 10, "map1", 14, 2, "x++");
-    decorList.emplace_back(9, 9, "map1", 11, 7, "x++");
-    plat.emplace_back(15, 7, "map1", 2, 4);
-
-    for (int x = 15; x <= 21; x++)
-        plat.emplace_back(x, 7, "map1", 2, 4);
-
-    plat.emplace_back(22, 8, "map1", 2, 4);
-    plat.emplace_back(23, 9, "map1", 2, 4);
-    plat.emplace_back(24, 10, "map1", 2, 4);
-
-    for (int x = 21; x <= 25; x++)
-        plat.emplace_back(x, 11, "map1", 2, 4);
-
     SDL_srand(0);
     double ex = 100.0 + SDL_rand(700);
     double ey = 50.0 + SDL_rand(250);

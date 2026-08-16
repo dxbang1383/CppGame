@@ -12,6 +12,7 @@ sceneEditor::~sceneEditor() {
 void sceneEditor::preLoad(SDL_Renderer* renderer) {
     tileMap.setTexture(resourceManager::getTexture(renderer, tileMap.getType()));
     map.addTextures(renderer);
+    map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
 }
 
 // cập nhật mỗi vòng lặp 
@@ -189,27 +190,27 @@ void sceneEditor::handleInput(const SDL_Event& event) {
             case SDLK_L:
                 map.save(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
                 break;
-            case SDLK_0:
+            case SDLK_1:
                 tileMap.setLayer(TileLayer::LAYER_PLATFORM);
                 std::cout << "p -" << std::endl;
                 break;
-            case SDLK_1:
+            case SDLK_2:
                 tileMap.setLayer(TileLayer::LAYER_DECOR);
                 std::cout << "d -" << std::endl;
                 break;
-            case SDLK_2:
+            case SDLK_3:
                 tileMap.setLayer(TileLayer::LAYER_PLATFORM_XPP);
                 std::cout << "p x++" << std::endl;
                 break;
-            case SDLK_3:
+            case SDLK_4:
                 tileMap.setLayer(TileLayer::LAYER_DECOR_XPP);
                 std::cout << "d x++" << std::endl;
                 break;
-            case SDLK_4:
+            case SDLK_5:
                 tileMap.setLayer(TileLayer::LAYER_PLATFORM_YPP);
                 std::cout << "p y++" << std::endl;
                 break;
-            case SDLK_5:
+            case SDLK_6:
                 tileMap.setLayer(TileLayer::LAYER_DECOR_YPP);
                 std::cout << "d y++" << std::endl;
                 break;

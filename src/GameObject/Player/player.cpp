@@ -9,7 +9,7 @@ player::player(double x, double y, double width, double height)
     this->speed = 300.0;
     this->direction = 1;
     this->gravity = 980.0;
-    this->jumpForce = 450.0;
+    this->jumpForce = 600.0;
     this->onGround = false;
     this->currentFrame = 0;
     this->totalFrame = 2;
@@ -28,7 +28,7 @@ player::player(double x, double y) : gameObject(x, y, 32.0, 32.0) {
     this->speed = 300.0;
     this->direction = 1;
     this->gravity = 980.0;
-    this->jumpForce = 450.0;
+    this->jumpForce = 600.0;
     this->onGround = false;
     this->currentFrame = 0;
     this->totalFrame = 2;

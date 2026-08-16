@@ -20,7 +20,7 @@ private:
     double speed = 300.0; // tốc độ của nhân vật
     int direction = 1; // hướng của nhân vật 
     double gravity = 980.0; // tốc độ của trọng lực
-    double jumpForce = 450.0; // tốc độ nhảy 
+    double jumpForce = 1000.0; // tốc độ nhảy 
     bool onGround = false; // trêm mặt đất hay không 
     // Luu sheet dang lam
     SDL_Texture* idleTexture = nullptr; 
