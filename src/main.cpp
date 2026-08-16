@@ -70,6 +70,13 @@ int main(int argc, char* argv[])
             else if (a == MENU_GUIDE)  { menuScene.resetAction(); }
         }
 
+        if (thisScene == &mainScene) {
+            int a = mainScene.getSceneAction();
+            if (a == SCENE_MENU)        { thisScene = &menuScene; mainScene.resetSceneAction(); }
+            else if (a == SCENE_EDITOR) { thisScene = &editorScene; mainScene.resetSceneAction(); }
+            else if (a == SCENE_QUIT)   { running = false; }
+        }
+
         bool inGame = (thisScene == &mainScene || thisScene == &editorScene);
         if (inGame && !musicOn) { soundManager::playMusic("bgm"); musicOn = true; }
         else if (!inGame && musicOn) { soundManager::stopMusic(); musicOn = false; }

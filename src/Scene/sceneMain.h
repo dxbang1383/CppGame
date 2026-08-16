@@ -13,7 +13,16 @@
 #include "../GameObject/Platform/decor.h"
 #include "../engine/resourceManager.h"
 #include "../engine/camera.h"
+#include "../engine/UI/PauseMenu.h"
+#include "../engine/UI/GameOverMenu.h"
 #include "../Map/Map.h"
+
+enum SceneAction {
+    SCENE_NONE = 0,
+    SCENE_MENU,
+    SCENE_EDITOR,
+    SCENE_QUIT
+};
 
 class sceneMain : public scene {
 private:
@@ -24,6 +33,16 @@ private:
     const float W = 1280.0f, H = 720.0f;
     const int COLS = (int)(W / TILE);
     const int ROWS = (int)(H / TILE);
+
+    bool paused = false;
+    bool lost = false;
+    PauseMenu pauseMenu;
+    GameOverMenu gameOverMenu;
+    float spawnX = 0.0f, spawnY = 0.0f;
+    const float deathY = 2000.0f;
+    int sceneAction = SCENE_NONE;
+
+    void resetPlayer();
 
 public:
     sceneMain();
@@ -37,6 +56,9 @@ public:
     bool overlapsLadder(ladder& l);
     void focusPlayer();
     void switchScene() override;
+
+    int getSceneAction() const { return sceneAction; }
+    void resetSceneAction() { sceneAction = SCENE_NONE; }
 };
 
 #endif // !SCENE_MAIN_H
