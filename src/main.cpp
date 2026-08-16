@@ -77,9 +77,9 @@ int main(int argc, char* argv[])
             else if (a == SCENE_QUIT)   { running = false; }
         }
 
-        bool inGame = (thisScene == &mainScene || thisScene == &editorScene);
-        if (inGame && !musicOn) { soundManager::playMusic("bgm"); musicOn = true; }
-        else if (!inGame && musicOn) { soundManager::stopMusic(); musicOn = false; }
+        bool shouldPlay = (thisScene == &mainScene || thisScene == &editorScene) && !soundManager::isMuted();
+        if (shouldPlay && !musicOn) { soundManager::playMusic("bgm"); musicOn = true; }
+        else if (!shouldPlay && musicOn) { soundManager::stopMusic(); musicOn = false; }
 
         // update vi tri chuan bi in ra man
         thisScene->update(dt);

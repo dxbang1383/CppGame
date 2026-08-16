@@ -4,10 +4,15 @@
 #include <SDL3/SDL.h>
 #include "scene.h"
 #include "../engine/UI/Menu.h"
+#include "../engine/UI/SettingsMenu.h"
 
 class sceneMenu : public scene {
 private:
     Menu menu;
+    SettingsMenu settings;
+
+    SDL_Texture* iconTex = nullptr;
+    SDL_FRect iconBSrc = { 397.0f, 278.0f, 40.0f, 40.0f };
 
 public:
     sceneMenu();

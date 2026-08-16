@@ -15,6 +15,7 @@
 #include "../engine/camera.h"
 #include "../engine/UI/PauseMenu.h"
 #include "../engine/UI/GameOverMenu.h"
+#include "../engine/UI/SettingsMenu.h"
 #include "../Map/Map.h"
 
 enum SceneAction {
@@ -38,9 +39,16 @@ private:
     bool lost = false;
     PauseMenu pauseMenu;
     GameOverMenu gameOverMenu;
+    SettingsMenu settings;
     float spawnX = 0.0f, spawnY = 0.0f;
     const float deathY = 2000.0f;
     int sceneAction = SCENE_NONE;
+
+    SDL_Texture* iconTex = nullptr;
+    SDL_FRect pauseIconSrc = { 545.0f, 337.0f, 40.0f, 40.0f };
+    SDL_FRect resumeIconSrc = { 298.0f, 218.0f, 40.0f, 40.0f };
+    SDL_FRect toggleBtnRect = { 1220.0f, 20.0f, 40.0f, 40.0f };
+    SDL_FRect iconBSrc = { 397.0f, 278.0f, 40.0f, 40.0f };
 
     void resetPlayer();
 

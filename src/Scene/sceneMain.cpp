@@ -38,6 +38,8 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
 
     pauseMenu.preLoad(renderer);
     gameOverMenu.preLoad(renderer);
+    settings.preLoad(renderer);
+    iconTex = resourceManager::getTexture(renderer, "menu");
     spawnX = (float)map.getPlayer().getX();
     spawnY = (float)map.getPlayer().getY();
 }
@@ -54,6 +56,7 @@ void sceneMain::resetPlayer() {
 
 void sceneMain::update(float deltaTime) {
     if (paused || lost) return;
+    settings.close();
 
     for (platform& x : map.getPlatforms()) x.update(deltaTime);
     for (decor& d : map.getDecors())       d.update(deltaTime);
@@ -84,6 +87,18 @@ void sceneMain::render(SDL_Renderer* renderer) {
 
     if (paused) pauseMenu.render(renderer);
     if (lost) gameOverMenu.render(renderer);
+
+    if (!lost) {
+        SDL_RenderTexture(renderer, iconTex, paused ? &resumeIconSrc : &pauseIconSrc, &toggleBtnRect);
+    }
+
+    if (paused || lost) {
+        int base = lost ? 0 : 1;
+        float sx = 1220.0f - base * 50.0f;
+        SDL_FRect rb = { 1220.0f - (base + 1) * 50.0f, 20.0f, 40.0f, 40.0f };
+        SDL_RenderTexture(renderer, iconTex, &iconBSrc, &rb);
+        settings.render(renderer, sx, 20.0f);
+    }
 }
 
 bool sceneMain::overlaps(platform& p) {
@@ -166,6 +181,14 @@ void sceneMain::handleCollision(float deltaTime) {
 
 // xá»­ lÃ½ input 
 void sceneMain::handleInput(const SDL_Event& event) {
+    if ((paused || lost)
+        && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
+        && event.button.button == SDL_BUTTON_LEFT) {
+        int base = lost ? 0 : 1;
+        float sx = 1220.0f - base * 50.0f;
+        if (settings.handleClick(event.button.x, event.button.y, sx, 20.0f)) return;
+    }
+
     if (lost) {
         if (event.type == SDL_EVENT_MOUSE_MOTION) {
             gameOverMenu.handleMouseMove(event.motion.x, event.motion.y);
@@ -180,6 +203,15 @@ void sceneMain::handleInput(const SDL_Event& event) {
             else if (a == GAMEOVER_QUIT)  { sceneAction = SCENE_QUIT; }
             gameOverMenu.resetAction();
         }
+        return;
+    }
+
+    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
+        && event.button.button == SDL_BUTTON_LEFT
+        && event.button.x >= toggleBtnRect.x && event.button.x <= toggleBtnRect.x + toggleBtnRect.w
+        && event.button.y >= toggleBtnRect.y && event.button.y <= toggleBtnRect.y + toggleBtnRect.h) {
+        paused = !paused;
+        pauseMenu.resetAction();
         return;
     }
 

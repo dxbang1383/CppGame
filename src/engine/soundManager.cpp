@@ -13,7 +13,11 @@ SDL_AudioStream* soundManager::musicStream = nullptr;
 Uint8* soundManager::musicBuffer = nullptr;
 Uint32 soundManager::musicLength = 0;
 bool soundManager::musicLoop = false;
+bool soundManager::muted = false;
 std::vector<SDL_AudioStream*> soundManager::effectStreams;
+
+bool soundManager::isMuted() { return muted; }
+void soundManager::toggleMute() { muted = !muted; }
 
 bool soundManager::init() {
     device = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);

@@ -15,6 +15,7 @@ private:
     static Uint8* musicBuffer;
     static Uint32 musicLength;
     static bool musicLoop;
+    static bool muted;
 
     static std::vector<SDL_AudioStream*> effectStreams;
 
@@ -27,6 +28,9 @@ public:
     static void playEffect(const std::string& key);
     static void update();
     static void clearAll();
+
+    static bool isMuted();
+    static void toggleMute();
 };
 
 #endif

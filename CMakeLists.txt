@@ -44,6 +44,8 @@ target_sources(CppGame PRIVATE
      "src/engine/UI/PauseMenu.cpp"
      "src/engine/UI/GameOverMenu.h"
      "src/engine/UI/GameOverMenu.cpp"
+     "src/engine/UI/SettingsMenu.h"
+     "src/engine/UI/SettingsMenu.cpp"
      "src/engine/soundManager.h"
      "src/engine/soundManager.cpp"
      "src/Map/Map.cpp" 
