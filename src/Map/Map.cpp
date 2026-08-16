@@ -1,38 +1,176 @@
 #include "Map.h"
 
 Map::Map() : mainPlayer(100.0, 100.0, 50.0, 50.0) {
-    for (int x = 0; x < 26; x++)
-        plat.emplace_back(x, 14, "map1", 2, 4);
 
-    plat.emplace_back(3, 13, "map1", 2, 4);
-    plat.emplace_back(4, 12, "map1", 2, 4);
-    plat.emplace_back(5, 11, "map1", 2, 4);
-    plat.emplace_back(6, 10, "map1", 2, 4);
+    // =========================================================
+    // GROUND - NỀN MAP
+    // Map rộng 60 ô
+    // =========================================================
 
-    for (int x = 6; x <= 12; x++)
+    for (int x = 0; x < 60; x++) {
+        plat.emplace_back(x, 29, "map1", 2, 4);
+    }
+
+
+    // =========================================================
+    // KHU VỰC 1 - BÊN TRÁI
+    // =========================================================
+
+    for (int x = 2; x <= 8; x++) {
+        plat.emplace_back(x, 25, "map1", 2, 4);
+    }
+
+    for (int x = 4; x <= 10; x++) {
+        plat.emplace_back(x, 21, "map1", 2, 4);
+    }
+
+    for (int x = 7; x <= 13; x++) {
+        plat.emplace_back(x, 17, "map1", 2, 4);
+    }
+
+
+    // =========================================================
+    // KHU VỰC 2 - CẦU THANG
+    // =========================================================
+
+    plat.emplace_back(14, 24, "map1", 2, 4);
+    plat.emplace_back(15, 23, "map1", 2, 4);
+    plat.emplace_back(16, 22, "map1", 2, 4);
+    plat.emplace_back(17, 21, "map1", 2, 4);
+    plat.emplace_back(18, 20, "map1", 2, 4);
+
+
+    // =========================================================
+    // KHU VỰC 3 - PLATFORM DÀI
+    // =========================================================
+
+    for (int x = 18; x <= 27; x++) {
+        plat.emplace_back(x, 20, "map1", 2, 4);
+    }
+
+    for (int x = 21; x <= 25; x++) {
+        plat.emplace_back(x, 16, "map1", 2, 4);
+    }
+
+    for (int x = 25; x <= 31; x++) {
+        plat.emplace_back(x, 12, "map1", 2, 4);
+    }
+
+
+    // =========================================================
+    // KHU VỰC 4 - HỐ VÀ CẦU
+    // =========================================================
+
+    for (int x = 32; x <= 36; x++) {
+        plat.emplace_back(x, 20, "map1", 2, 4);
+    }
+
+    for (int x = 39; x <= 45; x++) {
+        plat.emplace_back(x, 20, "map1", 2, 4);
+    }
+
+    // Cầu phía trên
+    for (int x = 34; x <= 40; x++) {
+        plat.emplace_back(x, 15, "map1", 2, 4);
+    }
+
+
+    // =========================================================
+    // KHU VỰC 5 - PLATFORM CAO
+    // =========================================================
+
+    for (int x = 42; x <= 49; x++) {
+        plat.emplace_back(x, 15, "map1", 2, 4);
+    }
+
+    for (int x = 46; x <= 53; x++) {
         plat.emplace_back(x, 10, "map1", 2, 4);
+    }
 
-    plat.emplace_back(13, 9, "map1", 2, 4);
-    plat.emplace_back(14, 8, "map1", 14, 1, "x++");
-    plat.emplace_back(14, 9, "map1", 14, 2, "x++");
-    plat.emplace_back(14, 10, "map1", 14, 2, "x++");
-    decorList.emplace_back(9, 9, "map1", 11, 7, "x++");
-    plat.emplace_back(15, 7, "map1", 2, 4);
 
-    for (int x = 15; x <= 21; x++)
-        plat.emplace_back(x, 7, "map1", 2, 4);
+    // =========================================================
+    // KHU VỰC 6 - ĐƯỜNG ĐI CUỐI MAP
+    // =========================================================
 
-    plat.emplace_back(22, 8, "map1", 2, 4);
-    plat.emplace_back(23, 9, "map1", 2, 4);
-    plat.emplace_back(24, 10, "map1", 2, 4);
+    for (int x = 50; x <= 58; x++) {
+        plat.emplace_back(x, 20, "map1", 2, 4);
+    }
 
-    for (int x = 21; x <= 25; x++)
-        plat.emplace_back(x, 11, "map1", 2, 4);
+    for (int x = 54; x <= 59; x++) {
+        plat.emplace_back(x, 16, "map1", 2, 4);
+    }
+
+    for (int x = 57; x <= 59; x++) {
+        plat.emplace_back(x, 12, "map1", 2, 4);
+    }
+
+
+    // =========================================================
+    // DECOR
+    // =========================================================
+
+    decorList.emplace_back(
+        10, 16,
+        "map1",
+        11, 7,
+        "x++"
+    );
+
+    decorList.emplace_back(
+        28, 11,
+        "map1",
+        11, 7,
+        "x++"
+    );
+
+    decorList.emplace_back(
+        45, 14,
+        "map1",
+        11, 7,
+        "x++"
+    );
+
+
+    // =========================================================
+    // ENEMY
+    // =========================================================
 
     SDL_srand(0);
-    double ex = 100.0 + SDL_rand(700);
-    double ey = 50.0 + SDL_rand(250);
-    enemies.emplace_back(ex, ey, 40.0, 40.0);
+
+    enemies.emplace_back(
+        500.0,
+        500.0,
+        40.0,
+        40.0
+    );
+
+    enemies.emplace_back(
+        900.0,
+        350.0,
+        40.0,
+        40.0
+    );
+
+    enemies.emplace_back(
+        1400.0,
+        450.0,
+        40.0,
+        40.0
+    );
+
+    enemies.emplace_back(
+        1900.0,
+        300.0,
+        40.0,
+        40.0
+    );
+
+    enemies.emplace_back(
+        2400.0,
+        450.0,
+        40.0,
+        40.0
+    );
 }
 
 void Map::clear() {

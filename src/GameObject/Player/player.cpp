@@ -45,19 +45,21 @@ player::player() : player(0.0, 0.0, 32.0, 32.0) {}
 
 void player::update(float deltaTime) {
 
-    velocityX = 0.0;
+    velocityX = 0.0f;
     if (isMovingLeft) {
-        velocityX = - speed;
+        velocityX -= speed;
+        direction = 1;
     }
     if (isMovingRight) {
         velocityX += speed;
+        direction = -1;
     }
     if (!isTouchingLadder) {
         isClimbing = false;
     }
 
     if (isClimbing) {
-        velocityY = 0.0;
+        velocityY = 0.0f;
 
         if (isMovingUp) {
             velocityY = -climbSpeed;
@@ -80,7 +82,7 @@ void player::update(float deltaTime) {
         velocityY += gravity * deltaTime;
     }
     else {
-        if (velocityY > 0) velocityY = 0.0;
+        if (velocityY > 0) velocityY = 0.0f;
     }
 
     //Cập nhật vị trí
