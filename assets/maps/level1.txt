@@ -245,3 +245,6 @@
 30 13 map1 11 5 x++
 20 6 map1 11 5 x++
 </decor>
+<enemy>
+4 4 flyer 1
+</enemy>

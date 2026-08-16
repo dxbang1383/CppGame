@@ -1,16 +1,14 @@
 #include "Map.h"
 
 Map::Map() : mainPlayer(100.0, 100.0, 50.0, 50.0) {
-    SDL_srand(0);
-    double ex = 100.0 + SDL_rand(700);
-    double ey = 50.0 + SDL_rand(250);
-    enemies.emplace_back(ex, ey, 40.0, 40.0);
+    // Map rong, moi noi dung deu den tu load()
 }
 
 void Map::clear() {
     plat.clear();
     decorList.clear();
-    enemies.clear();
+    flyers.clear();
+    walkers.clear();
 
     cols = rows = 0;
 
@@ -37,8 +35,11 @@ void Map::addTextures(SDL_Renderer* renderer) {
 
     mainPlayer.setTexture(resourceManager::getTexture(renderer, "player"));
 
-    for (enemy& e : enemies)
-        e.setTexture(resourceManager::getTexture(renderer, "enemy"));
+    for (flyer& f : flyers)
+        f.setTexture(resourceManager::getTexture(renderer, f.getType()));
+
+    for (walker& w : walkers)
+        w.setTexture(resourceManager::getTexture(renderer, w.getType()));
 }
 
 /// <summary>
@@ -100,8 +101,16 @@ void Map::addDecor(int col, int row, std::string texKey,
     dirty = true;
 }
 
-void Map::addEnemy(int col, int row, std::string texKey, int srcX, int srcY) {
-    // to do
+void Map::addFlyer(int col, int row, int patrol) {
+    flyers.emplace_back(col, row, patrol);
+    flyers.back().setTexture(resourceManager::getTexture(rend, flyers.back().getType()));
+    dirty = true;
+}
+
+void Map::addWalker(int col, int row, int patrol) {
+    walkers.emplace_back(col, row, patrol);
+    walkers.back().setTexture(resourceManager::getTexture(rend, walkers.back().getType()));
+    dirty = true;
 }
 
 bool Map::load(const std::string& path) {
@@ -112,8 +121,9 @@ bool Map::load(const std::string& path) {
     clear(); // xóa map cũ 
 
     std::string line;
-    bool inPlatformBlock = false; // cờ kiểm tra xem có đang đọc platform không 
+    bool inPlatformBlock = false; // cờ kiểm tra xem có đang đọc platform không
     bool inDecorBlock = false;
+    bool inEnemyBlock = false;
 
     while (std::getline(file, line)) {
         if (line == "<platform>") {
@@ -130,6 +140,14 @@ bool Map::load(const std::string& path) {
         }
         if (line == "</decor>") {
             inDecorBlock = false;
+            continue;
+        }
+        if (line == "<enemy>") {
+            inEnemyBlock = true;
+            continue;
+        }
+        if (line == "</enemy>") {
+            inEnemyBlock = false;
             continue;
         }
 
@@ -149,6 +167,18 @@ bool Map::load(const std::string& path) {
 
             ss >> col >> row >> texKey >> srcX >> srcY >> animType;
             addDecor(col, row, texKey, srcX, srcY, animType);
+        }
+
+        if (inEnemyBlock) {
+            std::istringstream ss(line);
+            int col, row, patrol;
+            std::string type;
+
+            if (ss >> col >> row >> type >> patrol) {
+                if (type == "flyer") addFlyer(col, row, patrol);
+                else if (type == "walker") addWalker(col, row, patrol);
+                else std::cout << "Khong biet loai quai: " << type << std::endl;
+            }
         }
     }
 
@@ -187,9 +217,21 @@ bool Map::save(const std::string& path) {
             << d.getSrcY() << " " << d.getTypeFrame() << std::endl;
     }
     file << "</decor>" << std::endl;
-    
+
+    // Ghi enemy vào file
+    file << "<enemy>" << std::endl;
+    for (flyer& f : flyers) {
+        file << f.getCol() << " " << f.getRow() << " "
+            << f.getType() << " " << f.getPatrol() << std::endl;
+    }
+    for (walker& w : walkers) {
+        file << w.getCol() << " " << w.getRow() << " "
+            << w.getType() << " " << w.getPatrol() << std::endl;
+    }
+    file << "</enemy>" << std::endl;
+
     // Đóng file .
-    file.close(); 
+    file.close();
     return true;
 }
 
@@ -197,5 +239,6 @@ void Map::updateRenderRect() {
     mainPlayer.updRenderRect(cam);
     for (platform& x : plat) x.updRenderRect(cam);
     for (decor& d : decorList) d.updRenderRect(cam);
-    for (enemy& e : enemies) e.updRenderRect(cam);
+    for (flyer& f : flyers) f.updRenderRect(cam);
+    for (walker& w : walkers) w.updRenderRect(cam);
 }

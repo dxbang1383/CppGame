@@ -2,26 +2,10 @@
 #include<cmath>
 
 player::player(double x, double y, double width, double height)
-    : gameObject(x, y, width, height)
-{
-    this->velocityX = 50.0;
-    this->velocityY = 100.0;
-    this->speed = 300.0;
-    this->direction = 1;
-    this->gravity = 980.0;
-    this->jumpForce = 600.0;
-    this->onGround = false;
+    : gameObject(x, y, width, height){
     setTexture(nullptr);
 }
 player::player(double x, double y) : gameObject(x, y, 32.0, 32.0) {
-
-    this->velocityX = 0.0;
-    this->velocityY = 0.0;
-    this->speed = 300.0;
-    this->direction = 1;
-    this->gravity = 980.0;
-    this->jumpForce = 600.0;
-    this->onGround = false;
     setTexture(nullptr);
 }
 

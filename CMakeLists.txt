@@ -39,7 +39,11 @@ target_sources(CppGame PRIVATE
      "src/GameObject/Platform/ladder.h"
      "src/GameObject/Platform/ladder.cpp"
      "src/engine/Animation.h"
-     "src/engine/Animation.cpp")
+     "src/engine/Animation.cpp"
+     "src/GameObject/Enemy/flyer.h"
+     "src/GameObject/Enemy/flyer.cpp"
+     "src/GameObject/Enemy/walker.h"
+     "src/GameObject/Enemy/walker.cpp")
 
 target_include_directories(CppGame PRIVATE
     SDL3/include

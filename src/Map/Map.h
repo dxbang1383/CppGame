@@ -7,6 +7,8 @@
 #include <string>
 
 #include "../GameObject/Enemy/enemy.h"
+#include "../GameObject/Enemy/flyer.h"
+#include "../GameObject/Enemy/walker.h"
 #include "../engine/camera.h"
 #include "../GameObject/Platform/platform.h"
 #include "../GameObject/Player/player.h"
@@ -20,7 +22,8 @@ class Map {
 private:
     camera cam = camera();
     player mainPlayer;
-    std::vector<enemy> enemies;
+    std::vector<flyer> flyers;
+    std::vector<walker> walkers;
     std::vector<platform> plat;
     std::vector<decor> decorList;
 
@@ -50,7 +53,8 @@ public:
     // sửa map (editor dùng)
     void addPlatform(int col, int row, std::string texKey, int srcX, int srcY, std::string animType);
     void addDecor(int col, int row, std::string texKey, int srcX, int srcY, std::string animType);
-    void addEnemy(int col, int row, std::string texKey, int srcX, int srcY);
+    void addFlyer(int col, int row, int patrol);
+    void addWalker(int col, int row, int patrol);
 
     bool eraseAt(int col, int row, TileLayer layer);
 
@@ -64,7 +68,8 @@ public:
     }
 
     SDL_Texture* getBkg() { return bkg; }
-    std::vector<enemy>& getEnemies() { return enemies; }
+    std::vector<flyer>& getFlyers() { return flyers; }
+    std::vector<walker>& getWalkers() { return walkers; }
     std::vector<platform>& getPlatforms() { return plat; }
     std::vector<decor>& getDecors() { return decorList; }
     player& getPlayer() { return mainPlayer; }

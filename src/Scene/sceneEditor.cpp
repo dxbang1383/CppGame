@@ -22,14 +22,14 @@ void sceneEditor::update(float deltaTime) {
     // cập nhật vị trí trong thế giới
     for (platform& x : map.getPlatforms()) x.update(deltaTime);
     for (decor& d : map.getDecors()) d.update(deltaTime);
-    for (enemy& e : map.getEnemies()) e.update(deltaTime);
 
     // Camera chốt vị trí
 
     // rồi mới tính lại renderRect cho mọi object
     for (platform& x : map.getPlatforms()) x.updRenderRect(map.getCam());
     for (decor& d : map.getDecors()) d.updRenderRect(map.getCam());
-    //for (enemy& e : map.getEnemies()) e.udpRenderRect(map.getCam());
+    for (flyer& f : map.getFlyers()) f.updRenderRect(map.getCam());
+    for (walker& w : map.getWalkers()) w.updRenderRect(map.getCam());
 }
 
 // in ra bên ngoài 
@@ -50,11 +50,8 @@ void sceneEditor::render(SDL_Renderer* renderer) {
         d.render(renderer);
     }
 
-    /*
-    for (enemy& e : map.getEnemies()) {
-        e.render(renderer);
-    }
-    */
+    for (flyer& f : map.getFlyers()) f.render(renderer);
+    for (walker& w : map.getWalkers()) w.render(renderer);
 
     if (rendergrid == true) {
         renderGrid(renderer);
@@ -161,6 +158,9 @@ void sceneEditor::handleInput(const SDL_Event& event) {
                     map.addDecor(col, row, tileMap.getType(),
                         tileMap.getSrcX(), tileMap.getSrcY(), "y++");
                 }
+                else if (layer == TileLayer::LAYER_ENEMY) {
+                    map.addFlyer(4, 4, 1);
+                }
             }
 
             else if (event.button.button == SDL_BUTTON_RIGHT) {
@@ -213,6 +213,10 @@ void sceneEditor::handleInput(const SDL_Event& event) {
             case SDLK_6:
                 tileMap.setLayer(TileLayer::LAYER_DECOR_YPP);
                 std::cout << "d y++" << std::endl;
+                break;
+            case SDLK_7:
+                tileMap.setLayer(TileLayer::LAYER_ENEMY);
+                std::cout << "e 1" << std::endl;
                 break;
             }
         }

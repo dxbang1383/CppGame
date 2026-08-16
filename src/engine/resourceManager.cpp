@@ -11,49 +11,11 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{ "player_run",  "assets/kenney_pixel-platformer/Tiles/Characters/tile_run.png" },
 	{ "player_jump", "assets/kenney_pixel-platformer/Tiles/Characters/tile_0001.png" },
 	{ "ladder",      "assets/kenney_pixel-platformer/Tiles/tile_0071.png" },
+	{ "flyer",       "assets/kenney_pixel-platformer/Tiles/Enemy/flyer.png" },
+	{ "walker",      "assets/kenney_pixel-platformer/Tiles/Characters/tile_0024.png" },
 };
 
 std::map<std::string, SDL_Texture*> resourceManager::cache;
-
-/*
-SDL_Texture* resourceManager::loadImage(SDL_Renderer* renderer, std::string s) {
-	std::string path = "def";
-
-	if (s == "default") {
-		path = "assets/kenney_pixel-platformer/bkg.png";
-	}
-	else if (s == "P") {
-		path = "assets/kenney_pixel-platformer/Tiles/tile_0002.png";
-	}
-	/*else if (s == "player") {
-		path = "assets/kenney_pixel-platformer/Tiles/Characters/tile_run.png";
-	}
-	else if (s == "player_idle") {
-		path = "assets/kenney_pixel-platformer/Tiles/Characters/tile_idle1.png";
-	}
-	else if (s == "player_run") {
-		path = "assets/kenney_pixel-platformer/Tiles/Characters/tile_run.png";
-	}
-	else if (s == "player_jump") {
-		path = "assets/kenney_pixel-platformer/Tiles/Characters/tile_0001.png";
-	}
-	else if (s == "ladder") {
-		path = "assets/kenney_pixel-platformer/Tiles/tile_0071.png";
-	}
-
-	if (s == "map1") {
-		path = "assets/kenney_pixel-platformer/Tilemap/tilemap_packed.png";
-	}
-
-	SDL_Texture* texture = IMG_LoadTexture(renderer, path.c_str());
-	if (!texture) {
-		SDL_Log("Load anh Thatbai: %s", SDL_GetError());
-	}
-	SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
-
-	return texture;
-}
-*/
 
 SDL_Texture* resourceManager::getTexture(SDL_Renderer* renderer, const std::string& key) {
 	// check trong cache co chua neu co return luon 

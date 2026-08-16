@@ -41,7 +41,8 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
 void sceneMain::update(float deltaTime) {
     for (platform& x : map.getPlatforms()) x.update(deltaTime);
     for (decor& d : map.getDecors())       d.update(deltaTime);
-    for (enemy& e : map.getEnemies())      e.update(deltaTime);
+    for (flyer& f : map.getFlyers())       f.update(deltaTime);
+    for (walker& w : map.getWalkers())     w.update(deltaTime);
     map.getPlayer().update(deltaTime);
 
     handleCollision(deltaTime);
@@ -58,7 +59,8 @@ void sceneMain::render(SDL_Renderer* renderer) {
     for (platform& p : map.getPlatforms()) p.render(renderer);
     for (ladder& l : ladders) l.render(renderer);
     for (decor& d : map.getDecors()) d.render(renderer);
-    for (enemy& e : map.getEnemies()) e.render(renderer);
+    for (flyer& f : map.getFlyers()) f.render(renderer);
+    for (walker& w : map.getWalkers()) w.render(renderer);
     map.getPlayer().render(renderer);
 }
 
@@ -175,6 +177,7 @@ void sceneMain::handleInput(const SDL_Event& event) {
             break;
         case SDLK_L:
             map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
+            std::cout << "load " << std::endl;
             break;
         }
 
