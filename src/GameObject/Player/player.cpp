@@ -11,14 +11,6 @@ player::player(double x, double y, double width, double height)
     this->gravity = 980.0;
     this->jumpForce = 600.0;
     this->onGround = false;
-    this->currentFrame = 0;
-    this->totalFrame = 2;
-    this->frameTime = 1.0f;
-    this->frameTimer = 0.0f;
-    this->frameWidth = 24;
-    this->frameHeight = 24;
-    this->aniRow = 0;
-    this->currentState = PlayerState::STATE_IDLE;
     setTexture(nullptr);
 }
 player::player(double x, double y) : gameObject(x, y, 32.0, 32.0) {
@@ -30,14 +22,6 @@ player::player(double x, double y) : gameObject(x, y, 32.0, 32.0) {
     this->gravity = 980.0;
     this->jumpForce = 600.0;
     this->onGround = false;
-    this->currentFrame = 0;
-    this->totalFrame = 2;
-    this->frameTime = 1.0f;
-    this->frameTimer = 0.0f;
-    this->frameWidth = 24;
-    this->frameHeight = 24;
-    this->aniRow = 0;
-    this->currentState = PlayerState::STATE_IDLE;
     setTexture(nullptr);
 }
 
@@ -59,52 +43,14 @@ void player::update(float deltaTime) {
 }
 
 void player::updateState() {
-    // không trên mặt đất
-    if (!onGround ) {
-        if (currentState != PlayerState::STATE_JUMP) {
-            currentState = PlayerState::STATE_JUMP;
-            setTexture(jumpTexture);
-            totalFrame = 1;
-            currentFrame = 0;
-            frameTimer = 0.0f;
-            frameTime = 0.1f;
-        }
-    }
-    // nếu trên mặt đất
-    else {
-        if (velocityX == 0.0) {
-            if (currentState != PlayerState::STATE_IDLE) {
-                currentState = PlayerState::STATE_IDLE;
-                setTexture(idleTexture);
-                totalFrame = 2;
-                currentFrame = 0;
-                frameTimer = 0.0f;
-                frameTime = 0.1f;
-            }
-        }
-        else {
-            if (currentState != PlayerState::STATE_RUN) {
-                currentState = PlayerState::STATE_RUN;
-                setTexture(runTexture);
-                totalFrame = 2;
-                currentFrame = 0;
-                frameTimer = 0.0f;
-                frameTime = 0.05f;
-            }
-        }
-    }
+    // chi doi con tro, moi Animation tu giu nhip frame cua no
+    if (!onGround)              current = &jumpAnim;
+    else if (velocityX == 0.0)  current = &idleAnim;
+    else                        current = &runAnim;
 }
 
 void player::updateAnimation(float deltaTime) {
-    //Cập nhật animation Frame ( theo state)
-    frameTimer += deltaTime;
-    if (frameTimer >= frameTime) {
-        frameTimer -= frameTime;
-        currentFrame++;
-        if (currentFrame >= totalFrame) {
-            currentFrame = 0;
-        }
-    }
+    current->update(deltaTime);
 }
 
 void player::updateVelocityX(float deltaTime) {
@@ -139,16 +85,11 @@ void player::updateVelocityY(float deltaTime) {
 void player::render(SDL_Renderer* renderer) {
     if (renderer == nullptr) return;
 
-    SDL_Texture* tex = getTexture();
+    SDL_Texture* tex = current->getTexture();
     SDL_FRect* pRect = getRenderRect();
 
     if (tex != nullptr) {
-        SDL_FRect srcRect = {
-            (float)(currentFrame * frameWidth),
-            (float)(aniRow * frameHeight),
-            (float)(frameWidth),
-            (float)(frameHeight)
-        };
+        SDL_FRect srcRect = current->getSrcRect();
         if (getDirection() == 1) {
             SDL_RenderTextureRotated(renderer, tex, &srcRect, pRect, 0.0, nullptr, SDL_FLIP_HORIZONTAL);
         }

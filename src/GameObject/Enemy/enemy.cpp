@@ -8,7 +8,7 @@ enemy::enemy(double x, double y, double width, double height)
 	minX = x - 150.0;
 	maxX = x + 150.0;
 }
-
+ 
 enemy::enemy() : gameObject() {
 	speed = 120.0;
 	direction = 1;

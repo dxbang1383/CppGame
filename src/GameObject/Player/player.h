@@ -4,13 +4,7 @@
 #include <SDL3/SDL.h>
 #include <iostream>
 #include "../src/GameObject/gameObject.h"
-
-
-enum class PlayerState {
-    STATE_IDLE,
-    STATE_RUN,
-    STATE_JUMP
-};
+#include "../src/engine/Animation.h"
 
 class player : public gameObject {
 private:
@@ -21,21 +15,13 @@ private:
     int direction = 1; // hướng của nhân vật 
     double gravity = 980.0; // tốc độ của trọng lực
     double jumpForce = 1000.0; // tốc độ nhảy 
-    bool onGround = false; // trêm mặt đất hay không 
-    // Luu sheet dang lam
-    SDL_Texture* idleTexture = nullptr; 
-    SDL_Texture* runTexture = nullptr;
-    SDL_Texture* jumpTexture = nullptr;
-    //Trang thai xu li frame cho nhan vat
-    PlayerState currentState; // lựa chọn các trạng thái trong enum để chạy animation
-    int currentFrame;
-    int totalFrame;
-    float frameTime;
-    float frameTimer;
-
-    float frameWidth;
-    float frameHeight;
-    int aniRow;
+    bool onGround = false; // trêm mặt đất hay không
+    // Animation cho tung trang thai, moi cai giu nhip frame rieng
+    Animation idleAnim{ 2, 0.10f };
+    Animation runAnim { 2, 0.05f };
+    Animation jumpAnim{ 1, 0.10f };
+    // Animation dang duoc chay, luon tro toi 1 cai hop le
+    Animation* current = &idleAnim;
     // Trạng thái nút bấm
     bool isMovingLeft = false;
     bool isMovingRight = false;
@@ -69,23 +55,14 @@ public:
     double getVelocityY() const { return velocityY; }
     double getJumpForce() { return jumpForce; }
     // Ham sceneMain nap anh vao cho player
-    void setIdleTexture(SDL_Texture* tex) {
-        this->idleTexture = tex;
-    }
-    void setRunTexture(SDL_Texture* tex) {
-        this->runTexture = tex;
-    }
-    void setJumpTexture(SDL_Texture* tex) {
-        this->jumpTexture = tex;
-    }
+    void setIdleTexture(SDL_Texture* tex) { idleAnim.setTexture(tex); }
+    void setRunTexture(SDL_Texture* tex) { runAnim.setTexture(tex); }
+    void setJumpTexture(SDL_Texture* tex) { jumpAnim.setTexture(tex); }
     void setIsTouchingLadder(bool touch) { isTouchingLadder = touch; }
     bool IsTouchingLadder() const { return this->isTouchingLadder; }
     bool getIsClimbing() { return isClimbing; }
     void setIsClimbing(bool climbing) { isClimbing = climbing; }
 
-    SDL_Texture* getIdleTexture() const { return idleTexture; }
-    SDL_Texture* getRunTexture() const { return runTexture; }
-    SDL_Texture* getJumpTexture() const { return jumpTexture; }
     void updateState();
     // hàm này chỉ cập nhật hcn vị trí in ảnh 
     void updateAnimation(float deltaTime);
