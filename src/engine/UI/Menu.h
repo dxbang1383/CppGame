@@ -2,6 +2,7 @@
 #define MENU_H
 
 #include <SDL3/SDL.h>
+#include <string>
 
 enum MenuAction {
     MENU_NONE = 0,
@@ -14,7 +15,7 @@ enum MenuAction {
 class Menu {
 private:
     SDL_Texture* menuTex = nullptr;
-    SDL_Texture* labelTex[4] = { nullptr, nullptr, nullptr, nullptr };
+    std::string labels[4] = { "MODE 1", "MODE 2", "How to play", "Quit" };
 
     int action = MENU_NONE;
     int hovered = -1;

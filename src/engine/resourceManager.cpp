@@ -12,10 +12,6 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{ "player_jump", "assets/kenney_pixel-platformer/Tiles/Characters/tile_0001.png" },
 	{ "ladder",      "assets/kenney_pixel-platformer/Tiles/tile_0071.png" },
 	{ "menu", "assets/kenney_pixel-platformer/menu.png" },
-	{ "label_mode1", "assets/kenney_pixel-platformer/labels/mode1.png" },
-	{ "label_mode2", "assets/kenney_pixel-platformer/labels/mode2.png" },
-	{ "label_guide", "assets/kenney_pixel-platformer/labels/guide.png" },
-	{ "label_quit",  "assets/kenney_pixel-platformer/labels/quit.png" },
 };
 
 std::map<std::string, SDL_Texture*> resourceManager::cache;

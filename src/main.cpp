@@ -5,6 +5,7 @@
 #include "../src/Scene/sceneMain.h"
 #include "../src/Scene/sceneEditor.h"
 #include "../src/engine/soundManager.h"
+#include "../src/engine/UI/Text.h"
 
 int main(int argc, char* argv[])
 {
@@ -14,6 +15,7 @@ int main(int argc, char* argv[])
     SDL_Renderer* renderer = SDL_CreateRenderer(window, nullptr);
 
     soundManager::init();
+    Text::init();
 
     // Bien vong lap
     bool running = true;
@@ -97,6 +99,7 @@ int main(int argc, char* argv[])
     }
 
     soundManager::clearAll();
+    Text::quit();
 
     SDL_DestroyWindow(window);
 

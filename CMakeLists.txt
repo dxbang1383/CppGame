@@ -38,6 +38,8 @@ target_sources(CppGame PRIVATE
      "src/engine/UI/Palette.cpp" 
      "src/engine/UI/Menu.h"
      "src/engine/UI/Menu.cpp"
+     "src/engine/UI/Text.h"
+     "src/engine/UI/Text.cpp"
      "src/engine/soundManager.h"
      "src/engine/soundManager.cpp"
      "src/Map/Map.cpp" 
@@ -48,17 +50,20 @@ target_sources(CppGame PRIVATE
 target_include_directories(CppGame PRIVATE
     SDL3/include
     SDL3_image/include
+    SDL3_ttf/include
     src
 )
 
 target_link_directories(CppGame PRIVATE
     SDL3/lib/x64
     SDL3_image/lib/x64
+    SDL3_ttf/lib/x64
 )
 
 target_link_libraries(CppGame PRIVATE
     SDL3
     SDL3_image
+    SDL3_ttf
 )
 
 add_custom_command(TARGET CppGame POST_BUILD
@@ -70,6 +75,12 @@ add_custom_command(TARGET CppGame POST_BUILD
 add_custom_command(TARGET CppGame POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${PROJECT_SOURCE_DIR}/SDL3_image/lib/x64/SDL3_image.dll"
+    "$<TARGET_FILE_DIR:CppGame>"
+)
+
+add_custom_command(TARGET CppGame POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${PROJECT_SOURCE_DIR}/SDL3_ttf/lib/x64/SDL3_ttf.dll"
     "$<TARGET_FILE_DIR:CppGame>"
 )
 
