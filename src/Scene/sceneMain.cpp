@@ -20,6 +20,10 @@ sceneMain::~sceneMain() {
 void sceneMain::preLoad(SDL_Renderer* renderer) {
     map.addTextures(renderer);          // bkg, platform, decor, enemy, player
 
+    std::string mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt";
+    if (!map.load(mapPath)) {
+        SDL_Log("Khong nap duoc map: %s -> dung map mac dinh", mapPath.c_str());
+    }
     // Animation player
     SDL_Texture* idle = resourceManager::getTexture(renderer, "player_idle");
     SDL_Texture* run = resourceManager::getTexture(renderer, "player_run");
