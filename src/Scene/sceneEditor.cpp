@@ -1,4 +1,5 @@
 #include "sceneEditor.h"
+#include <cmath>
 
 sceneEditor::sceneEditor() {
 

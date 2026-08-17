@@ -1,4 +1,5 @@
 ﻿#include "sceneMain.h"
+#include "../engine/soundManager.h"
 
 // Constructor
 sceneMain::sceneMain() {
@@ -35,10 +36,28 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     SDL_Texture* ladTex = resourceManager::getTexture(renderer, "ladder");
     for (ladder& l : ladders) l.setTexture(ladTex);
 
-    map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
+    pauseMenu.preLoad(renderer);
+    gameOverMenu.preLoad(renderer);
+    settings.preLoad(renderer);
+    iconTex = resourceManager::getTexture(renderer, "menu");
+    spawnX = (float)map.getPlayer().getX();
+    spawnY = (float)map.getPlayer().getY();
+}
+
+void sceneMain::resetPlayer() {
+    player& p = map.getPlayer();
+    p.setX(spawnX);
+    p.setY(spawnY);
+    p.setVelocityX(0);
+    p.setVelocityY(0);
+    p.setOnGround(false);
+    p.setIsClimbing(false);
 }
 
 void sceneMain::update(float deltaTime) {
+    if (paused || lost) return;
+    settings.close();
+
     for (platform& x : map.getPlatforms()) x.update(deltaTime);
     for (decor& d : map.getDecors())       d.update(deltaTime);
     for (flyer& f : map.getFlyers())       f.update(deltaTime);
@@ -50,6 +69,11 @@ void sceneMain::update(float deltaTime) {
 
     map.updateRenderRect();
     for (ladder& l : ladders) l.updRenderRect(map.getCam());   // thang cũng theo camera
+
+    if (map.getPlayer().getY() > deathY) {
+        lost = true;
+        soundManager::playEffect("lose");
+    }
 }
 
 void sceneMain::render(SDL_Renderer* renderer) {
@@ -62,6 +86,21 @@ void sceneMain::render(SDL_Renderer* renderer) {
     for (flyer& f : map.getFlyers()) f.render(renderer);
     for (walker& w : map.getWalkers()) w.render(renderer);
     map.getPlayer().render(renderer);
+
+    if (paused) pauseMenu.render(renderer);
+    if (lost) gameOverMenu.render(renderer);
+
+    if (!lost) {
+        SDL_RenderTexture(renderer, iconTex, paused ? &resumeIconSrc : &pauseIconSrc, &toggleBtnRect);
+    }
+
+    if (paused || lost) {
+        int base = lost ? 0 : 1;
+        float sx = 1220.0f - base * 50.0f;
+        SDL_FRect rb = { 1220.0f - (base + 1) * 50.0f, 20.0f, 40.0f, 40.0f };
+        SDL_RenderTexture(renderer, iconTex, &iconBSrc, &rb);
+        settings.render(renderer, sx, 20.0f);
+    }
 }
 
 bool sceneMain::overlaps(platform& p) {
@@ -144,6 +183,63 @@ void sceneMain::handleCollision(float deltaTime) {
 
 // xá»­ lÃ½ input 
 void sceneMain::handleInput(const SDL_Event& event) {
+    if ((paused || lost)
+        && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
+        && event.button.button == SDL_BUTTON_LEFT) {
+        int base = lost ? 0 : 1;
+        float sx = 1220.0f - base * 50.0f;
+        if (settings.handleClick(event.button.x, event.button.y, sx, 20.0f)) return;
+    }
+
+    if (lost) {
+        if (event.type == SDL_EVENT_MOUSE_MOTION) {
+            gameOverMenu.handleMouseMove(event.motion.x, event.motion.y);
+        }
+        else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
+                 && event.button.button == SDL_BUTTON_LEFT) {
+            gameOverMenu.handleClick(event.button.x, event.button.y);
+            int a = gameOverMenu.getAction();
+            if (a == GAMEOVER_REPLAY)     { resetPlayer(); lost = false; }
+            else if (a == GAMEOVER_MODE2) { resetPlayer(); lost = false; sceneAction = SCENE_EDITOR; }
+            else if (a == GAMEOVER_MENU)  { resetPlayer(); lost = false; sceneAction = SCENE_MENU; }
+            else if (a == GAMEOVER_QUIT)  { sceneAction = SCENE_QUIT; }
+            gameOverMenu.resetAction();
+        }
+        return;
+    }
+
+    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
+        && event.button.button == SDL_BUTTON_LEFT
+        && event.button.x >= toggleBtnRect.x && event.button.x <= toggleBtnRect.x + toggleBtnRect.w
+        && event.button.y >= toggleBtnRect.y && event.button.y <= toggleBtnRect.y + toggleBtnRect.h) {
+        paused = !paused;
+        pauseMenu.resetAction();
+        return;
+    }
+
+    if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_P) {
+        paused = !paused;
+        pauseMenu.resetAction();
+        return;
+    }
+
+    if (paused) {
+        if (event.type == SDL_EVENT_MOUSE_MOTION) {
+            pauseMenu.handleMouseMove(event.motion.x, event.motion.y);
+        }
+        else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
+                 && event.button.button == SDL_BUTTON_LEFT) {
+            pauseMenu.handleClick(event.button.x, event.button.y);
+            int a = pauseMenu.getAction();
+            if (a == PAUSE_RESUME)      paused = false;
+            else if (a == PAUSE_REPLAY) { resetPlayer(); paused = false; }
+            else if (a == PAUSE_MENU)   { resetPlayer(); sceneAction = SCENE_MENU; paused = false; }
+            else if (a == PAUSE_QUIT)   sceneAction = SCENE_QUIT;
+            pauseMenu.resetAction();
+        }
+        return;
+    }
+
     if (event.type == SDL_EVENT_KEY_DOWN) {
         switch (event.key.key) {
         case SDLK_A:

@@ -13,7 +13,17 @@
 #include "../GameObject/Platform/decor.h"
 #include "../engine/resourceManager.h"
 #include "../engine/camera.h"
+#include "../engine/UI/PauseMenu.h"
+#include "../engine/UI/GameOverMenu.h"
+#include "../engine/UI/SettingsMenu.h"
 #include "../Map/Map.h"
+
+enum SceneAction {
+    SCENE_NONE = 0,
+    SCENE_MENU,
+    SCENE_EDITOR,
+    SCENE_QUIT
+};
 
 class sceneMain : public scene {
 private:
@@ -24,6 +34,23 @@ private:
     const float W = 1280.0f, H = 720.0f;
     const int COLS = (int)(W / TILE);
     const int ROWS = (int)(H / TILE);
+
+    bool paused = false;
+    bool lost = false;
+    PauseMenu pauseMenu;
+    GameOverMenu gameOverMenu;
+    SettingsMenu settings;
+    float spawnX = 0.0f, spawnY = 0.0f;
+    const float deathY = 2000.0f;
+    int sceneAction = SCENE_NONE;
+
+    SDL_Texture* iconTex = nullptr;
+    SDL_FRect pauseIconSrc = { 545.0f, 337.0f, 40.0f, 40.0f };
+    SDL_FRect resumeIconSrc = { 298.0f, 218.0f, 40.0f, 40.0f };
+    SDL_FRect toggleBtnRect = { 1220.0f, 20.0f, 40.0f, 40.0f };
+    SDL_FRect iconBSrc = { 397.0f, 278.0f, 40.0f, 40.0f };
+
+    void resetPlayer();
 
 public:
     sceneMain();
@@ -37,6 +64,9 @@ public:
     bool overlapsLadder(ladder& l);
     void focusPlayer();
     void switchScene() override;
+
+    int getSceneAction() const { return sceneAction; }
+    void resetSceneAction() { sceneAction = SCENE_NONE; }
 };
 
 #endif // !SCENE_MAIN_H
