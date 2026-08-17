@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 #include "../src/GameObject/gameObject.h"
-#include "../src/GameObject/Platform/platform.h"
+#include "../src/GameObject/Tile/platform.h"
 #include "../src/engine/Animation.h"
 
 /*
@@ -42,8 +42,8 @@ public:
 	const std::string& getType() const { return type; }
 	int getPatrol() const { return patrol; }
 
-	int getCol() const { return (int)(getX() / platform::TILE_SIZE); }
-	int getRow() const { return (int)(getY() / platform::TILE_SIZE); }
+	int getCol() const { return (int)(getX() / tile::TILE_SIZE); }
+	int getRow() const { return (int)(getY() / tile::TILE_SIZE); }
 
 	int  getDirection() const { return direction; }
 	void turnAround() { direction = -direction; }

@@ -14,6 +14,12 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{ "flyer",       "assets/kenney_pixel-platformer/Tiles/Enemy/flyer.png" },
 	{ "walker",      "assets/kenney_pixel-platformer/Tiles/Characters/tile_0024.png" },
 	{ "menu", "assets/kenney_pixel-platformer/menu.png" },
+
+	{ "water",         "assets/kenney_pixel-platformer/Tiles/Animation/water.png" },
+	{ "waterfall_top", "assets/kenney_pixel-platformer/Tiles/Animation/waterfall_top.png" },
+	{ "waterfall_mid", "assets/kenney_pixel-platformer/Tiles/Animation/waterfall_mid.png" },
+	{ "waterfall_bot", "assets/kenney_pixel-platformer/Tiles/Animation/waterfall_bot.png" },
+	{ "flag",          "assets/kenney_pixel-platformer/Tiles/Animation/flag.png" },
 };
 
 std::map<std::string, SDL_Texture*> resourceManager::cache;

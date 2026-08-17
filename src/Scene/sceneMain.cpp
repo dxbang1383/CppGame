@@ -6,9 +6,9 @@ sceneMain::sceneMain() {
     // Map da tu dung san trong constructor cua no
     int ladderCol = 10;
     for (int row = -3; row <= 9; row++) {
-        ladders.emplace_back(ladderCol * platform::TILE_SIZE,
-            row * platform::TILE_SIZE,
-            platform::TILE_SIZE, platform::TILE_SIZE);
+        ladders.emplace_back(ladderCol * tile::TILE_SIZE,
+            row * tile::TILE_SIZE,
+            tile::TILE_SIZE, tile::TILE_SIZE);
     }
 }
 

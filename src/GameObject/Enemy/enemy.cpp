@@ -1,8 +1,8 @@
 #include "enemy.h"
 
 enemy::enemy(int col, int row, int patrol)
-	: gameObject(col * platform::TILE_SIZE, row * platform::TILE_SIZE,
-		platform::TILE_SIZE, platform::TILE_SIZE) {
+	: gameObject(col * tile::TILE_SIZE, row * tile::TILE_SIZE,
+		tile::TILE_SIZE, tile::TILE_SIZE) {
 	this->patrol = patrol;
 }
 

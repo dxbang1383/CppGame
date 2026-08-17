@@ -19,7 +19,7 @@ void Animation::setTexture(SDL_Texture* tex) {
 }
 
 void Animation::update(float deltaTime) {
-	if (frameCount <= 1)   return;   // 1 frame thi dung yen, khong can dem gio
+	if (frameCount <= 1) return;   // 1 frame thi dung yen, khong can dem gio
 	if (frameTime <= 0.0f) return;   // tranh lap vo han neu quen set frameTime
 
 	timer += deltaTime;

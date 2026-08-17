@@ -31,6 +31,10 @@ void Map::addTextures(SDL_Renderer* renderer) {
 
     for (decor& d : decorList) {
         d.setTexture(resourceManager::getTexture(renderer, d.getType()));
+        // sprite animation rieng (neu co)
+        if (d.hasAnim()) {
+            d.getAnim().setTexture(resourceManager::getTexture(renderer, d.getAnimKey()));
+        }
     }
 
     mainPlayer.setTexture(resourceManager::getTexture(renderer, "player"));
@@ -50,35 +54,37 @@ void Map::addTextures(SDL_Renderer* renderer) {
 /// <param name="layer"></param> p , e, d
 /// <returns> true nếu xóa được một cái gì đó </returns>
 bool Map::eraseAt(int col, int row, TileLayer layer ) {
-    // platform 
-    if (layer == TileLayer::LAYER_PLATFORM 
-        || layer == TileLayer::LAYER_PLATFORM_XPP
-        || layer == TileLayer::LAYER_PLATFORM_YPP) {
+    // Duyet NGUOC de xoa dung tile ve sau cung (tile nam tren cung)
+
+    if (layer == TileLayer::LAYER_PLATFORM) {
         for (int i = (int)plat.size() - 1; i >= 0; i--) {
-            platform& p = plat[i];
-
-            int pCol = (int)(p.getX() / platform::TILE_SIZE);
-            int pRow = (int)(p.getY() / platform::TILE_SIZE);
-
-            if (pCol == col && pRow == row) {
+            if (plat[i].getCol() == col && plat[i].getRow() == row) {
                 plat.erase(plat.begin() + i);
                 dirty = true;
                 return true;
             }
         }
     }
-    // decor
-    else if (layer == TileLayer::LAYER_DECOR
-            || layer == TileLayer::LAYER_DECOR_XPP
-            || layer == TileLayer::LAYER_DECOR_YPP) {
+    else if (layer == TileLayer::LAYER_DECOR) {
         for (int i = (int)decorList.size() - 1; i >= 0; i--) {
-            decor& d = decorList[i];
-
-            int dCol = (int)(d.getX() / platform::TILE_SIZE);
-            int dRow = (int)(d.getY() / platform::TILE_SIZE);
-
-            if (dCol == col && dRow == row) {
+            if (decorList[i].getCol() == col && decorList[i].getRow() == row) {
                 decorList.erase(decorList.begin() + i);
+                dirty = true;
+                return true;
+            }
+        }
+    }
+    else if (layer == TileLayer::LAYER_ENEMY) {
+        for (int i = (int)flyers.size() - 1; i >= 0; i--) {
+            if (flyers[i].getCol() == col && flyers[i].getRow() == row) {
+                flyers.erase(flyers.begin() + i);
+                dirty = true;
+                return true;
+            }
+        }
+        for (int i = (int)walkers.size() - 1; i >= 0; i--) {
+            if (walkers[i].getCol() == col && walkers[i].getRow() == row) {
+                walkers.erase(walkers.begin() + i);
                 dirty = true;
                 return true;
             }
@@ -88,16 +94,24 @@ bool Map::eraseAt(int col, int row, TileLayer layer ) {
 }
 
 void Map::addPlatform(int col, int row, std::string texKey,
-                        int srcX, int srcY, std::string animType) {
-    getPlatforms().emplace_back(col, row, texKey, srcX, srcY, animType);
-    getPlatforms().back().setTexture(resourceManager::getTexture(rend, texKey));
+                        int srcX, int srcY) {
+    plat.emplace_back(col, row, texKey, srcX, srcY);
+    plat.back().setTexture(resourceManager::getTexture(rend, texKey));
     dirty = true;
 }
 
-void Map::addDecor(int col, int row, std::string texKey, 
-                        int srcX, int srcY, std::string animType) {
-    getDecors().emplace_back(col, row, texKey, srcX, srcY, animType);
-    getDecors().back().setTexture(resourceManager::getTexture(rend, texKey));
+void Map::addDecor(int col, int row, std::string texKey,
+                        int srcX, int srcY, std::string animKey) {
+    decorList.emplace_back(col, row, texKey, srcX, srcY, animKey);
+    decor& d = decorList.back();
+
+    // hinh du phong
+    d.setTexture(resourceManager::getTexture(rend, texKey));
+
+    // sprite animation rieng trong Tiles/Animation
+    if (d.hasAnim()) {
+        d.getAnim().setTexture(resourceManager::getTexture(rend, animKey));
+    }
     dirty = true;
 }
 
@@ -154,19 +168,22 @@ bool Map::load(const std::string& path) {
         if (inPlatformBlock) {
             std::istringstream ss(line); // chuyển thành giống như cin 
             int col, row, srcX, srcY;
-            std::string texKey, animType;
+            std::string texKey;
 
-            ss >> col >> row >> texKey >> srcX >> srcY >> animType;
-            addPlatform(col, row, texKey, srcX, srcY, animType);
+            if (ss >> col >> row >> texKey >> srcX >> srcY) {
+                addPlatform(col, row, texKey, srcX, srcY);
+            }
         }
 
         if (inDecorBlock) {
             std::istringstream ss(line); // chuyển thành giống như cin 
             int col, row, srcX, srcY;
-            std::string texKey, animType;
+            std::string texKey, animKey;
 
-            ss >> col >> row >> texKey >> srcX >> srcY >> animType;
-            addDecor(col, row, texKey, srcX, srcY, animType);
+            // animKey = "-" static
+            if (ss >> col >> row >> texKey >> srcX >> srcY >> animKey) {
+                addDecor(col, row, texKey, srcX, srcY, animKey);
+            }
         }
 
         if (inEnemyBlock) {
@@ -199,39 +216,38 @@ bool Map::save(const std::string& path) {
         return false;
     }
 
-    std::cout << "bat dau ghi file";
-    // Ghi các platform vào file .
-    file << "<platform>" << std::endl;
+    file << "<platform>\n";
     for (platform& p : plat) {
         file << p.getCol() << " " << p.getRow() << " "
             << p.getType() << " " << p.getSrcX() << " "
-            << p.getSrcY() << " " << p.getTypeFrame() << std::endl;
+            << p.getSrcY() << "\n";
     }
-    file << "</platform>" << std::endl;
+    file << "</platform>\n";
 
-    // Ghi các decor vào file .
-    file << "<decor>" << std::endl;
+    // Ghi các decor vào file 
+    file << "<decor>\n";
     for (decor& d : decorList) {
         file << d.getCol() << " " << d.getRow() << " "
             << d.getType() << " " << d.getSrcX() << " "
-            << d.getSrcY() << " " << d.getTypeFrame() << std::endl;
+            << d.getSrcY() << " " << d.getAnimKey() << "\n";
     }
-    file << "</decor>" << std::endl;
+    file << "</decor>\n";
 
     // Ghi enemy vào file
-    file << "<enemy>" << std::endl;
+    file << "<enemy>\n";
     for (flyer& f : flyers) {
         file << f.getCol() << " " << f.getRow() << " "
-            << f.getType() << " " << f.getPatrol() << std::endl;
+            << f.getType() << " " << f.getPatrol() << "\n";
     }
     for (walker& w : walkers) {
         file << w.getCol() << " " << w.getRow() << " "
-            << w.getType() << " " << w.getPatrol() << std::endl;
+            << w.getType() << " " << w.getPatrol() << "\n";
     }
-    file << "</enemy>" << std::endl;
+    file << "</enemy>\n";
 
     // Đóng file .
     file.close();
+    dirty = false;
     return true;
 }
 

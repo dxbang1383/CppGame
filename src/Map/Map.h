@@ -10,9 +10,9 @@
 #include "../GameObject/Enemy/flyer.h"
 #include "../GameObject/Enemy/walker.h"
 #include "../engine/camera.h"
-#include "../GameObject/Platform/platform.h"
+#include "../GameObject/Tile/platform.h"
 #include "../GameObject/Player/player.h"
-#include "../GameObject/Platform/decor.h"
+#include "../GameObject/Tile/decor.h"
 #include "../engine/resourceManager.h"
 #include "../engine/UI/Palette.h"
 #include <fstream>   // std::ofstream, std::ifstream
@@ -47,12 +47,12 @@ public:
     bool save(const std::string& path);
     void clear();
 
-    // Gán texture cho TOÀN BỘ object — gọi ngay sau load()
     void addTextures(SDL_Renderer* renderer);
 
-    // sửa map (editor dùng)
-    void addPlatform(int col, int row, std::string texKey, int srcX, int srcY, std::string animType);
-    void addDecor(int col, int row, std::string texKey, int srcX, int srcY, std::string animType);
+    void addPlatform(int col, int row, std::string texKey, int srcX, int srcY);
+
+    // animKey = "-" neu tinxh
+    void addDecor(int col, int row, std::string texKey, int srcX, int srcY, std::string animKey);
     void addFlyer(int col, int row, int patrol);
     void addWalker(int col, int row, int patrol);
 
@@ -73,14 +73,14 @@ public:
     std::vector<platform>& getPlatforms() { return plat; }
     std::vector<decor>& getDecors() { return decorList; }
     player& getPlayer() { return mainPlayer; }
-    float getStartX() const { return startCol * platform::TILE_SIZE; }
-    float getStartY() const { return startRow * platform::TILE_SIZE; }
+    float getStartX() const { return startCol * tile::TILE_SIZE; }
+    float getStartY() const { return startRow * tile::TILE_SIZE; }
     camera& getCam() { return cam; }
     int xScreenToCol(float mouseClickX) {
-        return floor(cam.xScreenToWorld(mouseClickX) / platform::TILE_SIZE);
+        return floor(cam.xScreenToWorld(mouseClickX) / tile::TILE_SIZE);
     }
     int yScreenToRow(float mouseClickY) {
-        return floor(cam.yScreenToWorld(mouseClickY) / platform::TILE_SIZE);
+        return floor(cam.yScreenToWorld(mouseClickY) / tile::TILE_SIZE);
     }
     void updateRenderRect();
     

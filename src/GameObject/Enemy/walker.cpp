@@ -4,8 +4,8 @@ walker::walker(int col, int row, int patrol) : enemy(col, row, patrol) {
 	type = "walker";
 	anim = Animation(1, 0.15f);// tam thoi 1 drame
 
-	patrolMinX = getX() - 3 * platform::TILE_SIZE;
-	patrolMaxX = getX() + 3 * platform::TILE_SIZE;
+	patrolMinX = getX() - 3 * tile::TILE_SIZE;
+	patrolMaxX = getX() + 3 * tile::TILE_SIZE;
 }
 
 void walker::update(float deltaTime) {

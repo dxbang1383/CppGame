@@ -5,8 +5,8 @@ flyer::flyer(int col, int row, int patrol) : enemy(col, row, patrol) {
 	anim = Animation(3, 0.15f);
 
 	// bay trai phai 
-	patrolMinX = getX() - 4 * platform::TILE_SIZE;
-	patrolMaxX = getX() + 4 * platform::TILE_SIZE;
+	patrolMinX = getX() - 4 * tile::TILE_SIZE;
+	patrolMaxX = getX() + 4 * tile::TILE_SIZE;
 }
 
 void flyer::update(float deltaTime) {

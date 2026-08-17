@@ -137,30 +137,15 @@ void sceneEditor::handleInput(const SDL_Event& event) {
 
                 if (layer == TileLayer::LAYER_PLATFORM) {
                     map.addPlatform(col, row, tileMap.getType(),
-                        tileMap.getSrcX(), tileMap.getSrcY(), "-");
-                }
-                else if (layer == TileLayer::LAYER_PLATFORM_XPP) {
-                    map.addPlatform(col, row, tileMap.getType(),
-                        tileMap.getSrcX(), tileMap.getSrcY(), "x++");
-                }
-                else if (layer == TileLayer::LAYER_PLATFORM_YPP) {
-                    map.addPlatform(col, row, tileMap.getType(),
-                        tileMap.getSrcX(), tileMap.getSrcY(), "y++");
+                        tileMap.getSrcX(), tileMap.getSrcY());
                 }
                 else if (layer == TileLayer::LAYER_DECOR) {
+                    // "-" = decor tinh
                     map.addDecor(col, row, tileMap.getType(),
                         tileMap.getSrcX(), tileMap.getSrcY(), "-");
                 }
-                else if (layer == TileLayer::LAYER_DECOR_XPP) {
-                    map.addDecor(col, row, tileMap.getType(),
-                        tileMap.getSrcX(), tileMap.getSrcY(), "x++");
-                }
-                else if (layer == TileLayer::LAYER_DECOR_YPP) {
-                    map.addDecor(col, row, tileMap.getType(),
-                        tileMap.getSrcX(), tileMap.getSrcY(), "y++");
-                }
                 else if (layer == TileLayer::LAYER_ENEMY) {
-                    map.addFlyer(4, 4, 1);
+                    map.addFlyer(col, row, 1);
                 }
             }
 
@@ -200,22 +185,6 @@ void sceneEditor::handleInput(const SDL_Event& event) {
                 std::cout << "d -" << std::endl;
                 break;
             case SDLK_3:
-                tileMap.setLayer(TileLayer::LAYER_PLATFORM_XPP);
-                std::cout << "p x++" << std::endl;
-                break;
-            case SDLK_4:
-                tileMap.setLayer(TileLayer::LAYER_DECOR_XPP);
-                std::cout << "d x++" << std::endl;
-                break;
-            case SDLK_5:
-                tileMap.setLayer(TileLayer::LAYER_PLATFORM_YPP);
-                std::cout << "p y++" << std::endl;
-                break;
-            case SDLK_6:
-                tileMap.setLayer(TileLayer::LAYER_DECOR_YPP);
-                std::cout << "d y++" << std::endl;
-                break;
-            case SDLK_7:
                 tileMap.setLayer(TileLayer::LAYER_ENEMY);
                 std::cout << "e 1" << std::endl;
                 break;

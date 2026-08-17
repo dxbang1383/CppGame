@@ -6,14 +6,15 @@
 #include <string>
 #include "SDL3/SDL.h"
 #include "SDL3_image/SDL_image.h"
+
 enum class TileLayer {
 	LAYER_PLATFORM,
 	LAYER_DECOR,
-	LAYER_ENEMY,
-	LAYER_PLATFORM_XPP,
-	LAYER_PLATFORM_YPP,
-	LAYER_DECOR_XPP,
-	LAYER_DECOR_YPP
+	LAYER_ENEMY
+	//LAYER_PLATFORM_XPP,
+	//LAYER_PLATFORM_YPP,
+	//LAYER_DECOR_XPP,
+	//LAYER_DECOR_YPP
 };
 
 class Palette {

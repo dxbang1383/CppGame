@@ -7,8 +7,8 @@
 
 #include "scene.h"
 #include "../GameObject/Player/player.h"
-#include "../GameObject/Platform/platform.h"
-#include "../GameObject/Platform/decor.h"
+#include "../GameObject/Tile/platform.h"
+#include "../GameObject/Tile/decor.h"
 #include "../engine/resourceManager.h"
 #include "../engine/camera.h"
 #include "../engine/UI/Palette.h"
