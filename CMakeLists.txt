@@ -32,6 +32,8 @@ target_sources(CppGame PRIVATE
      "src/engine/resourceManager.cpp"
      "src/Scene/sceneEditor.cpp" 
      "src/Scene/sceneEditor.h" 
+     "src/engine/UI/Button.h"
+     "src/engine/UI/Button.cpp"
      "src/engine/UI/Palette.h"
      "src/engine/UI/Palette.cpp" 
      "src/engine/UI/Menu.h"

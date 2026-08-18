@@ -234,6 +234,7 @@
 </animation>
 <enemy>
 4 4 flyer 1
+17 3 flyer 1
 </enemy>
 <ladder>
 10 -3 ladder
@@ -249,4 +250,8 @@
 10 7 ladder
 10 8 ladder
 10 9 ladder
+7 9 ladder_down
+7 8 ladder_down
+7 7 ladder_down
+7 6 ladder_top
 </ladder>

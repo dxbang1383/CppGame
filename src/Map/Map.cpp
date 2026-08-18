@@ -9,6 +9,7 @@ void Map::clear() {
     decorList.clear();
     flyers.clear();
     walkers.clear();
+    ladders.clear();
 
     cols = rows = 0;
 
@@ -38,7 +39,7 @@ void Map::addTextures(SDL_Renderer* renderer) {
     }
 
     for (ladder& l : ladders) {
-        l.setTexture(resourceManager::getTexture(renderer, "ladder"));
+        l.setTexture(resourceManager::getTexture(renderer, l.getType()));
     }
 
     // Animation player
@@ -79,10 +80,19 @@ bool Map::eraseAt(int col, int row, TileLayer layer ) {
             }
         }
     }
-    else if (layer == TileLayer::LAYER_DECOR) {
+    else if (layer == TileLayer::LAYER_DECOR || layer == TileLayer::LAYER_DECOR_ANIM) {
         for (int i = (int)decorList.size() - 1; i >= 0; i--) {
             if (decorList[i].getCol() == col && decorList[i].getRow() == row) {
                 decorList.erase(decorList.begin() + i);
+                dirty = true;
+                return true;
+            }
+        }
+    }
+    else if (layer == TileLayer::LAYER_LADDER) {
+        for (int i = (int)ladders.size() - 1; i >= 0; i--) {
+            if (ladders[i].getCol() == col && ladders[i].getRow() == row) {
+                ladders.erase(ladders.begin() + i);
                 dirty = true;
                 return true;
             }
@@ -120,14 +130,12 @@ void Map::addPlatform(int col, int row, std::string texKey,
     dirty = true;
 }
 
-// decor TINH - cat tu sheet
 void Map::addDecor(int col, int row, std::string texKey, int srcX, int srcY) {
     decorList.emplace_back(col, row, texKey, srcX, srcY);
     decorList.back().setTexture(resourceManager::getTexture(rend, texKey));
     dirty = true;
 }
 
-// decor DONG - texKey chinh la ten sprite trong Tiles/Animation
 void Map::addDecorAnim(int col, int row, std::string animKey) {
     decorList.emplace_back(col, row, animKey);
     decorList.back().getAnim().setTexture(resourceManager::getTexture(rend, animKey));

@@ -11,15 +11,38 @@ sceneEditor::~sceneEditor() {
 }
 
 void sceneEditor::preLoad(SDL_Renderer* renderer) {
-    tileMap.setTexture(resourceManager::getTexture(renderer, tileMap.getType()));
+    rend = renderer;
+    palette.preLoad(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     map.addTextures(renderer);
     map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
 }
 
-// cập nhật mỗi vòng lặp 
+// dat tile theo layer dang chon trong palette
+void sceneEditor::placeAt(int col, int row) {
+    const std::string& key = palette.getTexKey();
+
+    switch (palette.getLayer()) {
+    case TileLayer::LAYER_PLATFORM:
+        map.addPlatform(col, row, key, palette.getSrcX(), palette.getSrcY());
+        break;
+    case TileLayer::LAYER_DECOR:
+        map.addDecor(col, row, key, palette.getSrcX(), palette.getSrcY());
+        break;
+    case TileLayer::LAYER_DECOR_ANIM:
+        map.addDecorAnim(col, row, key);
+        break;
+    case TileLayer::LAYER_LADDER:
+        map.addLadder(col, row, key);
+        break;
+    case TileLayer::LAYER_ENEMY:
+        map.addFlyer(col, row, 1);
+        break;
+    }
+}
+
+// cập nhật mỗi vòng lặp
 void sceneEditor::update(float deltaTime) {
 
-    tileMap.update(deltaTime);
     // cập nhật vị trí trong thế giới
     for (platform& x : map.getPlatforms()) x.update(deltaTime);
     for (decor& d : map.getDecors()) d.update(deltaTime);
@@ -57,147 +80,56 @@ void sceneEditor::render(SDL_Renderer* renderer) {
         renderGrid(renderer);
     }
 
-    if (menuOpen == true) {
-        renderPalette(renderer);
-    }
+    palette.render(renderer);   // tu thoat neu dang dong
 }
 
-// xử lý input của scene này 
+// xử lý input của scene này
 void sceneEditor::handleInput(const SDL_Event& event) {
 
-    // xử lý input trong game 
-    if (menuOpen == false) {
-        if (event.type == SDL_EVENT_KEY_DOWN) {
-            switch (event.key.key) {
-            case SDLK_A:
-            case SDLK_LEFT:
-                map.getCam().moveLeft();
-                break;
-            case SDLK_D:
-            case SDLK_RIGHT:
-                map.getCam().moveRight();
-                break;
-            case SDLK_SPACE:
-            case SDLK_W:
-            case SDLK_UP:
-                map.getCam().moveUp();
-                break;
-
-            case SDLK_S:
-            case SDLK_DOWN:
-                map.getCam().moveDown();
-                break;
-
-            case SDLK_TAB:
-                menuOpen = true;
-                break;
-                break;
-            case SDLK_F3:
-                rendergrid = !rendergrid;
-                break;
-            }
-
-        }
-        else if (event.type == SDL_EVENT_KEY_UP) {
-            switch (event.key.key) {
-            case SDLK_A:
-            case SDLK_LEFT:
-                //mainPlayer.setMovingLeft(false);
-                break;
-            case SDLK_D:
-            case SDLK_RIGHT:
-                //mainPlayer.setMovingRight(false);
-                break;
-            }
-        }
-        else if (event.type == SDL_EVENT_MOUSE_WHEEL) {
-            if (event.wheel.y > 0)
-            {
-                // Lăn lên
-                map.getCam().zoomIn();
-            }
-            else if (event.wheel.y < 0)
-            {
-                // Lăn xuống
-                map.getCam().zoomOut();
-            }
-        }
-
-        else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-            float mouseClickX = event.button.x;
-            float mouseClickY = event.button.y;
-
-            int col = map.xScreenToCol(mouseClickX);
-            int row = map.yScreenToRow(mouseClickY);
-
-            if (event.button.button == SDL_BUTTON_LEFT) {
-                TileLayer layer = tileMap.getLayer();
-
-                if (layer == TileLayer::LAYER_PLATFORM) {
-                    map.addPlatform(col, row, tileMap.getType(),
-                        tileMap.getSrcX(), tileMap.getSrcY());
-                }
-                else if (layer == TileLayer::LAYER_DECOR) {
-                    map.addDecor(col, row, tileMap.getType(),
-                        tileMap.getSrcX(), tileMap.getSrcY());
-                }
-                else if (layer == TileLayer::LAYER_ENEMY) {
-                    map.addFlyer(col, row, 1);
-                }
-            }
-
-            else if (event.button.button == SDL_BUTTON_RIGHT) {
-                std::cout << "Nhan chuot phai: " << mouseClickX << " " << mouseClickY << std::endl;
-                
-                if (map.eraseAt(col, row, tileMap.getLayer())) {
-                    std::cout << "xoa 1 tile" << std::endl;
-                }
-                else {
-                    std::cout << "Khong xoa gi ca" << std::endl;
-                }
-            }
-
-        }
+    // ---- Tab: bat/tat palette. Xu li TRUOC moi thu khac ----
+    if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_TAB) {
+        palette.toggle();
+        return;
     }
 
-    // xử lý input palette
-    else if (menuOpen == true) {
-        if (event.type == SDL_EVENT_KEY_DOWN) {
-            switch (event.key.key) {
-            case SDLK_TAB:
-                menuOpen = false;
-                break;
-            case SDLK_F3:
-                rendergrid = !rendergrid;
-                break;
-            case SDLK_L:
-                map.save(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
-                break;
-            case SDLK_1:
-                tileMap.setLayer(TileLayer::LAYER_PLATFORM);
-                std::cout << "p -" << std::endl;
-                break;
-            case SDLK_2:
-                tileMap.setLayer(TileLayer::LAYER_DECOR);
-                std::cout << "d -" << std::endl;
-                break;
-            case SDLK_3:
-                tileMap.setLayer(TileLayer::LAYER_ENEMY);
-                std::cout << "e 1" << std::endl;
-                break;
-            }
-        }
-        else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-            if (event.button.button == SDL_BUTTON_LEFT) {
-                float mouseClickX = event.button.x;
-                float mouseClickY = event.button.y;
+    // ---- Palette dang mo thi no chiem toan bo input ----
+    if (palette.handleInput(event)) return;
 
-                std::cout << "Nhan chuot trai: " << mouseClickX << " " << mouseClickY << std::endl;
-                tileMap.mouseClick(mouseClickX, mouseClickY);
-            }
+    // ---- Tu day tro xuong la canvas ----
+    if (event.type == SDL_EVENT_KEY_DOWN) {
+        switch (event.key.key) {
+        case SDLK_A:
+        case SDLK_LEFT:   map.getCam().moveLeft();  break;
+        case SDLK_D:
+        case SDLK_RIGHT:  map.getCam().moveRight(); break;
+        case SDLK_W:
+        case SDLK_UP:     map.getCam().moveUp();    break;
+        case SDLK_S:
+        case SDLK_DOWN:   map.getCam().moveDown();  break;
+
+        case SDLK_F3:     rendergrid = !rendergrid; break;
+
+        case SDLK_L:
+            if (map.save(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt"))
+                SDL_Log("Da luu map");
+            break;
         }
     }
+    else if (event.type == SDL_EVENT_MOUSE_WHEEL) {
+        if (event.wheel.y > 0)      map.getCam().zoomIn();
+        else if (event.wheel.y < 0) map.getCam().zoomOut();
+    }
+    else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+        int col = map.xScreenToCol(event.button.x);
+        int row = map.yScreenToRow(event.button.y);
 
+        if (event.button.button == SDL_BUTTON_LEFT) {
+            placeAt(col, row);
+        }
+        else if (event.button.button == SDL_BUTTON_RIGHT) {
+            map.eraseAt(col, row, palette.getLayer());
+        }
+    }
 }
 
 void sceneEditor::switchScene() {
@@ -230,17 +162,3 @@ void sceneEditor::renderGrid(SDL_Renderer * renderer) {
 
 }
 
-void sceneEditor::renderPalette(SDL_Renderer* renderer) {
-    // bong mo 
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200); // Alpha = 200 / 255
-
-    SDL_FRect rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-    SDL_RenderFillRect(renderer, &rect);
-
-    // in hinh anh tile map 
-
-    tileMap.render(renderer);
-    
-}

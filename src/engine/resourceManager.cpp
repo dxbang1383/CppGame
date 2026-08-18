@@ -17,7 +17,7 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{ "player_idle", "assets/kenney_pixel-platformer/Tiles/Characters/tile_idle1.png" },
 	{ "player_run",  "assets/kenney_pixel-platformer/Tiles/Characters/tile_run.png" },
 	{ "player_jump", "assets/kenney_pixel-platformer/Tiles/Characters/tile_0001.png" },
-	{ "ladder",      "assets/kenney_pixel-platformer/Tiles/ladder_down.png" },  // giu cho map cu
+	{ "ladder",      "assets/kenney_pixel-platformer/Tiles/ladder_down.png" },
 	{ "ladder_down", "assets/kenney_pixel-platformer/Tiles/ladder_down.png" },
 	{ "ladder_top",  "assets/kenney_pixel-platformer/Tiles/ladder_top.png" },
 	{ "flyer",       "assets/kenney_pixel-platformer/Tiles/Enemy/flyer.png" },

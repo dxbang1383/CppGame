@@ -19,12 +19,11 @@ class sceneEditor : public scene {
 private:
     Map map = Map();
 
-    Palette tileMap = Palette(50, 50);
+    Palette palette;
     SDL_Renderer* rend = nullptr;
-    int  idMap = 1;
-    bool menuOpen = false;
-    bool pauseMenu = false;
     bool rendergrid = true;
+
+    void placeAt(int col, int row);   // dat tile theo layer dang chon
 
 public :
 
@@ -37,7 +36,6 @@ public :
     void render(SDL_Renderer* renderer) override;
     void switchScene() override;
     void renderGrid(SDL_Renderer * renderer);
-    void renderPalette(SDL_Renderer* renderer);
 };
 
 
