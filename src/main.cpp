@@ -14,6 +14,7 @@ int main(int argc, char* argv[])
     // Bien vong lap
     bool running = true;
 
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
     // 
     sceneMain mainScene = sceneMain();
     sceneEditor editorScene = sceneEditor();

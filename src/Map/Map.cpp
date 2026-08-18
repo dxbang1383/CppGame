@@ -170,7 +170,59 @@ Map::Map() : mainPlayer(100.0, 100.0, 50.0, 50.0) {
         450.0,
         40.0,
         40.0
+    ); 
+    boxes.emplace_back(
+        15 * platform::TILE_SIZE,
+        25 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        BoxType::COIN
     );
+
+    boxes.emplace_back(
+        20 * platform::TILE_SIZE,
+        25 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        BoxType::QUESTION
+    );
+
+    boxes.emplace_back(
+        28 * platform::TILE_SIZE,
+        25 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        BoxType::ITEM
+    );
+    boxes.emplace_back(
+        26 * platform::TILE_SIZE,
+        11 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        BoxType::QUESTION
+    );
+    items.emplace_back(
+        10 * platform::TILE_SIZE,
+        10 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        ItemType::COIN1
+    );
+
+   items.emplace_back(
+        12 * platform::TILE_SIZE,
+        10 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        ItemType::NO_GRAVITY
+    );
+   items.emplace_back(
+       16 * platform::TILE_SIZE,
+       10 * platform::TILE_SIZE,
+       platform::TILE_SIZE,
+       platform::TILE_SIZE,
+       ItemType::HIGH_JUMP
+   );
 }
 
 void Map::clear() {
@@ -273,4 +325,18 @@ void Map::updateRenderRect() {
     for (platform& x : plat) x.updRenderRect(cam);
     for (decor& d : decorList) d.updRenderRect(cam);
     for (enemy& e : enemies) e.updRenderRect(cam);
+    for (itemBox& box : boxes)
+        box.updRenderRect({
+            cam.getX(),
+            cam.getY(),
+            0,
+            0
+            });
+    for (Item& it : items)
+        it.updRenderRect({
+            cam.getX(),
+            cam.getY(),
+            0,
+            0
+            });
 }

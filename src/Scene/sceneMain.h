@@ -13,6 +13,8 @@
 #include "../GameObject/Platform/switch.h"
 #include "../GameObject/Platform/platform.h"
 #include "../GameObject/Platform/decor.h"
+#include "../GameObject/Special/itembox.h"
+#include "../GameObject/Special/item.h"
 #include "../engine/resourceManager.h"
 #include "../engine/camera.h"
 #include "../Map/Map.h"
@@ -28,6 +30,13 @@ private:
     const float W = 1280.0f, H = 720.0f;
     const int COLS = (int)(W / TILE);
     const int ROWS = (int)(H / TILE);
+    SDL_Texture* Icoin = nullptr;
+    SDL_Texture* Ispeed = nullptr;
+    SDL_Texture* Iheart = nullptr;
+    SDL_Texture* Istar = nullptr;
+    SDL_Texture* Inogravity = nullptr;
+    SDL_Texture* Idoublejump = nullptr;
+    SDL_Texture* Ihighjump = nullptr;
 
 public:
     sceneMain();
@@ -45,7 +54,7 @@ public:
         return (a.getX() < b.getX() + b.getWidth() &&
                 a.getX() + a.getWidth() > b.getX() &&
                 a.getY() < b.getY() + b.getHeight() &&
-                a.getY() + b.getHeight() > b.getY());
+                a.getY() + a.getHeight() > b.getY());
     }
 };
 

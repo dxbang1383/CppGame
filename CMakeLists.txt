@@ -37,7 +37,7 @@ target_sources(CppGame PRIVATE
      "src/Map/Map.cpp" 
      "src/Map/Map.h"
      "src/GameObject/Platform/ladder.h" 
-     "src/GameObject/Platform/ladder.cpp" "src/GameObject/Platform/switch.cpp" "src/GameObject/Platform/switch.h" "src/GameObject/Platform/spike.cpp" "src/GameObject/Platform/spike.h" "src/GameObject/Special/itemBox.cpp" "src/GameObject/Special/itemBox.h")
+     "src/GameObject/Platform/ladder.cpp" "src/GameObject/Platform/switch.cpp" "src/GameObject/Platform/switch.h" "src/GameObject/Platform/spike.cpp" "src/GameObject/Platform/spike.h" "src/GameObject/Special/itemBox.cpp" "src/GameObject/Special/itemBox.h" "src/GameObject/Special/item.cpp" "src/GameObject/Special/item.h")
 
 target_include_directories(CppGame PRIVATE
     SDL3/include

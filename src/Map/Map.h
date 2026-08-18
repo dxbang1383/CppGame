@@ -10,8 +10,13 @@
 #include "../engine/camera.h"
 #include "../GameObject/Platform/platform.h"
 #include "../GameObject/Platform/switch.h"
+#include "../GameObject/Platform/ladder.h"
+#include "../GameObject/Platform/spike.h"
+
 #include "../GameObject/Player/player.h"
 #include "../GameObject/Platform/decor.h"
+#include "../GameObject/Special/itembox.h"
+#include "../GameObject/Special/item.h"
 #include "../engine/resourceManager.h"
 
 
@@ -23,6 +28,9 @@ private:
     std::vector<platform> plat;
     std::vector<decor> decorList;
     std::vector<Switch> switches;
+    std::vector<itemBox> boxes;
+    std::vector<Item> items;
+
 
     SDL_Texture* bkg = nullptr;
 
@@ -68,6 +76,8 @@ public:
     std::vector<platform>& getPlatforms() { return plat; }
     std::vector<decor>& getDecors() { return decorList; }
     std::vector<Switch>& getSwitches() { return switches; }
+    std::vector<itemBox>& getBoxes() { return boxes; }
+    std::vector<Item>& getItems() { return items; }
     player& getPlayer() { return mainPlayer; }
     float getStartX() const { return startCol * platform::TILE_SIZE; }
     float getStartY() const { return startRow * platform::TILE_SIZE; }

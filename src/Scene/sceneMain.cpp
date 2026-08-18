@@ -7,6 +7,8 @@ sceneMain::sceneMain() {
 // =========================================================
 
 // Cầu thang 1: nối platform ở row 25 -> row 21
+    
+
     int ladderCol = 12;
 
     for (int row = 21; row <= 25; row++) {
@@ -34,6 +36,16 @@ sceneMain::sceneMain() {
     ladderCol = 27;
 
     for (int row = 12; row <= 16; row++) {
+        ladders.emplace_back(
+            ladderCol * platform::TILE_SIZE,
+            row * platform::TILE_SIZE,
+            platform::TILE_SIZE,
+            platform::TILE_SIZE
+        );
+    }
+    ladderCol = 14;
+
+    for (int row = 4; row <= 18; row++) {
         ladders.emplace_back(
             ladderCol * platform::TILE_SIZE,
             row * platform::TILE_SIZE,
@@ -93,7 +105,7 @@ sceneMain::sceneMain() {
         spikes.emplace_back(
             col * platform::TILE_SIZE,
             20 * platform::TILE_SIZE,
-            platform::TILE_SIZE,
+            platform::TILE_SIZE,    
             platform::TILE_SIZE
         );
     }
@@ -127,6 +139,7 @@ sceneMain::sceneMain() {
             platform::TILE_SIZE
         );
     }
+
 }
 
 // Destruction 
@@ -162,6 +175,86 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     for (spike& sp : spikes) {
         sp.setTexture(spikeTex);
     }
+
+    SDL_Texture* boxCoin = resourceManager::getTexture(renderer, "box_coin");
+    SDL_Texture* boxQuestion = resourceManager::getTexture(renderer, "box_question");
+    SDL_Texture* boxItem = resourceManager::getTexture(renderer, "box_item");
+
+    Icoin = resourceManager::getTexture(renderer, "i_coin");
+    Istar = resourceManager::getTexture(renderer, "i_star");
+    Ispeed = resourceManager::getTexture(renderer, "i_speed");
+    Iheart = resourceManager::getTexture(renderer, "i_heart");
+    Inogravity = resourceManager::getTexture(renderer, "i_nogravity");
+    Idoublejump = resourceManager::getTexture(renderer, "i_doublejump");
+    Ihighjump = resourceManager::getTexture(renderer, "i_highjump");
+
+    for (itemBox& box : map.getBoxes()) {
+        switch (box.getBoxType()) {
+
+        case BoxType::COIN:
+            box.setTexture(boxCoin);
+            break;
+
+        case BoxType::QUESTION:
+            box.setTexture(boxQuestion);
+            break;
+
+        case BoxType::ITEM:
+            box.setTexture(boxItem);
+            break;
+        }
+    }
+
+    for (Item& it : map.getItems()) {
+        switch (it.getItemType()) {
+        case ItemType::COIN1:
+            it.setTexture(Icoin);
+            break;
+        case ItemType::STAR:
+            it.setTexture(Istar);
+            break;
+        case ItemType::SPEED:
+            it.setTexture(Ispeed);
+            break;
+        case ItemType::HEART:
+            it.setTexture(Iheart);
+            break;
+        case ItemType::NO_GRAVITY:
+            it.setTexture(Inogravity);
+            break;
+        case ItemType::DOUBLE_JUMP:
+            it.setTexture(Idoublejump);
+            break;
+        case ItemType::HIGH_JUMP:
+            it.setTexture(Ihighjump);
+            break;
+        }
+    }
+    /*map.getItems().clear();
+
+    map.getItems().emplace_back(
+        10 * platform::TILE_SIZE,
+        10 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        ItemType::COIN
+    );
+    if (Icoin != nullptr) {
+        map.getItems().back().setTexture(Icoin);
+    }
+    map.getItems().back().updRenderRect(map.getCam());
+
+    map.getItems().emplace_back(
+        12 * platform::TILE_SIZE,
+        10 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        ItemType::STAR
+    );
+    if (Istar != nullptr) {
+        map.getItems().back().setTexture(Istar);
+    }
+    map.getItems().back().updRenderRect(map.getCam());*/
 }
 
 void sceneMain::update(float deltaTime) {
@@ -170,6 +263,7 @@ void sceneMain::update(float deltaTime) {
     for (enemy& e    : map.getEnemies())      e.update(deltaTime);
     for (Switch& s   : map.getSwitches())     s.update(deltaTime);
     for (spike& sp   : spikes)       sp.update(deltaTime);
+ 
     map.getPlayer().update(deltaTime);
 
     handleCollision(deltaTime);
@@ -181,7 +275,12 @@ void sceneMain::update(float deltaTime) {
     for (spike& sp : spikes) {
         sp.updRenderRect({ map.getCam().getX(), map.getCam().getY(), 0, 0 });
     }
-
+    for (itemBox& box : map.getBoxes()) {
+        box.updRenderRect({ map.getCam().getX(), map.getCam().getY(), 0, 0 });
+    }
+    for (Item& item : map.getItems()) {
+        item.updRenderRect({ map.getCam().getX(), map.getCam().getY(), 0, 0 });
+    }
 }
 
 
@@ -196,7 +295,8 @@ void sceneMain::render(SDL_Renderer* renderer) {
     for (enemy& e : map.getEnemies()) e.render(renderer);
     for (Switch& sw : map.getSwitches()) sw.render(renderer);
     for (spike& sp : spikes) sp.render(renderer);
-
+    for (itemBox& box : map.getBoxes()) box.render(renderer);
+    for (Item& it : map.getItems()) it.render(renderer);
     map.getPlayer().render(renderer);
 }
 
@@ -255,53 +355,166 @@ void sceneMain::handleCollision(float deltaTime) {
         }
     }
 
-    // --- Thang ---
-    bool touchingLadder = false;
-    for (ladder& l : ladders) {
-        if (overlapsLadder(l)) {
-            touchingLadder = true;
-            break;   // Chi can cham vao 1 nac la du
+    // Player cung dau vao hop
+    for (itemBox& box : map.getBoxes()) {
+
+        bool horizontalOverlap =
+            p.getX() < box.getX() + box.getWidth() &&
+            p.getX() + p.getWidth() > box.getX();
+
+        bool verticalOverlap =
+            p.getY() < box.getY() + box.getHeight() &&
+            p.getY() + p.getHeight() > box.getY();
+
+        // Đang nhảy lên và chạm box
+        if (p.getVelocityY() < 0 &&
+            horizontalOverlap &&
+            verticalOverlap)
+        {
+            // Đưa player xuống ngay dưới box
+            p.setY(box.getY() + box.getHeight());
+
+            // Không cho player tiếp tục bay lên
+            p.setVelocityY(0);
+
+            // Chỉ box chưa kích hoạt mới activate
+            // Chỉ box chưa kích hoạt mới activate
+            if (!box.isActivated()) {
+
+                box.activate();
+                ItemType itemType = ItemType::COIN1;
+
+                if (box.getBoxType() == BoxType::COIN) {
+                    
+                    itemType = ItemType::COIN1;
+                }
+                else if (box.getBoxType() == BoxType::QUESTION) {
+                   
+                    static const ItemType questionPool[] = {
+                        ItemType::HEART,
+                        ItemType::SPEED,
+                        ItemType::DOUBLE_JUMP
+                    };
+                    itemType = questionPool[rand() % 3];
+                }
+                else if (box.getBoxType() == BoxType::ITEM) {
+                   
+                    static const ItemType itemPool[] = {
+                        ItemType::NO_GRAVITY,
+                        ItemType::HIGH_JUMP,
+                        ItemType::STAR,
+                    
+                    };
+                    itemType = itemPool[rand() % 3];
+                }
+
+                Item newItem(
+                    box.getRewardX() - 12.0,
+                    box.getRewardY(),
+                    24.0,
+                    24.0,
+                    itemType
+                );
+
+                switch (itemType) {
+
+                case ItemType::COIN1:
+                    newItem.setTexture(Icoin);
+                    break;
+
+                case ItemType::STAR:
+                    newItem.setTexture(Istar);
+                    break;
+
+                case ItemType::DOUBLE_JUMP:
+                    newItem.setTexture(Idoublejump);
+                    break;
+
+                case ItemType::NO_GRAVITY:
+                    newItem.setTexture(Inogravity);
+                    break;
+
+                case ItemType::HIGH_JUMP:
+                    newItem.setTexture(Ihighjump);
+                    break;
+
+                case ItemType::HEART:
+                    newItem.setTexture(Iheart);
+                    break;
+
+                case ItemType::SPEED:
+                    newItem.setTexture(Ispeed);
+                    break;
+                }
+
+                newItem.setIVelocityY(-5.0);
+                newItem.updRenderRect(map.getCam());
+
+                map.getItems().push_back(newItem);
+            }
         }
+
+        // --- Thang ---
+        bool touchingLadder = false;
+        for (ladder& l : ladders) {
+            if (overlapsLadder(l)) {
+                touchingLadder = true;
+                break;   // Chi can cham vao 1 nac la du
+            }
+        }
+
+        // Cap nhat trang thai cho Player
+        p.setIsTouchingLadder(touchingLadder);
+
+        // Roi khoi thang thi thoi leo (ban cu thieu -> treo lo lung giua khong trung)
+        if (!touchingLadder) p.setIsClimbing(false);
+
+        // Neu dang treo thang thi khong can xu li voi mat dat
+        if (p.getIsClimbing()) return;
+
+        // Cap nhat lai trang thai dung tren mat dat cho player
+        p.setOnGround(onAnyGround);
+
+        //Xu li player cham cong tac
+        for (Switch& sw : map.getSwitches()) {
+            if (!sw.getIsActivated() && checkCollision(p, sw)) {
+                sw.trigger();
+
+                float switchCenterX = sw.getX() + sw.getWidth() / 2.0f;
+                float switchCenterY = sw.getY() + sw.getHeight() / 2.0f;
+
+                float radius = 400.0f;
+
+                std::erase_if(spikes, [switchCenterX, switchCenterY, radius](const spike& sp) {
+                    float spikeCenterX = sp.getX() +    sp.getWidth() / 2.0f;
+                    float spikeCenterY = sp.getY() + sp.getHeight() / 2.0f;
+
+                    float distance = std::hypot(switchCenterX - spikeCenterX, switchCenterY - spikeCenterY);
+
+                    return distance <= radius;
+                    });
+            }
+        }
+        std::erase_if(spikes, [this, &p](const spike& sp) {
+            if (checkCollision(p, sp)) {
+                return true;
+            }
+            return false;
+            });
+
+        // Kiểm tra player nhặt item
+        for (Item& item : map.getItems()) {
+            if (!item.isCollected() && checkCollision(p, item)) {
+                item.collect();
+                p.collectItem(item.getItemType()); // Kích hoạt hiệu ứng cho player
+            }
+        }
+
+        // Xóa các item đã bị nhặt khỏi map
+        std::erase_if(map.getItems(), [](const Item& item) {
+            return item.isCollected();
+            });
     }
-
-    // Cap nhat trang thai cho Player
-    p.setIsTouchingLadder(touchingLadder);
-
-    // Roi khoi thang thi thoi leo (ban cu thieu -> treo lo lung giua khong trung)
-    if (!touchingLadder) p.setIsClimbing(false);
-
-    // Neu dang treo thang thi khong can xu li voi mat dat
-    if (p.getIsClimbing()) return;
-
-    // Cap nhat lai trang thai dung tren mat dat cho player
-    p.setOnGround(onAnyGround);
-
-    //Xu li player cham cong tac
-    for (Switch& sw : map.getSwitches()) {
-        if (!sw.getIsActivated() && checkCollision(p, sw)) {
-            sw.trigger();
-
-            float switchCenterX = sw.getX() + sw.getWidth() / 2.0f;
-            float switchCenterY = sw.getY() + sw.getHeight() / 2.0f;
-
-            float radius = 400.0f;
-
-            std::erase_if(spikes, [switchCenterX, switchCenterY, radius](const spike& sp) {
-                float spikeCenterX = sp.getX() + sp.getWidth() / 2.0f;
-                float spikeCenterY = sp.getY() + sp.getHeight() / 2.0f;
-
-                float distance = std::hypot(switchCenterX - spikeCenterX, switchCenterY - spikeCenterY);
-
-                return distance <= radius;
-                });
-        }
-    }
-    std::erase_if(spikes, [this, &p](const spike& sp) {
-        if (checkCollision(p, sp)) {
-            return true;
-        }
-        return false;
-        });
 }
 
 
@@ -313,45 +526,69 @@ void sceneMain::handleInput(const SDL_Event& event) {
             map.getPlayer().setDirection(-1);
             map.getPlayer().setMovingLeft(true);
             break;
+
         case SDLK_D:
         case SDLK_RIGHT:
             map.getPlayer().setMovingRight(true);
             map.getPlayer().setDirection(1);
             break;
+
         case SDLK_SPACE:
         case SDLK_W:
         case SDLK_UP:
-            if (map.getPlayer().IsTouchingLadder()) {
+            // 1. Ưu tiên kiểm tra trạng thái Không trọng lực (No Gravity)
+            if (map.getPlayer().isNoGravity()) {
+                map.getPlayer().setMovingUp(true);
+            }
+            // 2. Nếu đang chạm thang thì leo lên
+            else if (map.getPlayer().IsTouchingLadder()) {
                 map.getPlayer().setIsClimbing(true);
                 map.getPlayer().setMovingUp(true);
-            } else if (map.getPlayer().isOnGround()) {
-                map.getPlayer().setVelocityY(-map.getPlayer().getJumpForce());
-                map.getPlayer().setOnGround(false);
             }
-            break;  
+            // 3. Bình thường thì nhảy
+            else {
+                map.getPlayer().jump();
+            }
+            break;
+
         case SDLK_S:
         case SDLK_DOWN:
-            if (map.getPlayer().IsTouchingLadder()) {
+            // 1. Kiểm tra trạng thái Không trọng lực
+            if (map.getPlayer().isNoGravity()) {
+                map.getPlayer().setMovingDown(true);
+            }
+            // 2. Nếu đang chạm thang thì leo xuống
+            else if (map.getPlayer().IsTouchingLadder()) {
                 map.getPlayer().setIsClimbing(true);
-                map.getPlayer().setMovingUp(true);
+                map.getPlayer().setMovingDown(true); // Đã sửa lỗi cũ (trước đó bạn để setMovingUp)
             }
             break;
         }
     }
-
     else if (event.type == SDL_EVENT_KEY_UP) {
         switch (event.key.key) {
         case SDLK_A:
         case SDLK_LEFT:
             map.getPlayer().setMovingLeft(false);
             break;
+
         case SDLK_D:
         case SDLK_RIGHT:
             map.getPlayer().setMovingRight(false);
             break;
+
+        case SDLK_SPACE:
+        case SDLK_W:
+        case SDLK_UP:
+            map.getPlayer().setMovingUp(false); // Thả phím W/UP -> Dừng bay lên / Dừng leo
+            break;
+
+        case SDLK_S:
+        case SDLK_DOWN:
+            map.getPlayer().setMovingDown(false); // Thả phím S/DOWN -> Dừng bay xuống / Dừng leo
+            break;
         }
     }
-
 }
 
 void sceneMain::focusPlayer() {
