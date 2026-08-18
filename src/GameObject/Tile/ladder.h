@@ -3,18 +3,12 @@
 
 #include <SDL3/SDL.h>
 #include <string>
-#include "../gameObject.h"
+#include <../src/GameObject/Tile/tile.h>
 
-class ladder : public gameObject {
+class ladder : public tile {
 public:
-	ladder(double x, double y, double width = 32.0, double height = 32.0)
-		: gameObject(x, y, width, height) {}
+	ladder(int col, int row, std::string texKey = "ladder") : tile(col, row, texKey) {
 
-	void render(SDL_Renderer* renderer) override {
-		SDL_Texture* tex = getTexture();
-		if (tex != nullptr) {
-			SDL_RenderTexture(renderer, tex, nullptr, getRenderRect());
-		}
 	}
 };
 

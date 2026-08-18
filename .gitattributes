@@ -1,2 +1,4 @@
 SDL3/** linguist-vendored
 SDL3_image/** linguist-vendored
+SDL3_ttf/** linguist-vendored
+assets/** linguist-vendored

@@ -5,11 +5,11 @@ player::player(double x, double y, double width, double height)
     : gameObject(x, y, width, height){
     setTexture(nullptr);
 }
-player::player(double x, double y) : gameObject(x, y, 32.0, 32.0) {
+player::player(double x, double y) : gameObject(x, y, 48.0, 48.0) {
     setTexture(nullptr);
 }
 
-player::player() : player(0.0, 0.0, 32.0, 32.0) {}
+player::player() : player(0.0, 0.0, 48.0, 48.0) {}
 
 void player::update(float deltaTime) {
 

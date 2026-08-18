@@ -1,3 +1,6 @@
+<state>
+9 0 0 0
+</state>
 <platform>
 0 14 map1 2 4
 1 14 map1 2 4
@@ -230,3 +233,18 @@
 <enemy>
 4 4 flyer 1
 </enemy>
+<ladder>
+10 -3 ladder
+10 -2 ladder
+10 -1 ladder
+10 0 ladder
+10 1 ladder
+10 2 ladder
+10 3 ladder
+10 4 ladder
+10 5 ladder
+10 6 ladder
+10 7 ladder
+10 8 ladder
+10 9 ladder
+</ladder>

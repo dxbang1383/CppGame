@@ -28,7 +28,6 @@ enum SceneAction {
 class sceneMain : public scene {
 private:
     Map map = Map();
-    std::vector<ladder> ladders; // sau chuyen vao map 
 
     const float TILE = 36.0f;
     const float W = 1280.0f, H = 720.0f;
@@ -40,7 +39,6 @@ private:
     PauseMenu pauseMenu;
     GameOverMenu gameOverMenu;
     SettingsMenu settings;
-    float spawnX = 0.0f, spawnY = 0.0f;
     const float deathY = 2000.0f;
     int sceneAction = SCENE_NONE;
 

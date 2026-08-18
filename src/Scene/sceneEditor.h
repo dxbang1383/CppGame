@@ -13,6 +13,7 @@
 #include "../engine/camera.h"
 #include "../engine/UI/Palette.h"
 #include "../Map/Map.h"
+#include "../GameObject/Tile/ladder.h"
 
 class sceneEditor : public scene {
 private:

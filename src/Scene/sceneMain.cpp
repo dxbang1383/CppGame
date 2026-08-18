@@ -3,13 +3,7 @@
 
 // Constructor
 sceneMain::sceneMain() {
-    // Map da tu dung san trong constructor cua no
-    int ladderCol = 10;
-    for (int row = -3; row <= 9; row++) {
-        ladders.emplace_back(ladderCol * tile::TILE_SIZE,
-            row * tile::TILE_SIZE,
-            tile::TILE_SIZE, tile::TILE_SIZE);
-    }
+
 }
 
 // Destruction 
@@ -18,40 +12,24 @@ sceneMain::~sceneMain() {
 }
 
 void sceneMain::preLoad(SDL_Renderer* renderer) {
-    map.addTextures(renderer);          // bkg, platform, decor, enemy, player
+    map.addTextures(renderer); // bkg, platform, decor, enemy, player
 
     std::string mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt";
     if (!map.load(mapPath)) {
         SDL_Log("Khong nap duoc map: %s -> dung map mac dinh", mapPath.c_str());
     }
-    // Animation player
-    SDL_Texture* idle = resourceManager::getTexture(renderer, "player_idle");
-    SDL_Texture* run = resourceManager::getTexture(renderer, "player_run");
-    SDL_Texture* jump = resourceManager::getTexture(renderer, "player_jump");
-    SDL_Texture* def = resourceManager::getTexture(renderer, "player");
 
-    player& p = map.getPlayer();
-    p.setIdleTexture(idle ? idle : def);
-    p.setRunTexture(run ? run : def);
-    p.setJumpTexture(jump ? jump : def);
-    p.setTexture(idle ? idle : def);
-
-    // Thang
-    SDL_Texture* ladTex = resourceManager::getTexture(renderer, "ladder");
-    for (ladder& l : ladders) l.setTexture(ladTex);
 
     pauseMenu.preLoad(renderer);
     gameOverMenu.preLoad(renderer);
     settings.preLoad(renderer);
     iconTex = resourceManager::getTexture(renderer, "menu");
-    spawnX = (float)map.getPlayer().getX();
-    spawnY = (float)map.getPlayer().getY();
 }
 
 void sceneMain::resetPlayer() {
     player& p = map.getPlayer();
-    p.setX(spawnX);
-    p.setY(spawnY);
+    p.setX(map.getStartX());
+    p.setY(map.getStartY());
     p.setVelocityX(0);
     p.setVelocityY(0);
     p.setOnGround(false);
@@ -72,7 +50,7 @@ void sceneMain::update(float deltaTime) {
     focusPlayer();
 
     map.updateRenderRect();
-    for (ladder& l : ladders) l.updRenderRect(map.getCam());   // thang cũng theo camera
+    for (ladder& l : map.getLadders()) l.updRenderRect(map.getCam());   // thang cũng theo camera
 
     if (map.getPlayer().getY() > deathY) {
         lost = true;
@@ -85,7 +63,7 @@ void sceneMain::render(SDL_Renderer* renderer) {
     SDL_RenderTexture(renderer, map.getBkg(), nullptr, &bkgRect);
 
     for (platform& p : map.getPlatforms()) p.render(renderer);
-    for (ladder& l : ladders) l.render(renderer);
+    for (ladder& l : map.getLadders()) l.render(renderer);
     for (decor& d : map.getDecors()) d.render(renderer);
     for (flyer& f : map.getFlyers()) f.render(renderer);
     for (walker& w : map.getWalkers()) w.render(renderer);
@@ -165,7 +143,7 @@ void sceneMain::handleCollision(float deltaTime) {
 
     // --- Thang ---
     bool touchingLadder = false;
-    for (ladder& l : ladders) {
+    for (ladder& l : map.getLadders()) {
         if (overlapsLadder(l)) {
             touchingLadder = true;
             break;   // Chi can cham vao 1 nac la du

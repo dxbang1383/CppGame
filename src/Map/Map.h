@@ -15,6 +15,7 @@
 #include "../GameObject/Tile/decor.h"
 #include "../engine/resourceManager.h"
 #include "../engine/UI/Palette.h"
+#include "../GameObject/Tile/ladder.h"
 #include <fstream>   // std::ofstream, std::ifstream
 #include <sstream>   // std::istringstream
 
@@ -26,16 +27,17 @@ private:
     std::vector<walker> walkers;
     std::vector<platform> plat;
     std::vector<decor> decorList;
+    std::vector<ladder> ladders;
 
     SDL_Texture* bkg = nullptr;
 
-    int startCol = 0, startRow = 0;       // điểm xuất phát
-    int goalCol = 0, goalRow = 0;       // đích
+    int startCol = 0, startRow = 0; // điểm xuất phát
+    int goalCol = 0, goalRow = 0; // đích
     bool hasGoal = false;
 
-    int cols = 0, rows = 0;               // kích thước map, tính bằng Ô
+    int cols = 0, rows = 0; // kích thước map, tính bằng Ô
     std::string name;
-    bool dirty = false;                   // có thay đổi chưa lưu
+    bool dirty = false;  // có thay đổi chưa lưu
 
     std::string type;
     SDL_Renderer* rend = nullptr; // tam thoi lay renderer tu add texture
@@ -55,6 +57,7 @@ public:
     void addDecor(int col, int row, std::string texKey, int srcX, int srcY, std::string animKey);
     void addFlyer(int col, int row, int patrol);
     void addWalker(int col, int row, int patrol);
+    void addLadder(int col, int row, std::string texKey);
 
     bool eraseAt(int col, int row, TileLayer layer);
 
@@ -72,8 +75,12 @@ public:
     std::vector<walker>& getWalkers() { return walkers; }
     std::vector<platform>& getPlatforms() { return plat; }
     std::vector<decor>& getDecors() { return decorList; }
+    std::vector<ladder>& getLadders() { return ladders; }
+
     player& getPlayer() { return mainPlayer; }
+    // Chuyển từ địa chỉ col sang x 
     float getStartX() const { return startCol * tile::TILE_SIZE; }
+    // Chuyển từ địa chỉ row sang y 
     float getStartY() const { return startRow * tile::TILE_SIZE; }
     camera& getCam() { return cam; }
     int xScreenToCol(float mouseClickX) {

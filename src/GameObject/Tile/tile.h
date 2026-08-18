@@ -11,7 +11,7 @@
 */
 class tile : public gameObject {
 private:
-	std::string type = "P";
+	std::string type = "Tile";
 	SDL_FRect srcRect = { 0.0f, 0.0f, 0.0f, 0.0f }; // vung cat tren sheet
 
 public:
@@ -26,8 +26,8 @@ public:
 	void setType(std::string t) { type = t; }
 	void setSrcRect(SDL_FRect rect) { srcRect = rect; }
 
-	int getCol() { return (int)getX() / TILE_SIZE; }
-	int getRow() { return (int)getY() / TILE_SIZE; }
+	int getCol() { return floor(getX()) / TILE_SIZE; }
+	int getRow() { return floor(getY()) / TILE_SIZE; }
 	int getSrcX() { return srcRect.x / TILE_MAP; }
 	int getSrcY() { return srcRect.y / TILE_MAP; }
 

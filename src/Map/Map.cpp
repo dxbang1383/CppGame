@@ -1,7 +1,7 @@
 #include "Map.h"
 
-Map::Map() : mainPlayer(100.0, 100.0, 50.0, 50.0) {
-    // Map rong, moi noi dung deu den tu load()
+Map::Map() : mainPlayer(0, 0) {
+
 }
 
 void Map::clear() {
@@ -37,7 +37,21 @@ void Map::addTextures(SDL_Renderer* renderer) {
         }
     }
 
-    mainPlayer.setTexture(resourceManager::getTexture(renderer, "player"));
+    for (ladder& l : ladders) {
+        l.setTexture(resourceManager::getTexture(renderer, "ladder"));
+    }
+
+    // Animation player
+    SDL_Texture* idle = resourceManager::getTexture(renderer, "player_idle");
+    SDL_Texture* run = resourceManager::getTexture(renderer, "player_run");
+    SDL_Texture* jump = resourceManager::getTexture(renderer, "player_jump");
+    SDL_Texture* def = resourceManager::getTexture(renderer, "player");
+
+    player& p = getPlayer();
+    p.setIdleTexture(idle ? idle : def);
+    p.setRunTexture(run ? run : def);
+    p.setJumpTexture(jump ? jump : def);
+    p.setTexture(idle ? idle : def);
 
     for (flyer& f : flyers)
         f.setTexture(resourceManager::getTexture(renderer, f.getType()));
@@ -93,6 +107,12 @@ bool Map::eraseAt(int col, int row, TileLayer layer ) {
     return false;
 }
 
+void Map::addLadder(int col, int row, std::string texKey) {
+    ladders.emplace_back(col, row, texKey);
+    ladders.back().setTexture(resourceManager::getTexture(rend, texKey));
+    dirty = true;
+}
+
 void Map::addPlatform(int col, int row, std::string texKey,
                         int srcX, int srcY) {
     plat.emplace_back(col, row, texKey, srcX, srcY);
@@ -138,8 +158,18 @@ bool Map::load(const std::string& path) {
     bool inPlatformBlock = false; // cờ kiểm tra xem có đang đọc platform không
     bool inDecorBlock = false;
     bool inEnemyBlock = false;
+    bool inStateBlock = false;
+    bool inLadderBlock = false;
 
     while (std::getline(file, line)) {
+        if (line == "<state>") {
+            inStateBlock = true;
+            continue;
+        }
+        if (line == "</state>") {
+            inStateBlock = false;
+            continue;
+        }
         if (line == "<platform>") {
             inPlatformBlock = true;
             continue;
@@ -163,6 +193,20 @@ bool Map::load(const std::string& path) {
         if (line == "</enemy>") {
             inEnemyBlock = false;
             continue;
+        }
+        if (line == "<ladder>") {
+            inLadderBlock = true;
+            continue;
+        }
+        if (line == "</ladder>") {
+            inLadderBlock = false;
+            continue;
+        }
+
+        if (inStateBlock) {
+            std::istringstream ss(line); // chuyển thành giống như cin 
+            ss >> startCol >> startRow >> goalCol >> goalRow;
+            mainPlayer.setPosition(getStartX(), getStartY());
         }
 
         if (inPlatformBlock) {
@@ -197,6 +241,14 @@ bool Map::load(const std::string& path) {
                 else std::cout << "Khong biet loai quai: " << type << std::endl;
             }
         }
+
+        if (inLadderBlock) {
+            std::istringstream ss(line);
+            int col, row;
+            std::string texKey;
+            ss >> col >> row >> texKey;
+            addLadder(col, row, texKey);
+        }
     }
 
     dirty = false;
@@ -215,6 +267,11 @@ bool Map::save(const std::string& path) {
         std::cout << "khong the mo file " << std::endl;
         return false;
     }
+    std::cout << "Save Map " << std::endl;
+    file << "<state>\n";
+    file << startCol << " " << startRow << " " 
+        << goalRow << " " << goalCol << "\n";
+    file << "</state>\n";
 
     file << "<platform>\n";
     for (platform& p : plat) {
@@ -244,6 +301,14 @@ bool Map::save(const std::string& path) {
             << w.getType() << " " << w.getPatrol() << "\n";
     }
     file << "</enemy>\n";
+
+    // Ghi laddder vào file 
+    file << "<ladder>\n";
+    for (ladder& l : ladders) {
+        file << l.getCol() << " " << l.getRow() << " "
+            << l.getType() << "\n";
+    }
+    file << "</ladder>\n";
 
     // Đóng file .
     file.close();

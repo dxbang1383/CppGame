@@ -23,12 +23,14 @@ void sceneEditor::update(float deltaTime) {
     // cập nhật vị trí trong thế giới
     for (platform& x : map.getPlatforms()) x.update(deltaTime);
     for (decor& d : map.getDecors()) d.update(deltaTime);
+    for (ladder& l : map.getLadders()) l.update(deltaTime);
 
     // Camera chốt vị trí
 
     // rồi mới tính lại renderRect cho mọi object
     for (platform& x : map.getPlatforms()) x.updRenderRect(map.getCam());
     for (decor& d : map.getDecors()) d.updRenderRect(map.getCam());
+    for (ladder& l : map.getLadders()) l.updRenderRect(map.getCam());
     for (flyer& f : map.getFlyers()) f.updRenderRect(map.getCam());
     for (walker& w : map.getWalkers()) w.updRenderRect(map.getCam());
 }
@@ -44,12 +46,9 @@ void sceneEditor::render(SDL_Renderer* renderer) {
     SDL_FRect bkgRect = { 0, 0, 1280, 720 };
     SDL_RenderTexture(renderer, map.getBkg(), nullptr, &bkgRect);
 
-    for (platform& p : map.getPlatforms())
-        p.render(renderer);
-
-    for (decor& d : map.getDecors()) {
-        d.render(renderer);
-    }
+    for (platform& p : map.getPlatforms()) p.render(renderer);
+    for (ladder& l : map.getLadders()) l.render(renderer);
+    for (decor& d : map.getDecors()) d.render(renderer);
 
     for (flyer& f : map.getFlyers()) f.render(renderer);
     for (walker& w : map.getWalkers()) w.render(renderer);
@@ -61,7 +60,6 @@ void sceneEditor::render(SDL_Renderer* renderer) {
     if (menuOpen == true) {
         renderPalette(renderer);
     }
-    
 }
 
 // xử lý input của scene này 
