@@ -3,6 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include <string>
+#include <cmath>
 #include "../gameObject.h"
 
 /*

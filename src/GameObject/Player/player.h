@@ -5,6 +5,7 @@
 #include <iostream>
 #include "../src/GameObject/gameObject.h"
 #include "../src/engine/Animation.h"
+#include "../src/gameObject/Special/Item.h"
 
 class player : public gameObject {
 private:
@@ -14,6 +15,42 @@ private:
     double speed = 300.0; // tốc độ của nhân vật
     int direction = 1; // hướng của nhân vật 
     double gravity = 980.0; // tốc độ của trọng lực
+    double jumpForce = 450.0; // tốc độ nhảy 
+    bool onGround = false; // trêm mặt đất hay không 
+    //Item
+    bool hasDoubleJump = false;
+    bool doubleJumpUsed = false;
+    bool noGravity = false;
+
+    bool highJump = false;
+    bool speedBoost = false;
+    bool starPower = false;
+    
+    int coins = 0;
+    int health = 3;
+
+    double normalJumpForce = 450.0;
+    double normalSpeed = 450.0;
+    //TimerItem
+    double starTimer = 0.0;
+    double noGravityTimer = 0.0;
+    double highJumpTimer = 0.0;
+    double speedTimer = 0.0;
+
+    // Luu sheet dang lam
+    SDL_Texture* idleTexture = nullptr; 
+    SDL_Texture* runTexture = nullptr;
+    SDL_Texture* jumpTexture = nullptr;
+    //Trang thai xu li frame cho nhan vat
+    PlayerState currentState; // lựa chọn các trạng thái trong enum để chạy animation
+    int currentFrame;
+    int totalFrame;
+    float frameTime;
+    float frameTimer;
+
+    float frameWidth;
+    float frameHeight;
+    int aniRow;
     double jumpForce = 600.0; // tốc độ nhảy 
     bool onGround = false; // trêm mặt đất hay không
     // Animation cho tung trang thai, moi cai giu nhip frame rieng
@@ -43,7 +80,6 @@ public:
     int getDirection() { return direction; }
     void setSpeed(double speed) { this->speed = speed; }
     void setDirection(int d) { if (d != 0) direction = (d > 0) ? 1 : -1; }
-    void setOnGround(bool grounded) { this->onGround = grounded; }
     bool isOnGround() const { return onGround; }
     void setMovingLeft(bool left) { isMovingLeft = left; }
     void setMovingRight(bool right) { isMovingRight = right; }
@@ -54,6 +90,12 @@ public:
     double getVelocityX() const { return velocityX; }
     double getVelocityY() const { return velocityY; }
     double getJumpForce() { return jumpForce; }
+    void setOnGround(bool grounded) {
+        this->onGround = grounded;
+        if (grounded) {
+            doubleJumpUsed = false;
+        }
+    }
     // Ham sceneMain nap anh vao cho player
     void setIdleTexture(SDL_Texture* tex) { idleAnim.setTexture(tex); }
     void setRunTexture(SDL_Texture* tex) { runAnim.setTexture(tex); }
@@ -75,6 +117,19 @@ public:
     
     void render(SDL_Renderer* renderer) override;
     void update(float deltaTime) override;
+    //Item
+    bool isNoGravity() const { return noGravity; }
+    void collectItem(ItemType type);
+    void updateItemEffects();
+    void updateItem(float deltaTime);
+    void isInvincible() const;
+    void canDoubleJump() const;
+    bool hasNoGravity() const;
+    bool hasHighJump() const;
+    bool hasSpeedBoost() const;
+    int getCoins() const;
+    int getHealth() const;
+    void jump();
 };
 
 #endif // !PLAYER_H

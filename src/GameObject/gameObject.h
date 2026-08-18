@@ -12,7 +12,9 @@ private:
     double width, height; // kích thước hcn gốc
     SDL_FRect rect; // tọa độ thực tế trong không gian thế giới , đồng bộ với x,y ,width, height qua updRect()
     SDL_Texture* tex; // con trỏ texture
-    SDL_FRect renderRect; // tọa độ để vẽ vật thể lên màn hình 
+    //SDL_FRect renderRect; // tọa độ để vẽ vật thể lên màn hình 
+protected:
+    SDL_FRect renderRect;
 public:
     // Constructor
     gameObject(double x, double y, double width, double height);

@@ -9,8 +9,12 @@
 #include "../GameObject/Player/player.h"
 #include "../GameObject/Enemy/enemy.h"
 #include "../GameObject/Tile/ladder.h"
+#include "../GameObject/Tile/spike.h"
+#include "../GameObject/Tile/switch.h"
 #include "../GameObject/Tile/platform.h"
 #include "../GameObject/Tile/decor.h"
+#include "../GameObject/Special/itembox.h"
+#include "../GameObject/Special/item.h"
 #include "../engine/resourceManager.h"
 #include "../engine/camera.h"
 #include "../engine/UI/PauseMenu.h"
@@ -33,6 +37,13 @@ private:
     const float W = 1280.0f, H = 720.0f;
     const int COLS = (int)(W / TILE);
     const int ROWS = (int)(H / TILE);
+    SDL_Texture* Icoin = nullptr;
+    SDL_Texture* Ispeed = nullptr;
+    SDL_Texture* Iheart = nullptr;
+    SDL_Texture* Istar = nullptr;
+    SDL_Texture* Inogravity = nullptr;
+    SDL_Texture* Idoublejump = nullptr;
+    SDL_Texture* Ihighjump = nullptr;
 
     bool paused = false;
     bool lost = false;
@@ -66,6 +77,12 @@ public:
 
     int getSceneAction() const { return sceneAction; }
     void resetSceneAction() { sceneAction = SCENE_NONE; }
+    bool checkCollision(const gameObject& a, const gameObject& b) {
+        return (a.getX() < b.getX() + b.getWidth() &&
+                a.getX() + a.getWidth() > b.getX() &&
+                a.getY() < b.getY() + b.getHeight() &&
+                a.getY() + a.getHeight() > b.getY());
+    }
 };
 
 #endif // !SCENE_MAIN_H

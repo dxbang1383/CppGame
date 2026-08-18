@@ -1,7 +1,229 @@
 #include "Map.h"
 
 Map::Map() : mainPlayer(0, 0) {
+Map::Map() : mainPlayer(100.0, 100.0, 50.0, 50.0) {
 
+    // =========================================================
+    // GROUND - NỀN MAP
+    // Map rộng 60 ô
+    // =========================================================
+
+    for (int x = 0; x < 60; x++) {
+        plat.emplace_back(x, 29, "map1", 2, 4);
+    }
+
+
+    // =========================================================
+    // KHU VỰC 1 - BÊN TRÁI
+    // =========================================================
+
+    for (int x = 2; x <= 8; x++) {
+        plat.emplace_back(x, 25, "map1", 2, 4);
+    }
+
+    for (int x = 4; x <= 10; x++) {
+        plat.emplace_back(x, 21, "map1", 2, 4);
+    }
+
+    for (int x = 7; x <= 13; x++) {
+        plat.emplace_back(x, 17, "map1", 2, 4);
+    }
+
+
+    // =========================================================
+    // KHU VỰC 2 - CẦU THANG
+    // =========================================================
+
+    plat.emplace_back(14, 24, "map1", 2, 4);
+    plat.emplace_back(15, 23, "map1", 2, 4);
+    plat.emplace_back(16, 22, "map1", 2, 4);
+    plat.emplace_back(17, 21, "map1", 2, 4);
+    plat.emplace_back(18, 20, "map1", 2, 4);
+
+
+    // =========================================================
+    // KHU VỰC 3 - PLATFORM DÀI
+    // =========================================================
+
+    for (int x = 18; x <= 27; x++) {
+        plat.emplace_back(x, 20, "map1", 2, 4);
+    }
+
+    for (int x = 21; x <= 25; x++) {
+        plat.emplace_back(x, 16, "map1", 2, 4);
+    }
+
+    for (int x = 25; x <= 31; x++) {
+        plat.emplace_back(x, 12, "map1", 2, 4);
+    }
+
+
+    // =========================================================
+    // KHU VỰC 4 - HỐ VÀ CẦU
+    // =========================================================
+
+    for (int x = 32; x <= 36; x++) {
+        plat.emplace_back(x, 20, "map1", 2, 4);
+    }
+
+    for (int x = 39; x <= 45; x++) {
+        plat.emplace_back(x, 20, "map1", 2, 4);
+    }
+
+    // Cầu phía trên
+    for (int x = 34; x <= 40; x++) {
+        plat.emplace_back(x, 15, "map1", 2, 4);
+    }
+
+
+    // =========================================================
+    // KHU VỰC 5 - PLATFORM CAO
+    // =========================================================
+
+    for (int x = 42; x <= 49; x++) {
+        plat.emplace_back(x, 15, "map1", 2, 4);
+    }
+
+    for (int x = 46; x <= 53; x++) {
+        plat.emplace_back(x, 10, "map1", 2, 4);
+    }
+
+
+    // =========================================================
+    // KHU VỰC 6 - ĐƯỜNG ĐI CUỐI MAP
+    // =========================================================
+
+    for (int x = 50; x <= 58; x++) {
+        plat.emplace_back(x, 20, "map1", 2, 4);
+    }
+
+    for (int x = 54; x <= 59; x++) {
+        plat.emplace_back(x, 16, "map1", 2, 4);
+    }
+
+    for (int x = 57; x <= 59; x++) {
+        plat.emplace_back(x, 12, "map1", 2, 4);
+    }
+
+
+    // =========================================================
+    // DECOR
+    // =========================================================
+
+    decorList.emplace_back(
+        10, 16,
+        "map1",
+        11, 7,
+        "x++"
+    );
+
+    decorList.emplace_back(
+        28, 11,
+        "map1",
+        11, 7,
+        "x++"
+    );
+
+    decorList.emplace_back(
+        45, 14,
+        "map1",
+        11, 7,
+        "x++"
+    );
+
+
+    // =========================================================
+    // ENEMY
+    // =========================================================
+
+    SDL_srand(0);
+
+    enemies.emplace_back(
+        500.0,
+        500.0,
+        40.0,
+        40.0
+    );
+
+    enemies.emplace_back(
+        900.0,
+        350.0,
+        40.0,
+        40.0
+    );
+
+    enemies.emplace_back(
+        1400.0,
+        450.0,
+        40.0,
+        40.0
+    );
+
+    enemies.emplace_back(
+        1900.0,
+        300.0,
+        40.0,
+        40.0
+    );
+
+    enemies.emplace_back(
+        2400.0,
+        450.0,
+        40.0,
+        40.0
+    ); 
+    boxes.emplace_back(
+        15 * platform::TILE_SIZE,
+        25 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        BoxType::COIN
+    );
+
+    boxes.emplace_back(
+        20 * platform::TILE_SIZE,
+        25 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        BoxType::QUESTION
+    );
+
+    boxes.emplace_back(
+        28 * platform::TILE_SIZE,
+        25 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        BoxType::ITEM
+    );
+    boxes.emplace_back(
+        26 * platform::TILE_SIZE,
+        11 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        BoxType::QUESTION
+    );
+    items.emplace_back(
+        10 * platform::TILE_SIZE,
+        10 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        ItemType::COIN1
+    );
+
+   items.emplace_back(
+        12 * platform::TILE_SIZE,
+        10 * platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        platform::TILE_SIZE,
+        ItemType::NO_GRAVITY
+    );
+   items.emplace_back(
+       16 * platform::TILE_SIZE,
+       10 * platform::TILE_SIZE,
+       platform::TILE_SIZE,
+       platform::TILE_SIZE,
+       ItemType::HIGH_JUMP
+   );
 }
 
 void Map::clear() {
@@ -358,6 +580,9 @@ void Map::updateRenderRect() {
     mainPlayer.updRenderRect(cam);
     for (platform& x : plat) x.updRenderRect(cam);
     for (decor& d : decorList) d.updRenderRect(cam);
+    for (itemBox& box : boxes) box.updRenderRect(cam);
+    for (Item& it : items) it.updRenderRect(cam);
+    for (Switch& sw : switches) sw.updRenderRect(cam);
     for (flyer& f : flyers) f.updRenderRect(cam);
     for (walker& w : walkers) w.updRenderRect(cam);
 }

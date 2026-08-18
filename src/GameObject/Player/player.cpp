@@ -12,12 +12,39 @@ player::player(double x, double y) : gameObject(x, y, 48.0, 48.0) {
 player::player() : player(0.0, 0.0, 48.0, 48.0) {}
 
 void player::update(float deltaTime) {
+    // Cập nhật đếm ngược thời gian của các hiệu ứng
+    updateItem(deltaTime);
 
     updateVelocityX(deltaTime);
     setX(getX() + velocityX * deltaTime);
 
     updateVelocityY(deltaTime);
     setY(getY() + velocityY * deltaTime);
+    velocityX = 0.0f;
+    if (isMovingLeft) {
+        velocityX -= speed;
+        direction = 1;
+    }
+    if (isMovingRight) {
+        velocityX += speed;
+        direction = -1;
+    }
+    if (!isTouchingLadder) {
+        isClimbing = false;
+    }
+
+    if (isClimbing) {
+        velocityY = 0.0f;
+
+        if (isMovingUp) {
+            velocityY = -climbSpeed;
+        }
+        else if (isMovingDown) {
+            velocityY = climbSpeed;
+        }
+
+        setX(getX() + velocityX * deltaTime);
+        setY(getY() + velocityY * deltaTime);
 
     //std::cout << isOnGround() << " " << std::endl;
     //std::cout << IsTouchingLadder() << " " << getIsClimbing() << std::endl;
@@ -36,6 +63,27 @@ void player::updateState() {
 void player::updateAnimation(float deltaTime) {
     current->update(deltaTime);
 }
+    // Áp dụng Trọng lực trước khi xét State
+    if (noGravity) {
+        velocityY = 0.0f; // Triệt tiêu gia tốc trọng lực tích tụ
+
+        // Điều khiển bay LÊN / XUỐNG bằng phím bấm
+        if (isMovingUp) {
+            velocityY -= speed;
+        }
+        if (isMovingDown) {
+            velocityY += speed;
+        }
+    }
+    else {
+        // Áp dụng Trọng lực bình thường khi không có hiệu ứng
+        if (!onGround) {
+            velocityY += gravity * deltaTime;
+        }
+        else {
+            if (velocityY > 0) velocityY = 0.0f;
+        }
+    }
 
 void player::updateVelocityX(float deltaTime) {
     velocityX = 0.0;
@@ -86,3 +134,88 @@ void player::render(SDL_Renderer* renderer) {
         SDL_RenderFillRect(renderer, pRect);
     }
 }  
+}
+
+void player::collectItem(ItemType type) {
+    switch (type) {
+       /* case ItemType::COIN:
+            coins++;*/
+            break;  
+        case ItemType::STAR:
+            starPower = true;
+            starTimer = 10.0;
+            break;
+        case ItemType::DOUBLE_JUMP:
+            hasDoubleJump = true;
+            doubleJumpUsed = false;
+            break;
+        case ItemType::NO_GRAVITY:
+            noGravity = true;
+            noGravityTimer = 10.0;
+            break;
+        case ItemType::HIGH_JUMP:
+            highJump = true;
+            jumpForce = normalJumpForce * 2;
+            highJumpTimer = 10.0;
+            break;
+        case ItemType::HEART:
+            health++;
+            if (health > 5) 
+                health = 5;
+            break;
+        case ItemType::SPEED:
+            speedBoost = true;
+            speed = normalSpeed * 1.5;
+            speedTimer = 10.0;
+            break;
+    }
+}
+void player::updateItem(float deltaTime) {
+    if (starPower) {
+        starTimer -= deltaTime;
+
+        if (starTimer <= 0.0) {
+            starPower = false;
+            starTimer = 0.0;
+        }
+    }
+
+    if (noGravity) {
+        noGravityTimer -= deltaTime;
+        if (noGravityTimer <= 0.0) {
+            noGravity = false;
+            noGravityTimer = 0.0;
+        }
+    }
+
+    if (highJump) {
+        highJumpTimer -= deltaTime;
+        if (highJumpTimer <= 0) {
+            highJump = false;
+            highJumpTimer = 0.0;
+            jumpForce = normalJumpForce;
+        }
+    }
+
+    if (speedBoost) {
+        speedTimer -= deltaTime;
+        if (speedTimer <= 0.0) {
+            speedBoost = false;
+            speedTimer = 0.0;
+            speed = normalSpeed;
+        }
+    }
+}
+
+void player::jump() {
+    if (onGround) {
+        velocityY = -jumpForce;
+        onGround = false;
+        doubleJumpUsed = false;
+    } else if (hasDoubleJump && !doubleJumpUsed) {
+        velocityY = -jumpForce * 0.9f;
+        doubleJumpUsed = true;
+    }
+}
+
+

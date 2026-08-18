@@ -12,8 +12,14 @@
 #include "../GameObject/Enemy/walker.h"
 #include "../engine/camera.h"
 #include "../GameObject/Tile/platform.h"
+#include "../GameObject/Tile/switch.h"
+#include "../GameObject/Tile/ladder.h"
+#include "../GameObject/Tile/spike.h"
+
 #include "../GameObject/Player/player.h"
 #include "../GameObject/Tile/decor.h"
+#include "../GameObject/Special/itembox.h"
+#include "../GameObject/Special/item.h"
 #include "../engine/resourceManager.h"
 #include "../engine/UI/Palette.h"
 #include "../GameObject/Tile/ladder.h"
@@ -29,6 +35,10 @@ private:
     std::vector<platform> plat;
     std::vector<decor> decorList;
     std::vector<ladder> ladders;
+    std::vector<Switch> switches;
+    std::vector<itemBox> boxes;
+    std::vector<Item> items;
+
 
     SDL_Texture* bkg = nullptr;
 
@@ -80,6 +90,9 @@ public:
     std::vector<decor>& getDecors() { return decorList; }
     std::vector<ladder>& getLadders() { return ladders; }
 
+    std::vector<Switch>& getSwitches() { return switches; }
+    std::vector<itemBox>& getBoxes() { return boxes; }
+    std::vector<Item>& getItems() { return items; }
     player& getPlayer() { return mainPlayer; }
     // Chuyển từ địa chỉ col sang x 
     float getStartX() const { return startCol * tile::TILE_SIZE; }

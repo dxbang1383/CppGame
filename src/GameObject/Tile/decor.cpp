@@ -11,6 +11,8 @@ decor::decor(int col, int row, std::string animKey)
 	: tile(col, row, animKey),
 	  anim(ANIM_FRAMES, ANIM_TIME)
 {
+	typeFrame = typeAni;
+	animationEnable = true;
 }
 
 void decor::update(float deltaTime) {
@@ -20,12 +22,13 @@ void decor::update(float deltaTime) {
 // ve o red neu khong co texture
 void decor::render(SDL_Renderer* renderer) {
 	if (!hasAnim()) {
-		tile::render(renderer); 
+		tile::render(renderer);
 		return;
 	}
 
 	SDL_Texture* tex = anim.getTexture();
 	if (tex == nullptr) {
+		// in o RED neu loi
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderFillRect(renderer, getRenderRect());
 		return;

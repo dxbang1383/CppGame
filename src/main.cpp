@@ -22,6 +22,7 @@ int main(int argc, char* argv[])
     bool running = true;
     bool musicOn = false;
 
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
     // 
     sceneMenu menuScene = sceneMenu();
     sceneMain mainScene = sceneMain();

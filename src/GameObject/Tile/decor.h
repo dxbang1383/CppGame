@@ -28,7 +28,7 @@ public:
 	// Decor TINH 
 	decor(int col, int row, std::string texKey, int srcX, int srcY);
 
-	// Decor DONG 
+	// Decor DONG
 	decor(int col, int row, std::string animKey);
 
 	bool hasAnim() const { return anim.getFrameCount() > 1; }
