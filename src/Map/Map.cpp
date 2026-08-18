@@ -30,11 +30,11 @@ void Map::addTextures(SDL_Renderer* renderer) {
     }
 
     for (decor& d : decorList) {
-        d.setTexture(resourceManager::getTexture(renderer, d.getType()));
-        // sprite animation rieng (neu co)
-        if (d.hasAnim()) {
-            d.getAnim().setTexture(resourceManager::getTexture(renderer, d.getAnimKey()));
-        }
+        // getType() la khoa texture cho ca hai dang: sheet (tinh) hoac sprite (dong)
+        if (d.hasAnim())
+            d.getAnim().setTexture(resourceManager::getTexture(renderer, d.getType()));
+        else
+            d.setTexture(resourceManager::getTexture(renderer, d.getType()));
     }
 
     for (ladder& l : ladders) {
@@ -120,18 +120,17 @@ void Map::addPlatform(int col, int row, std::string texKey,
     dirty = true;
 }
 
-void Map::addDecor(int col, int row, std::string texKey,
-                        int srcX, int srcY, std::string animKey) {
-    decorList.emplace_back(col, row, texKey, srcX, srcY, animKey);
-    decor& d = decorList.back();
+// decor TINH - cat tu sheet
+void Map::addDecor(int col, int row, std::string texKey, int srcX, int srcY) {
+    decorList.emplace_back(col, row, texKey, srcX, srcY);
+    decorList.back().setTexture(resourceManager::getTexture(rend, texKey));
+    dirty = true;
+}
 
-    // hinh du phong
-    d.setTexture(resourceManager::getTexture(rend, texKey));
-
-    // sprite animation rieng trong Tiles/Animation
-    if (d.hasAnim()) {
-        d.getAnim().setTexture(resourceManager::getTexture(rend, animKey));
-    }
+// decor DONG - texKey chinh la ten sprite trong Tiles/Animation
+void Map::addDecorAnim(int col, int row, std::string animKey) {
+    decorList.emplace_back(col, row, animKey);
+    decorList.back().getAnim().setTexture(resourceManager::getTexture(rend, animKey));
     dirty = true;
 }
 
@@ -160,6 +159,7 @@ bool Map::load(const std::string& path) {
     bool inEnemyBlock = false;
     bool inStateBlock = false;
     bool inLadderBlock = false;
+    bool inAnimBlock = false;
 
     while (std::getline(file, line)) {
         if (line == "<state>") {
@@ -184,6 +184,14 @@ bool Map::load(const std::string& path) {
         }
         if (line == "</decor>") {
             inDecorBlock = false;
+            continue;
+        }
+        if (line == "<animation>") {
+            inAnimBlock = true;
+            continue;
+        }
+        if (line == "</animation>") {
+            inAnimBlock = false;
             continue;
         }
         if (line == "<enemy>") {
@@ -220,13 +228,22 @@ bool Map::load(const std::string& path) {
         }
 
         if (inDecorBlock) {
-            std::istringstream ss(line); // chuyển thành giống như cin 
+            std::istringstream ss(line); // chuyển thành giống như cin
             int col, row, srcX, srcY;
-            std::string texKey, animKey;
+            std::string texKey;
 
-            // animKey = "-" static
-            if (ss >> col >> row >> texKey >> srcX >> srcY >> animKey) {
-                addDecor(col, row, texKey, srcX, srcY, animKey);
+            if (ss >> col >> row >> texKey >> srcX >> srcY) {
+                addDecor(col, row, texKey, srcX, srcY);
+            }
+        }
+
+        if (inAnimBlock) {
+            std::istringstream ss(line);
+            int col, row;
+            std::string animKey;
+
+            if (ss >> col >> row >> animKey) {
+                addDecorAnim(col, row, animKey);
             }
         }
 
@@ -270,7 +287,7 @@ bool Map::save(const std::string& path) {
     std::cout << "Save Map " << std::endl;
     file << "<state>\n";
     file << startCol << " " << startRow << " " 
-        << goalRow << " " << goalCol << "\n";
+        << goalCol << " " << goalRow << "\n";
     file << "</state>\n";
 
     file << "<platform>\n";
@@ -282,13 +299,24 @@ bool Map::save(const std::string& path) {
     file << "</platform>\n";
 
     // Ghi các decor vào file 
+    // Decor TINH
     file << "<decor>\n";
     for (decor& d : decorList) {
+        if (d.hasAnim()) continue;
         file << d.getCol() << " " << d.getRow() << " "
             << d.getType() << " " << d.getSrcX() << " "
-            << d.getSrcY() << " " << d.getAnimKey() << "\n";
+            << d.getSrcY() << "\n";
     }
     file << "</decor>\n";
+
+    // Decor DONG
+    file << "<animation>\n";
+    for (decor& d : decorList) {
+        if (!d.hasAnim()) continue;
+        file << d.getCol() << " " << d.getRow() << " "
+            << d.getType() << "\n";
+    }
+    file << "</animation>\n";
 
     // Ghi enemy vào file
     file << "<enemy>\n";

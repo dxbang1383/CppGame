@@ -53,8 +53,9 @@ public:
 
     void addPlatform(int col, int row, std::string texKey, int srcX, int srcY);
 
-    // animKey = "-" neu tinxh
-    void addDecor(int col, int row, std::string texKey, int srcX, int srcY, std::string animKey);
+
+    void addDecor(int col, int row, std::string texKey, int srcX, int srcY);
+    void addDecorAnim(int col, int row, std::string animKey);
     void addFlyer(int col, int row, int patrol);
     void addWalker(int col, int row, int patrol);
     void addLadder(int col, int row, std::string texKey);

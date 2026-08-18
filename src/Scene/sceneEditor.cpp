@@ -138,9 +138,8 @@ void sceneEditor::handleInput(const SDL_Event& event) {
                         tileMap.getSrcX(), tileMap.getSrcY());
                 }
                 else if (layer == TileLayer::LAYER_DECOR) {
-                    // "-" = decor tinh
                     map.addDecor(col, row, tileMap.getType(),
-                        tileMap.getSrcX(), tileMap.getSrcY(), "-");
+                        tileMap.getSrcX(), tileMap.getSrcY());
                 }
                 else if (layer == TileLayer::LAYER_ENEMY) {
                     map.addFlyer(col, row, 1);

@@ -6,26 +6,33 @@
 #include "../../engine/Animation.h"
 
 /*
-	O trang tri - khong co va cham.
+	O trang tri - khong co va cham. Co hai dang:
+
+	  TINH  : cat tu sprite sheet -> can texKey + srcX + srcY
+	  DONG  : file sprite rieng -> chi can texKey (trung voi ten file trong Tiles/Animation)
+
+	Phan biet bang so khung cua Animation:
+	  frameCount == 1  ->  tinh   (Animation() mac dinh)
+	  frameCount >  1  ->  dong
+
 */
 class decor : public tile {
 private:
 	Animation anim;
-	std::string animKey = "-";      // "-" nghia la khong co animation
 
 	// Moi sprite trong thu muc Animation deu co dung 2 khung
 	static constexpr int   ANIM_FRAMES = 2;
 	static constexpr float ANIM_TIME = 0.3f;
 
 public:
-	using tile::tile; // ke thua 3 constructor cua tile (decor tinh)
+	// Decor TINH 
+	decor(int col, int row, std::string texKey, int srcX, int srcY);
 
-	// Constructor cho decor co animation
-	decor(int m, int n, std::string t, int srcX, int srcY, std::string key);
+	// Decor DONG 
+	decor(int col, int row, std::string animKey);
 
-	const std::string& getAnimKey() const { return animKey; }
+	bool hasAnim() const { return anim.getFrameCount() > 1; }
 	Animation& getAnim() { return anim; }
-	bool hasAnim() const { return animKey != "-" && !animKey.empty(); }
 
 	void update(float deltaTime) override;
 	void render(SDL_Renderer* renderer) override;

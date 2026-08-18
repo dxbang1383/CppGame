@@ -93,143 +93,145 @@
 36 14 map1 2 1
 </platform>
 <decor>
-9 9 map1 11 7 flag
-17 6 map1 11 7 flag
-6 13 map1 4 6 -
-10 9 map1 17 6 -
-10 8 map1 17 5 -
-10 7 map1 17 4 -
-9 7 map1 17 2 -
-9 6 map1 17 0 -
-10 6 map1 18 0 -
-11 6 map1 19 0 -
-11 7 map1 19 2 -
-14 8 map1 14 1 waterfall_top
-14 9 map1 14 2 waterfall_mid
-14 10 map1 14 2 waterfall_bot
-18 14 map1 14 1 waterfall_top
-18 15 map1 14 2 waterfall_mid
-18 16 map1 14 2 waterfall_bot
-0 15 map1 1 6 -
-1 15 map1 1 6 -
-1 15 map1 2 6 -
-2 15 map1 2 6 -
-3 15 map1 2 6 -
-4 15 map1 2 6 -
-5 15 map1 2 6 -
-6 15 map1 2 6 -
-7 15 map1 2 6 -
-8 15 map1 2 6 -
-9 15 map1 2 6 -
-10 15 map1 2 6 -
-11 15 map1 2 6 -
-12 15 map1 2 6 -
-13 15 map1 2 6 -
-14 15 map1 2 6 -
-15 15 map1 2 6 -
-16 15 map1 2 6 -
-17 15 map1 2 6 -
-18 15 map1 2 6 -
-19 15 map1 2 6 -
-20 15 map1 2 6 -
-21 15 map1 2 6 -
-22 15 map1 2 6 -
-23 15 map1 2 6 -
-24 15 map1 2 6 -
-25 15 map1 2 6 -
-26 15 map1 2 6 -
-27 15 map1 2 6 -
-28 15 map1 2 6 -
-29 15 map1 2 6 -
-30 15 map1 2 6 -
-31 15 map1 2 6 -
-32 15 map1 2 6 -
-33 15 map1 2 6 -
-34 15 map1 2 6 -
-35 15 map1 2 6 -
-36 15 map1 2 6 -
-1 16 map1 2 6 -
-2 16 map1 2 6 -
-3 16 map1 2 6 -
-4 16 map1 2 6 -
-5 16 map1 2 6 -
-6 16 map1 2 6 -
-7 16 map1 2 6 -
-8 16 map1 2 6 -
-9 16 map1 2 6 -
-10 16 map1 2 6 -
-11 16 map1 2 6 -
-12 16 map1 2 6 -
-13 16 map1 2 6 -
-14 16 map1 2 6 -
-15 16 map1 2 6 -
-16 16 map1 2 6 -
-17 16 map1 2 6 -
-18 16 map1 2 6 -
-19 16 map1 2 6 -
-20 16 map1 2 6 -
-21 16 map1 2 6 -
-22 16 map1 2 6 -
-23 16 map1 2 6 -
-24 16 map1 2 6 -
-25 16 map1 2 6 -
-26 16 map1 2 6 -
-27 16 map1 2 6 -
-28 16 map1 2 6 -
-29 16 map1 2 6 -
-30 16 map1 2 6 -
-31 16 map1 2 6 -
-32 16 map1 2 6 -
-33 16 map1 2 6 -
-34 16 map1 2 6 -
-35 16 map1 2 6 -
-36 16 map1 2 6 -
-0 16 map1 13 1 water
-1 16 map1 13 1 water
-2 16 map1 13 1 water
-3 16 map1 13 1 water
-4 16 map1 13 1 water
-5 16 map1 13 1 water
-6 16 map1 13 1 water
-7 16 map1 13 1 water
-8 16 map1 13 1 water
-9 16 map1 13 1 water
-10 16 map1 13 1 water
-11 16 map1 13 1 water
-12 16 map1 13 1 water
-13 16 map1 13 1 water
-14 16 map1 13 1 water
-15 16 map1 13 1 water
-16 16 map1 13 1 water
-17 16 map1 13 1 water
-18 16 map1 13 1 water
-19 16 map1 13 1 water
-20 16 map1 13 1 water
-21 16 map1 13 1 water
-22 16 map1 13 1 water
-23 16 map1 13 1 water
-24 16 map1 13 1 water
-25 16 map1 13 1 water
-26 16 map1 13 1 water
-27 16 map1 13 1 water
-28 16 map1 13 1 water
-29 16 map1 13 1 water
-30 16 map1 13 1 water
-31 16 map1 13 1 water
-32 16 map1 13 1 water
-33 16 map1 13 1 water
-34 16 map1 13 1 water
-35 16 map1 13 1 water
-36 16 map1 13 1 water
-6 9 map1 8 6 -
-12 9 map1 8 6 -
-19 6 map1 8 6 -
-3 12 map1 5 7 -
-24 13 map1 5 7 -
-32 13 map1 11 5 -
-30 13 map1 11 5 flag
-20 6 map1 11 5 flag
+6 13 map1 4 6
+10 9 map1 17 6
+10 8 map1 17 5
+10 7 map1 17 4
+9 7 map1 17 2
+9 6 map1 17 0
+10 6 map1 18 0
+11 6 map1 19 0
+11 7 map1 19 2
+0 15 map1 1 6
+1 15 map1 1 6
+1 15 map1 2 6
+2 15 map1 2 6
+3 15 map1 2 6
+4 15 map1 2 6
+5 15 map1 2 6
+6 15 map1 2 6
+7 15 map1 2 6
+8 15 map1 2 6
+9 15 map1 2 6
+10 15 map1 2 6
+11 15 map1 2 6
+12 15 map1 2 6
+13 15 map1 2 6
+14 15 map1 2 6
+15 15 map1 2 6
+16 15 map1 2 6
+17 15 map1 2 6
+18 15 map1 2 6
+19 15 map1 2 6
+20 15 map1 2 6
+21 15 map1 2 6
+22 15 map1 2 6
+23 15 map1 2 6
+24 15 map1 2 6
+25 15 map1 2 6
+26 15 map1 2 6
+27 15 map1 2 6
+28 15 map1 2 6
+29 15 map1 2 6
+30 15 map1 2 6
+31 15 map1 2 6
+32 15 map1 2 6
+33 15 map1 2 6
+34 15 map1 2 6
+35 15 map1 2 6
+36 15 map1 2 6
+1 16 map1 2 6
+2 16 map1 2 6
+3 16 map1 2 6
+4 16 map1 2 6
+5 16 map1 2 6
+6 16 map1 2 6
+7 16 map1 2 6
+8 16 map1 2 6
+9 16 map1 2 6
+10 16 map1 2 6
+11 16 map1 2 6
+12 16 map1 2 6
+13 16 map1 2 6
+14 16 map1 2 6
+15 16 map1 2 6
+16 16 map1 2 6
+17 16 map1 2 6
+18 16 map1 2 6
+19 16 map1 2 6
+20 16 map1 2 6
+21 16 map1 2 6
+22 16 map1 2 6
+23 16 map1 2 6
+24 16 map1 2 6
+25 16 map1 2 6
+26 16 map1 2 6
+27 16 map1 2 6
+28 16 map1 2 6
+29 16 map1 2 6
+30 16 map1 2 6
+31 16 map1 2 6
+32 16 map1 2 6
+33 16 map1 2 6
+34 16 map1 2 6
+35 16 map1 2 6
+36 16 map1 2 6
+6 9 map1 8 6
+12 9 map1 8 6
+19 6 map1 8 6
+3 12 map1 5 7
+24 13 map1 5 7
+32 13 map1 11 5
 </decor>
+<animation>
+9 9 flag
+17 6 flag
+14 8 waterfall_top
+14 9 waterfall_mid
+14 10 waterfall_bot
+18 14 waterfall_top
+18 15 waterfall_mid
+18 16 waterfall_bot
+0 16 water
+1 16 water
+2 16 water
+3 16 water
+4 16 water
+5 16 water
+6 16 water
+7 16 water
+8 16 water
+9 16 water
+10 16 water
+11 16 water
+12 16 water
+13 16 water
+14 16 water
+15 16 water
+16 16 water
+17 16 water
+18 16 water
+19 16 water
+20 16 water
+21 16 water
+22 16 water
+23 16 water
+24 16 water
+25 16 water
+26 16 water
+27 16 water
+28 16 water
+29 16 water
+30 16 water
+31 16 water
+32 16 water
+33 16 water
+34 16 water
+35 16 water
+36 16 water
+30 13 flag
+20 6 flag
+</animation>
 <enemy>
 4 4 flyer 1
 </enemy>

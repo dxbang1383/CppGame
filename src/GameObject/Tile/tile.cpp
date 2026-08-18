@@ -30,11 +30,19 @@ tile::tile(int m, int n, std::string t, int srcX, int srcY) {
 }
 
 void tile::render(SDL_Renderer* renderer) {
+	SDL_Texture* tex = getTexture();
+
+	if (tex == nullptr) {
+		// in o RED neu loi
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		SDL_RenderFillRect(renderer, getRenderRect());
+		return;
+	}
+
 	if (srcRect.w == 0 || srcRect.h == 0) {
-		// khong khai bao vung cat 
-		SDL_RenderTexture(renderer, getTexture(), nullptr, getRenderRect());
+		SDL_RenderTexture(renderer, tex, nullptr, getRenderRect());
 	}
 	else {
-		SDL_RenderTexture(renderer, getTexture(), &srcRect, getRenderRect());
+		SDL_RenderTexture(renderer, tex, &srcRect, getRenderRect());
 	}
 }

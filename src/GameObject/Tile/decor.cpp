@@ -1,24 +1,36 @@
 #include "decor.h"
 
-decor::decor(int m, int n, std::string t, int srcX, int srcY, std::string key)
-	: tile(m, n, t, srcX, srcY),
-	  anim(ANIM_FRAMES, ANIM_TIME),
-	  animKey(key)
+// anim giu nguyen mac dinh (frameCount = 1) nen hasAnim() tra false
+decor::decor(int col, int row, std::string texKey, int srcX, int srcY)
+	: tile(col, row, texKey, srcX, srcY)
+{
+}
+
+// texKey = ten sprite trong Animation, srcRect de trong
+decor::decor(int col, int row, std::string animKey)
+	: tile(col, row, animKey),
+	  anim(ANIM_FRAMES, ANIM_TIME)
 {
 }
 
 void decor::update(float deltaTime) {
-	// Animation tu thoat ngay neu frameCount <= 1 nen khong can kiem tra o day
 	anim.update(deltaTime);
 }
 
+// ve o red neu khong co texture
 void decor::render(SDL_Renderer* renderer) {
-	if (anim.getTexture() != nullptr) {
-		SDL_FRect src = anim.getSrcRect();
-		SDL_RenderTexture(renderer, anim.getTexture(), &src, getRenderRect());
+	if (!hasAnim()) {
+		tile::render(renderer); 
+		return;
 	}
-	else {
-		// Chua nap duoc sprite -> ve hinh tinh cat tu sheet
-		tile::render(renderer);
+
+	SDL_Texture* tex = anim.getTexture();
+	if (tex == nullptr) {
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		SDL_RenderFillRect(renderer, getRenderRect());
+		return;
 	}
+
+	SDL_FRect src = anim.getSrcRect();
+	SDL_RenderTexture(renderer, tex, &src, getRenderRect());
 }

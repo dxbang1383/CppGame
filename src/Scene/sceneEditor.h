@@ -21,6 +21,7 @@ private:
 
     Palette tileMap = Palette(50, 50);
     SDL_Renderer* rend = nullptr;
+    int  idMap = 1;
     bool menuOpen = false;
     bool pauseMenu = false;
     bool rendergrid = true;
