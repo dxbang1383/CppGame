@@ -60,6 +60,7 @@ public:
     void update(float deltaTime) override;
     void render(SDL_Renderer* renderer) override;
     void handleCollision(float deltaTime);
+    void handleEnemyCollision();
     bool overlaps(platform& p);
     bool overlapsLadder(ladder& l);
     void focusPlayer();

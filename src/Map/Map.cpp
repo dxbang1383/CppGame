@@ -107,8 +107,8 @@ void Map::addFlyer(int col, int row, int patrol) {
     dirty = true;
 }
 
-void Map::addWalker(int col, int row, int patrol) {
-    walkers.emplace_back(col, row, patrol);
+void Map::addWalker(int col, int row, int patrol, int kind) {
+    walkers.emplace_back(col, row, patrol, kind);
     walkers.back().setTexture(resourceManager::getTexture(rend, walkers.back().getType()));
     dirty = true;
 }
@@ -176,7 +176,9 @@ bool Map::load(const std::string& path) {
 
             if (ss >> col >> row >> type >> patrol) {
                 if (type == "flyer") addFlyer(col, row, patrol);
-                else if (type == "walker") addWalker(col, row, patrol);
+                else if (type == "walker" || type == "walker1") addWalker(col, row, patrol, 1);
+                else if (type == "walker2") addWalker(col, row, patrol, 2);
+                else if (type == "walker3") addWalker(col, row, patrol, 3);
                 else std::cout << "Khong biet loai quai: " << type << std::endl;
             }
         }

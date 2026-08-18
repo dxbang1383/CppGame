@@ -247,4 +247,7 @@
 </decor>
 <enemy>
 4 4 flyer 1
+6 13 walker1 1
+30 13 walker2 1
+28 13 walker3 1
 </enemy>
