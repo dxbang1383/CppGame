@@ -20,31 +20,6 @@ void player::update(float deltaTime) {
 
     updateVelocityY(deltaTime);
     setY(getY() + velocityY * deltaTime);
-    velocityX = 0.0f;
-    if (isMovingLeft) {
-        velocityX -= speed;
-        direction = 1;
-    }
-    if (isMovingRight) {
-        velocityX += speed;
-        direction = -1;
-    }
-    if (!isTouchingLadder) {
-        isClimbing = false;
-    }
-
-    if (isClimbing) {
-        velocityY = 0.0f;
-
-        if (isMovingUp) {
-            velocityY = -climbSpeed;
-        }
-        else if (isMovingDown) {
-            velocityY = climbSpeed;
-        }
-
-        setX(getX() + velocityX * deltaTime);
-        setY(getY() + velocityY * deltaTime);
 
     //std::cout << isOnGround() << " " << std::endl;
     //std::cout << IsTouchingLadder() << " " << getIsClimbing() << std::endl;
@@ -63,28 +38,6 @@ void player::updateState() {
 void player::updateAnimation(float deltaTime) {
     current->update(deltaTime);
 }
-    // Áp dụng Trọng lực trước khi xét State
-    if (noGravity) {
-        velocityY = 0.0f; // Triệt tiêu gia tốc trọng lực tích tụ
-
-        // Điều khiển bay LÊN / XUỐNG bằng phím bấm
-        if (isMovingUp) {
-            velocityY -= speed;
-        }
-        if (isMovingDown) {
-            velocityY += speed;
-        }
-    }
-    else {
-        // Áp dụng Trọng lực bình thường khi không có hiệu ứng
-        if (!onGround) {
-            velocityY += gravity * deltaTime;
-        }
-        else {
-            if (velocityY > 0) velocityY = 0.0f;
-        }
-    }
-
 void player::updateVelocityX(float deltaTime) {
     velocityX = 0.0;
     if (isMovingLeft) {
@@ -96,7 +49,15 @@ void player::updateVelocityX(float deltaTime) {
 }
 
 void player::updateVelocityY(float deltaTime) {
-    // update theo phương y 
+    // Vat pham NO_GRAVITY: bay tu do theo phim bam, khong chiu trong luc
+    if (noGravity) {
+        velocityY = 0.0;
+        if (isMovingUp)   velocityY -= speed;
+        if (isMovingDown) velocityY += speed;
+        return;
+    }
+
+    // update theo phương y
     if (getIsClimbing() || isOnGround()) {
         // nếu đang trèo hoặc trên mặt đất thì không bị ảnh hưởng trọng lực 
         if (isOnGround()) {
@@ -133,14 +94,13 @@ void player::render(SDL_Renderer* renderer) {
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         SDL_RenderFillRect(renderer, pRect);
     }
-}  
 }
 
 void player::collectItem(ItemType type) {
     switch (type) {
-       /* case ItemType::COIN:
-            coins++;*/
-            break;  
+        case ItemType::COIN1:
+            coins++;
+            break;
         case ItemType::STAR:
             starPower = true;
             starTimer = 10.0;

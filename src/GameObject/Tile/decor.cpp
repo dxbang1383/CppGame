@@ -11,8 +11,6 @@ decor::decor(int col, int row, std::string animKey)
 	: tile(col, row, animKey),
 	  anim(ANIM_FRAMES, ANIM_TIME)
 {
-	typeFrame = typeAni;
-	animationEnable = true;
 }
 
 void decor::update(float deltaTime) {

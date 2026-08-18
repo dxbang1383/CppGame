@@ -24,6 +24,8 @@ target_sources(CppGame PRIVATE
      "src/GameObject/Special/item.cpp"
      "src/GameObject/Special/item.h"
      "src/Scene/scene.cpp" "src/Scene/sceneMain.cpp"
+     "src/Scene/sceneMenu.cpp"
+     "src/Scene/sceneMenu.h"
      "src/GameObject/Enemy/enemy.h"
      "src/GameObject/Player/player.h"
      "src/Scene/scene.h"

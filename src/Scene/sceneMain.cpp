@@ -1,48 +1,9 @@
 ﻿#include "sceneMain.h"
+#include "../engine/soundManager.h"
 // Constructor
 sceneMain::sceneMain() {
-
-}
 // Map da tu dung san trong constructor cua no
-// =========================================================
-// LADDER
-// =========================================================
-
-// Cầu thang 1: nối platform ở row 25 -> row 21
-    
-
-    int ladderCol = 12;
-
-    for (int row = 21; row <= 25; row++) {
-        ladders.emplace_back(ladderCol, row);
-    }
-
-    // Cầu thang 2: nối khu vực giữa map
-    ladderCol = 20;
-
-    for (int row = 16; row <= 20; row++) {
-        ladders.emplace_back(ladderCol, row);
-    }
-
-    // Cầu thang 3: khu vực cao
-    ladderCol = 27;
-
-    for (int row = 12; row <= 16; row++) {
-        ladders.emplace_back(ladderCol, row);
-    }
-    ladderCol = 14;
-
-    for (int row = 4; row <= 18; row++) {
-        ladders.emplace_back(ladderCol, row);
-    }
-
-    // Cầu thang 4: gần cuối map
-    ladderCol = 53;
-
-    for (int row = 15; row <= 20; row++) {
-        ladders.emplace_back(ladderCol, row);
-    }
-
+// Thang (ladder) nap tu file level2.txt nen khong dung o day nua
 
     // =========================================================
     // SWITCH
@@ -81,7 +42,6 @@ sceneMain::sceneMain() {
     for (int col = 46; col <= 49; col++) {
         spikes.emplace_back(col, 20);
     }
-
 }
 
 // Destruction 
@@ -92,7 +52,7 @@ sceneMain::~sceneMain() {
 void sceneMain::preLoad(SDL_Renderer* renderer) {
     map.addTextures(renderer); // bkg, platform, decor, enemy, player
 
-    std::string mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt";
+    std::string mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level2.txt";
     if (!map.load(mapPath)) {
         SDL_Log("Khong nap duoc map: %s -> dung map mac dinh", mapPath.c_str());
     }
@@ -102,30 +62,12 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     gameOverMenu.preLoad(renderer);
     settings.preLoad(renderer);
     iconTex = resourceManager::getTexture(renderer, "menu");
-}
-    // Thang
-    SDL_Texture* ladTex = resourceManager::getTexture(renderer, "ladder");
-    for (ladder& l : ladders) l.setTexture(ladTex);
 
     SDL_Texture* switchTex = resourceManager::getTexture(renderer, "switch");
     for (Switch& sw : map.getSwitches()) {
         sw.setTexture(switchTex);
     }
 
-void sceneMain::resetPlayer() {
-    player& p = map.getPlayer();
-    p.setX(map.getStartX());
-    p.setY(map.getStartY());
-    p.setVelocityX(0);
-    p.setVelocityY(0);
-    p.setOnGround(false);
-    p.setIsClimbing(false);
-    p.setMovingLeft(false);
-    p.setMovingRight(false);
-    p.setMovingUp(false);
-    p.setMovingDown(false);
-    p.setDirection(1);
-}
 
     SDL_Texture* spikeTex = resourceManager::getTexture(renderer, "spike");
     for (spike& sp : spikes) {
@@ -213,6 +155,21 @@ void sceneMain::resetPlayer() {
     map.getItems().back().updRenderRect(map.getCam());*/
 }
 
+void sceneMain::resetPlayer() {
+    player& p = map.getPlayer();
+    p.setX(map.getStartX());
+    p.setY(map.getStartY());
+    p.setVelocityX(0);
+    p.setVelocityY(0);
+    p.setOnGround(false);
+    p.setIsClimbing(false);
+    p.setMovingLeft(false);
+    p.setMovingRight(false);
+    p.setMovingUp(false);
+    p.setMovingDown(false);
+    p.setDirection(1);
+}
+
 void sceneMain::update(float deltaTime) {
     if (paused || lost) return;
     settings.close();
@@ -221,12 +178,10 @@ void sceneMain::update(float deltaTime) {
     for (decor& d : map.getDecors())       d.update(deltaTime);
     for (flyer& f : map.getFlyers())       f.update(deltaTime);
     for (walker& w : map.getWalkers())     w.update(deltaTime);
-    for (platform& x : map.getPlatforms())    x.update(deltaTime);
-    for (decor& d    : map.getDecors())       d.update(deltaTime);
-    for (enemy& e    : map.getEnemies())      e.update(deltaTime);
-    for (Switch& s   : map.getSwitches())     s.update(deltaTime);
-    for (spike& sp   : spikes)       sp.update(deltaTime);
- 
+    for (Switch& s : map.getSwitches())    s.update(deltaTime);
+    for (spike& sp : spikes)               sp.update(deltaTime);
+    for (itemBox& b : map.getBoxes())      b.update(deltaTime);
+
     map.getPlayer().update(deltaTime);
 
     handleCollision(deltaTime);
@@ -235,16 +190,12 @@ void sceneMain::update(float deltaTime) {
 
     map.updateRenderRect();
     for (ladder& l : map.getLadders()) l.updRenderRect(map.getCam());   // thang cũng theo camera
+    for (spike& sp : spikes) sp.updRenderRect(map.getCam());
 
     if (map.getPlayer().getY() > deathY) {
         lost = true;
         soundManager::playEffect("lose");
     }
-    for (ladder& l : ladders) l.updRenderRect(map.getCam());   // thang cũng theo camera
-    for (Switch& s : map.getSwitches()) s.updRenderRect(map.getCam());
-    for (spike& sp : spikes) sp.updRenderRect(map.getCam());
-    for (itemBox& box : map.getBoxes()) box.updRenderRect(map.getCam());
-    for (Item& item : map.getItems()) item.updRenderRect(map.getCam());
 }
 
 
@@ -258,7 +209,6 @@ void sceneMain::render(SDL_Renderer* renderer) {
     for (decor& d : map.getDecors()) d.render(renderer);
     for (flyer& f : map.getFlyers()) f.render(renderer);
     for (walker& w : map.getWalkers()) w.render(renderer);
-    for (enemy& e : map.getEnemies()) e.render(renderer);
     for (Switch& sw : map.getSwitches()) sw.render(renderer);
     for (spike& sp : spikes) sp.render(renderer);
     for (itemBox& box : map.getBoxes()) box.render(renderer);
@@ -435,6 +385,7 @@ void sceneMain::handleCollision(float deltaTime) {
                 map.getItems().push_back(newItem);
             }
         }
+    }
 
     // --- Thang ---
     bool touchingLadder = false;
@@ -444,67 +395,63 @@ void sceneMain::handleCollision(float deltaTime) {
             break;   // Chi can cham vao 1 nac la du
         }
     }
-        // --- Thang ---
-        bool touchingLadder = false;
-        for (ladder& l : ladders) {
-            if (overlapsLadder(l)) {
-                touchingLadder = true;
-                break;   // Chi can cham vao 1 nac la du
-            }
+
+    // Cap nhat trang thai cho Player
+    p.setIsTouchingLadder(touchingLadder);
+
+    // Roi khoi thang thi thoi leo (ban cu thieu -> treo lo lung giua khong trung)
+    if (!touchingLadder) p.setIsClimbing(false);
+
+    // Neu dang treo thang thi khong can xu li voi mat dat
+    if (p.getIsClimbing()) return;
+
+    // Cap nhat lai trang thai dung tren mat dat cho player
+    p.setOnGround(onAnyGround);
+
+    //Xu li player cham cong tac
+    for (Switch& sw : map.getSwitches()) {
+        if (!sw.getIsActivated() && checkCollision(p, sw)) {
+            sw.trigger();
+
+            float switchCenterX = sw.getX() + sw.getWidth() / 2.0f;
+            float switchCenterY = sw.getY() + sw.getHeight() / 2.0f;
+
+            float radius = 400.0f;
+
+            std::erase_if(spikes, [switchCenterX, switchCenterY, radius](const spike& sp) {
+                float spikeCenterX = sp.getX() + sp.getWidth() / 2.0f;
+                float spikeCenterY = sp.getY() + sp.getHeight() / 2.0f;
+
+                float distance = std::hypot(switchCenterX - spikeCenterX, switchCenterY - spikeCenterY);
+
+                return distance <= radius;
+                });
         }
-
-        // Cap nhat trang thai cho Player
-        p.setIsTouchingLadder(touchingLadder);
-
-        // Roi khoi thang thi thoi leo (ban cu thieu -> treo lo lung giua khong trung)
-        if (!touchingLadder) p.setIsClimbing(false);
-
-        // Neu dang treo thang thi khong can xu li voi mat dat
-        if (p.getIsClimbing()) return;
-
-        // Cap nhat lai trang thai dung tren mat dat cho player
-        p.setOnGround(onAnyGround);
-
-        //Xu li player cham cong tac
-        for (Switch& sw : map.getSwitches()) {
-            if (!sw.getIsActivated() && checkCollision(p, sw)) {
-                sw.trigger();
-
-                float switchCenterX = sw.getX() + sw.getWidth() / 2.0f;
-                float switchCenterY = sw.getY() + sw.getHeight() / 2.0f;
-
-                float radius = 400.0f;
-
-                std::erase_if(spikes, [switchCenterX, switchCenterY, radius](const spike& sp) {
-                    float spikeCenterX = sp.getX() +    sp.getWidth() / 2.0f;
-                    float spikeCenterY = sp.getY() + sp.getHeight() / 2.0f;
-
-                    float distance = std::hypot(switchCenterX - spikeCenterX, switchCenterY - spikeCenterY);
-
-                    return distance <= radius;
-                    });
-            }
-        }
-        std::erase_if(spikes, [this, &p](const spike& sp) {
-            if (checkCollision(p, sp)) {
-                return true;
-            }
-            return false;
-            });
-
-        // Kiểm tra player nhặt item
-        for (Item& item : map.getItems()) {
-            if (!item.isCollected() && checkCollision(p, item)) {
-                item.collect();
-                p.collectItem(item.getItemType()); // Kích hoạt hiệu ứng cho player
-            }
-        }
-
-        // Xóa các item đã bị nhặt khỏi map
-        std::erase_if(map.getItems(), [](const Item& item) {
-            return item.isCollected();
-            });
     }
+
+    // Cham spike -> thua, tru khi dang bat bien nho STAR
+    if (!p.isInvincible()) {
+        for (spike& sp : spikes) {
+            if (sp.isActive() && checkCollision(p, sp)) {
+                lost = true;
+                soundManager::playEffect("lose");
+                break;
+            }
+        }
+    }
+
+    // Kiểm tra player nhặt item
+    for (Item& item : map.getItems()) {
+        if (!item.isCollected() && checkCollision(p, item)) {
+            item.collect();
+            p.collectItem(item.getItemType()); // Kích hoạt hiệu ứng cho player
+        }
+    }
+
+    // Xóa các item đã bị nhặt khỏi map
+    std::erase_if(map.getItems(), [](const Item& item) {
+        return item.isCollected();
+        });
 }
 
 void sceneMain::handleEnemyCollision() {
@@ -680,20 +627,6 @@ void sceneMain::handleInput(const SDL_Event& event) {
         case SDLK_RIGHT:
             map.getPlayer().setMovingRight(false);
             break;
-        case SDLK_SPACE:
-        case SDLK_W:
-        case SDLK_UP:
-            if (map.getPlayer().IsTouchingLadder()) {
-                map.getPlayer().setMovingUp(false);
-            }
-            break;
-        case SDLK_S:
-        case SDLK_DOWN:
-            if (map.getPlayer().IsTouchingLadder()) {
-                map.getPlayer().setMovingDown(false);
-            }
-            break;
-
         case SDLK_SPACE:
         case SDLK_W:
         case SDLK_UP:

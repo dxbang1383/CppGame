@@ -1,0 +1,218 @@
+<state>
+2 27 59 11
+</state>
+<platform>
+0 29 map1 2 4
+1 29 map1 2 4
+2 29 map1 2 4
+3 29 map1 2 4
+4 29 map1 2 4
+5 29 map1 2 4
+6 29 map1 2 4
+7 29 map1 2 4
+8 29 map1 2 4
+9 29 map1 2 4
+10 29 map1 2 4
+11 29 map1 2 4
+12 29 map1 2 4
+13 29 map1 2 4
+14 29 map1 2 4
+15 29 map1 2 4
+16 29 map1 2 4
+17 29 map1 2 4
+18 29 map1 2 4
+19 29 map1 2 4
+20 29 map1 2 4
+21 29 map1 2 4
+22 29 map1 2 4
+23 29 map1 2 4
+24 29 map1 2 4
+25 29 map1 2 4
+26 29 map1 2 4
+27 29 map1 2 4
+28 29 map1 2 4
+29 29 map1 2 4
+30 29 map1 2 4
+31 29 map1 2 4
+32 29 map1 2 4
+33 29 map1 2 4
+34 29 map1 2 4
+35 29 map1 2 4
+36 29 map1 2 4
+37 29 map1 2 4
+38 29 map1 2 4
+39 29 map1 2 4
+40 29 map1 2 4
+41 29 map1 2 4
+42 29 map1 2 4
+43 29 map1 2 4
+44 29 map1 2 4
+45 29 map1 2 4
+46 29 map1 2 4
+47 29 map1 2 4
+48 29 map1 2 4
+49 29 map1 2 4
+50 29 map1 2 4
+51 29 map1 2 4
+52 29 map1 2 4
+53 29 map1 2 4
+54 29 map1 2 4
+55 29 map1 2 4
+56 29 map1 2 4
+57 29 map1 2 4
+58 29 map1 2 4
+59 29 map1 2 4
+2 25 map1 2 4
+3 25 map1 2 4
+4 25 map1 2 4
+5 25 map1 2 4
+6 25 map1 2 4
+7 25 map1 2 4
+8 25 map1 2 4
+4 21 map1 2 4
+5 21 map1 2 4
+6 21 map1 2 4
+7 21 map1 2 4
+8 21 map1 2 4
+9 21 map1 2 4
+10 21 map1 2 4
+7 17 map1 2 4
+8 17 map1 2 4
+9 17 map1 2 4
+10 17 map1 2 4
+11 17 map1 2 4
+12 17 map1 2 4
+13 17 map1 2 4
+14 24 map1 2 4
+15 23 map1 2 4
+16 22 map1 2 4
+17 21 map1 2 4
+18 20 map1 2 4
+18 20 map1 2 4
+19 20 map1 2 4
+20 20 map1 2 4
+21 20 map1 2 4
+22 20 map1 2 4
+23 20 map1 2 4
+24 20 map1 2 4
+25 20 map1 2 4
+26 20 map1 2 4
+27 20 map1 2 4
+21 16 map1 2 4
+22 16 map1 2 4
+23 16 map1 2 4
+24 16 map1 2 4
+25 16 map1 2 4
+25 12 map1 2 4
+26 12 map1 2 4
+27 12 map1 2 4
+28 12 map1 2 4
+29 12 map1 2 4
+30 12 map1 2 4
+31 12 map1 2 4
+32 20 map1 2 4
+33 20 map1 2 4
+34 20 map1 2 4
+35 20 map1 2 4
+36 20 map1 2 4
+39 20 map1 2 4
+40 20 map1 2 4
+41 20 map1 2 4
+42 20 map1 2 4
+43 20 map1 2 4
+44 20 map1 2 4
+45 20 map1 2 4
+34 15 map1 2 4
+35 15 map1 2 4
+36 15 map1 2 4
+37 15 map1 2 4
+38 15 map1 2 4
+39 15 map1 2 4
+40 15 map1 2 4
+42 15 map1 2 4
+43 15 map1 2 4
+44 15 map1 2 4
+45 15 map1 2 4
+46 15 map1 2 4
+47 15 map1 2 4
+48 15 map1 2 4
+49 15 map1 2 4
+46 10 map1 2 4
+47 10 map1 2 4
+48 10 map1 2 4
+49 10 map1 2 4
+50 10 map1 2 4
+51 10 map1 2 4
+52 10 map1 2 4
+53 10 map1 2 4
+50 20 map1 2 4
+51 20 map1 2 4
+52 20 map1 2 4
+53 20 map1 2 4
+54 20 map1 2 4
+55 20 map1 2 4
+56 20 map1 2 4
+57 20 map1 2 4
+58 20 map1 2 4
+54 16 map1 2 4
+55 16 map1 2 4
+56 16 map1 2 4
+57 16 map1 2 4
+58 16 map1 2 4
+59 16 map1 2 4
+57 12 map1 2 4
+58 12 map1 2 4
+59 12 map1 2 4
+</platform>
+<decor>
+10 16 map1 11 7
+28 11 map1 11 7
+45 14 map1 11 7
+</decor>
+<animation>
+</animation>
+<enemy>
+5 24 walker1 3
+22 19 walker2 4
+44 14 walker3 3
+30 8 flyer 4
+52 28 walker1 5
+</enemy>
+<ladder>
+12 21 ladder
+12 22 ladder
+12 23 ladder
+12 24 ladder
+12 25 ladder
+20 16 ladder
+20 17 ladder
+20 18 ladder
+20 19 ladder
+20 20 ladder
+27 12 ladder
+27 13 ladder
+27 14 ladder
+27 15 ladder
+27 16 ladder
+14 4 ladder
+14 5 ladder
+14 6 ladder
+14 7 ladder
+14 8 ladder
+14 9 ladder
+14 10 ladder
+14 11 ladder
+14 12 ladder
+14 13 ladder
+14 14 ladder
+14 15 ladder
+14 16 ladder
+14 17 ladder
+14 18 ladder
+53 15 ladder
+53 16 ladder
+53 17 ladder
+53 18 ladder
+53 19 ladder
+53 20 ladder
+</ladder>
