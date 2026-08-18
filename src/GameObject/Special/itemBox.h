@@ -13,11 +13,7 @@ enum class BoxType {
 class itemBox : public gameObject
 {
 private:
-	SDL_Texture* texture = nullptr;
-	SDL_FRect renderRect = { 0, 0, 0, 0 };
-
 	BoxType boxType;
-	
 
 	bool activated = false;
 	int currentFrame = 0;
@@ -33,10 +29,6 @@ public:
 		double height,
 		BoxType type
 	);
-	// Texture
-	void setTexture(SDL_Texture* tex);
-	// Camera
-	void updRenderRect(const SDL_FRect& cam);
 	// Render
 	void render(SDL_Renderer* renderer);
 

@@ -12,58 +12,33 @@ sceneMain::sceneMain() {
     int ladderCol = 12;
 
     for (int row = 21; row <= 25; row++) {
-        ladders.emplace_back(
-            ladderCol * platform::TILE_SIZE,
-            row * platform::TILE_SIZE,
-            platform::TILE_SIZE,
-            platform::TILE_SIZE
-        );
+        ladders.emplace_back(ladderCol, row);
     }
 
     // Cầu thang 2: nối khu vực giữa map
     ladderCol = 20;
 
     for (int row = 16; row <= 20; row++) {
-        ladders.emplace_back(
-            ladderCol * platform::TILE_SIZE,
-            row * platform::TILE_SIZE,
-            platform::TILE_SIZE,
-            platform::TILE_SIZE
-        );
+        ladders.emplace_back(ladderCol, row);
     }
 
     // Cầu thang 3: khu vực cao
     ladderCol = 27;
 
     for (int row = 12; row <= 16; row++) {
-        ladders.emplace_back(
-            ladderCol * platform::TILE_SIZE,
-            row * platform::TILE_SIZE,
-            platform::TILE_SIZE,
-            platform::TILE_SIZE
-        );
+        ladders.emplace_back(ladderCol, row);
     }
     ladderCol = 14;
 
     for (int row = 4; row <= 18; row++) {
-        ladders.emplace_back(
-            ladderCol * platform::TILE_SIZE,
-            row * platform::TILE_SIZE,
-            platform::TILE_SIZE,
-            platform::TILE_SIZE
-        );
+        ladders.emplace_back(ladderCol, row);
     }
 
     // Cầu thang 4: gần cuối map
     ladderCol = 53;
 
     for (int row = 15; row <= 20; row++) {
-        ladders.emplace_back(
-            ladderCol * platform::TILE_SIZE,
-            row * platform::TILE_SIZE,
-            platform::TILE_SIZE,
-            platform::TILE_SIZE
-        );
+        ladders.emplace_back(ladderCol, row);
     }
 
 
@@ -72,28 +47,13 @@ sceneMain::sceneMain() {
     // =========================================================
 
     // Switch 1: khu vực đầu map
-    map.getSwitches().emplace_back(
-        10 * platform::TILE_SIZE,
-        20 * platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        platform::TILE_SIZE
-    );
+    map.getSwitches().emplace_back(10, 20);
 
     // Switch 2: khu vực giữa map
-    map.getSwitches().emplace_back(
-        27 * platform::TILE_SIZE,
-        11 * platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        platform::TILE_SIZE
-    );
+    map.getSwitches().emplace_back(27, 11);
 
     // Switch 3: gần cuối map
-    map.getSwitches().emplace_back(
-        50 * platform::TILE_SIZE,
-        19 * platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        platform::TILE_SIZE
-    );
+    map.getSwitches().emplace_back(50, 19);
 
 
     // =========================================================
@@ -102,42 +62,22 @@ sceneMain::sceneMain() {
 
     // Bẫy 1: sau khu vực platform đầu
     for (int col = 11; col <= 13; col++) {
-        spikes.emplace_back(
-            col * platform::TILE_SIZE,
-            20 * platform::TILE_SIZE,
-            platform::TILE_SIZE,    
-            platform::TILE_SIZE
-        );
+        spikes.emplace_back(col, 20);
     }
 
     // Bẫy 2: khu vực giữa map
     for (int col = 28; col <= 31; col++) {
-        spikes.emplace_back(
-            col * platform::TILE_SIZE,
-            20 * platform::TILE_SIZE,
-            platform::TILE_SIZE,
-            platform::TILE_SIZE
-        );
+        spikes.emplace_back(col, 20);
     }
 
     // Bẫy 3: khu vực cầu
     for (int col = 37; col <= 38; col++) {
-        spikes.emplace_back(
-            col * platform::TILE_SIZE,
-            20 * platform::TILE_SIZE,
-            platform::TILE_SIZE,
-            platform::TILE_SIZE
-        );
+        spikes.emplace_back(col, 20);
     }
 
     // Bẫy 4: gần cuối map
     for (int col = 46; col <= 49; col++) {
-        spikes.emplace_back(
-            col * platform::TILE_SIZE,
-            20 * platform::TILE_SIZE,
-            platform::TILE_SIZE,
-            platform::TILE_SIZE
-        );
+        spikes.emplace_back(col, 20);
     }
 
 }
@@ -271,16 +211,10 @@ void sceneMain::update(float deltaTime) {
 
     map.updateRenderRect();
     for (ladder& l : ladders) l.updRenderRect(map.getCam());   // thang cũng theo camera
-    for (Switch& s : map.getSwitches()) s.updRenderRect({ map.getCam().getX(), map.getCam().getY(), 0.0f, 0.0f });
-    for (spike& sp : spikes) {
-        sp.updRenderRect({ map.getCam().getX(), map.getCam().getY(), 0, 0 });
-    }
-    for (itemBox& box : map.getBoxes()) {
-        box.updRenderRect({ map.getCam().getX(), map.getCam().getY(), 0, 0 });
-    }
-    for (Item& item : map.getItems()) {
-        item.updRenderRect({ map.getCam().getX(), map.getCam().getY(), 0, 0 });
-    }
+    for (Switch& s : map.getSwitches()) s.updRenderRect(map.getCam());
+    for (spike& sp : spikes) sp.updRenderRect(map.getCam());
+    for (itemBox& box : map.getBoxes()) box.updRenderRect(map.getCam());
+    for (Item& item : map.getItems()) item.updRenderRect(map.getCam());
 }
 
 

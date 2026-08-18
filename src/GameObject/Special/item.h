@@ -16,7 +16,6 @@ enum class ItemType {
 class Item : public gameObject
 {
 private:
-	SDL_Texture* texture = nullptr;
 	ItemType type;
 	bool collected = false;
 
@@ -33,7 +32,6 @@ public:
 	);
 
 	void setIVelocityY(double velocity);
-	void setTexture(SDL_Texture* tex) { texture = tex; }
 	void update();
 	void render(SDL_Renderer* renderer);
 	ItemType getItemType() const;
@@ -41,6 +39,4 @@ public:
 	void collect();
 	double getIVelocityX() const;
 	double getIVelocityY() const;
-	void updRenderRect(const camera& cam);
-	void updRenderRect(const SDL_FRect& cam);
 };

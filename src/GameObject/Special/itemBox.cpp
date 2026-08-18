@@ -1,5 +1,4 @@
 #include "itemBox.h"
-#include "../Platform/platform.h"
 
 itemBox::itemBox(
 	double x,
@@ -9,19 +8,10 @@ itemBox::itemBox(
 	BoxType type
 ) : gameObject(x, y, width, height), boxType(type)
 {
-	renderRect = { (float)x, (float)y, (float)width, (float)height };
-}
-
-void itemBox::updRenderRect(const SDL_FRect& cam) {
-	renderRect.x = (float)(getX() - cam.x);
-	renderRect.y = (float)(getY() - cam.y);
-
-	renderRect.w = (float)getWidth();
-	renderRect.h = (float)getHeight();
 }
 
 void itemBox::render(SDL_Renderer* renderer) {
-	if (!texture) {
+	if (!getTexture()) {
 		return;
 	}
 
@@ -34,7 +24,7 @@ void itemBox::render(SDL_Renderer* renderer) {
 
 	SDL_RenderTexture(
 		renderer,
-		texture,
+		getTexture(),
 		&srcRect,
 		&renderRect
 	);
@@ -87,10 +77,6 @@ void itemBox::update(float deltaTime) {
 }
 
 
-
-void itemBox::setTexture(SDL_Texture* tex) {
-	texture = tex;
-}
 
 bool itemBox::isActivated() const { return activated; }
 bool itemBox::isBouncing() const { return bouncing; }

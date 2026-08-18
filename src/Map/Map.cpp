@@ -325,18 +325,7 @@ void Map::updateRenderRect() {
     for (platform& x : plat) x.updRenderRect(cam);
     for (decor& d : decorList) d.updRenderRect(cam);
     for (enemy& e : enemies) e.updRenderRect(cam);
-    for (itemBox& box : boxes)
-        box.updRenderRect({
-            cam.getX(),
-            cam.getY(),
-            0,
-            0
-            });
-    for (Item& it : items)
-        it.updRenderRect({
-            cam.getX(),
-            cam.getY(),
-            0,
-            0
-            });
+    for (itemBox& box : boxes) box.updRenderRect(cam);
+    for (Item& it : items) it.updRenderRect(cam);
+    for (Switch& sw : switches) sw.updRenderRect(cam);
 }

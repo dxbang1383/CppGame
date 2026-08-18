@@ -6,20 +6,11 @@ Item::Item(
 	double width,
 	double height,
 	ItemType type
-) : gameObject(x, y, width, height), type(type) 
+) : gameObject(x, y, width, height), type(type)
 {
-	texture = nullptr; 
 	collected = false;
 	IvelocityX = 0.0;
 	IvelocityY = 0.0;
-}
-
-void Item::updRenderRect(const SDL_FRect& cam) {
-	renderRect.x = (float)(getX() - cam.x);
-	renderRect.y = (float)(getY() - cam.y);
-
-	renderRect.w = (float)getWidth();
-	renderRect.h = (float)getHeight();
 }
 
 void Item::update() {
@@ -33,8 +24,8 @@ void Item::update() {
 void Item::render(SDL_Renderer* renderer) {
 	if (collected) return;
 
-	if (texture != nullptr) {
-		SDL_RenderTexture(renderer, texture, nullptr, &renderRect);
+	if (getTexture() != nullptr) {
+		SDL_RenderTexture(renderer, getTexture(), nullptr, &renderRect);
 	}
 	else {
 
@@ -48,13 +39,6 @@ void Item::collect() {
 	collected = true;
 }
 
-void Item::updRenderRect(const camera& cam) {
-	renderRect.x = (float)(getX() - cam.getX());
-	renderRect.y = (float)(getY() - cam.getY());
-
-	renderRect.w = (float)getWidth();
-	renderRect.h = (float)getHeight();
-}
 ItemType Item::getItemType() const { return type; }
 bool Item::isCollected() const { return collected; }
 double Item::getIVelocityX() const { return IvelocityX; }

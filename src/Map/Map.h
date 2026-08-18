@@ -8,13 +8,13 @@
 
 #include "../GameObject/Enemy/enemy.h"
 #include "../engine/camera.h"
-#include "../GameObject/Platform/platform.h"
-#include "../GameObject/Platform/switch.h"
-#include "../GameObject/Platform/ladder.h"
-#include "../GameObject/Platform/spike.h"
+#include "../GameObject/Tile/platform.h"
+#include "../GameObject/Tile/switch.h"
+#include "../GameObject/Tile/ladder.h"
+#include "../GameObject/Tile/spike.h"
 
 #include "../GameObject/Player/player.h"
-#include "../GameObject/Platform/decor.h"
+#include "../GameObject/Tile/decor.h"
 #include "../GameObject/Special/itembox.h"
 #include "../GameObject/Special/item.h"
 #include "../engine/resourceManager.h"
