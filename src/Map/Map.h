@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cmath>
 
 #include "../GameObject/Enemy/enemy.h"
 #include "../GameObject/Enemy/flyer.h"
@@ -59,6 +60,7 @@ public:
     void addFlyer(int col, int row, int patrol);
     void addWalker(int col, int row, int patrol);
     void addLadder(int col, int row, std::string texKey);
+    void addWalker(int col, int row, int patrol, int kind = 1);
 
     bool eraseAt(int col, int row, TileLayer layer);
 

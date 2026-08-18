@@ -20,9 +20,16 @@ private:
 	int   currentFrame = 0;    // trang thai dang chay
 	float timer = 0.0f;
 
+	int   loopFrames = 1;
+	bool  frozen = false;
+
 public:
 	Animation() = default;
 	Animation(int frameCount, float frameTime);
+
+	void setLoopFrames(int n) { loopFrames = (n > 0) ? n : 1; }
+	void freezeAt(int f) { currentFrame = f; frozen = true; }
+	void unfreeze() { frozen = false; }
 
 	// Goi sau khi da co renderer, vi texture chua ton tai luc khoi tao object
 	void setTexture(SDL_Texture* tex);

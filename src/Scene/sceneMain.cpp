@@ -34,6 +34,11 @@ void sceneMain::resetPlayer() {
     p.setVelocityY(0);
     p.setOnGround(false);
     p.setIsClimbing(false);
+    p.setMovingLeft(false);
+    p.setMovingRight(false);
+    p.setMovingUp(false);
+    p.setMovingDown(false);
+    p.setDirection(1);
 }
 
 void sceneMain::update(float deltaTime) {
@@ -47,6 +52,7 @@ void sceneMain::update(float deltaTime) {
     map.getPlayer().update(deltaTime);
 
     handleCollision(deltaTime);
+    handleEnemyCollision();
     focusPlayer();
 
     map.updateRenderRect();
@@ -161,6 +167,55 @@ void sceneMain::handleCollision(float deltaTime) {
 
     // Cap nhat lai trang thai dung tren mat dat cho player
     p.setOnGround(onAnyGround);
+}
+
+void sceneMain::handleEnemyCollision() {
+    player& p = map.getPlayer();
+    float px = p.getX(), py = p.getY(), pw = p.getWidth(), ph = p.getHeight();
+
+    for (walker& w : map.getWalkers()) {
+        float wx = w.getX() + w.getInsetSide();
+        float wy = w.getY() + w.getInsetTop();
+        float ww = w.getWidth() - 2 * w.getInsetSide();
+        float wh = w.getHeight() - w.getInsetTop();
+
+        bool over = px <= wx + ww && px + pw >= wx && py <= wy + wh && py + ph >= wy;
+        if (!over) continue;
+
+        float overlapLeft = (px + pw) - wx;
+        float overlapRight = (wx + ww) - px;
+        float overlapTop = (py + ph) - wy;
+        float overlapBottom = (wy + wh) - py;
+        float minX = std::min(overlapLeft, overlapRight);
+        float minY = std::min(overlapTop, overlapBottom);
+
+        int side;
+        if (minX < minY) {
+            if (overlapLeft < overlapRight) { p.setX(wx - pw); side = 0; }
+            else { p.setX(wx + ww); side = 1; }
+            p.setVelocityX(0);
+        }
+        else {
+            if (overlapTop < overlapBottom) { p.setY(wy - ph); p.setOnGround(true); side = 2; }
+            else { p.setY(wy + wh); side = 3; }
+            p.setVelocityY(0);
+        }
+
+        px = p.getX(); py = p.getY();
+
+        int k = w.getKind();
+        if (k == 1) {
+            w.stop();
+            if (side == 2) lost = true;
+        }
+        else if (k == 2) {
+            w.stop();
+            if (side != 2) lost = true;
+        }
+        else if (k == 3) {
+            if (side == 2) w.stop();
+        }
+    }
 }
 
 // xá»­ lÃ½ input 
