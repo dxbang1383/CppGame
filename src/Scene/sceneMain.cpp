@@ -100,6 +100,7 @@ void sceneMain::update(float deltaTime) {
     for (platform& x : map.getPlatforms()) x.update(deltaTime);
     for (decor& d : map.getDecors())       d.update(deltaTime);
     for (flyer& f : map.getFlyers())       f.update(deltaTime);
+    for (fish& f : map.getFishes())        f.update(deltaTime);
     for (walker& w : map.getWalkers())     w.update(deltaTime);
     for (Switch& s : map.getSwitches())    s.update(deltaTime);
     for (spike& sp : map.getSpikes())      sp.update(deltaTime);
@@ -152,6 +153,7 @@ void sceneMain::render(SDL_Renderer* renderer) {
     for (ladder& l : map.getLadders()) l.render(renderer);
     for (decor& d : map.getDecors()) d.render(renderer);
     for (flyer& f : map.getFlyers()) f.render(renderer);
+    for (fish& f : map.getFishes()) f.render(renderer);
     for (walker& w : map.getWalkers()) w.render(renderer);
     for (Switch& sw : map.getSwitches()) sw.render(renderer);
     for (spike& sp : map.getSpikes()) sp.render(renderer);
@@ -517,6 +519,25 @@ void sceneMain::handleEnemyCollision(float deltaTime) {
         }
     }
     std::erase_if(map.getFlyers(), [](const flyer& f) { return !f.isAlive(); });
+
+    px = p.getX(); py = p.getY();
+
+    for (fish& f : map.getFishes()) {
+        if (!f.isAlive()) continue;
+
+        float fx = f.getX() + f.getInsetSide();
+        float fy = f.getY() + f.getInsetVert();
+        float fw = f.getWidth() - 2 * f.getInsetSide();
+        float fh = f.getHeight() - 2 * f.getInsetVert();
+
+        bool over = px <= fx + fw && px + pw >= fx && py <= fy + fh && py + ph >= fy;
+        if (!over) continue;
+
+        if (p.takeDamage()) {
+            soundManager::playEffect("punji");
+            p.setVelocityY(-350);
+        }
+    }
 }
 
 // tâm của người chơi đang ở ô nào 
@@ -760,6 +781,7 @@ void sceneMain::checkCollectables() {
         if (!c.isCollected() && checkCollision(p, c)) {
             c.setCollected(true);
             p.addCoins(c.getValue());
+            soundManager::playEffect("earncoin");
         }
     }
 
@@ -768,6 +790,7 @@ void sceneMain::checkCollectables() {
         if (!dia.isCollected() && checkCollision(p, dia)) {
             dia.setCollected(true);
             p.addDiamond();
+            soundManager::playEffect("diamond");
         }
     }
     std::erase_if(map.getCoins(), [](const Coin& c) {

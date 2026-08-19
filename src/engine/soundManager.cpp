@@ -15,6 +15,7 @@ std::map<std::string, std::string> soundManager::pathTable = {
     { "ladder",  "assets/kenney_pixel-platformer/Sounds/Ladder.wav" },
     { "punji",   "assets/kenney_pixel-platformer/Sounds/Punji.wav" },
     { "switch",  "assets/kenney_pixel-platformer/Sounds/Switch.wav" },
+    { "diamond", "assets/kenney_pixel-platformer/Sounds/Diamond.wav" },
 };
 
 SDL_AudioStream* soundManager::musicStream = nullptr;

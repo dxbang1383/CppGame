@@ -15,6 +15,7 @@ void Map::clear() {
     decorList.clear();
     flyers.clear();
     walkers.clear();
+    fishes.clear();
     ladders.clear();
     switches.clear();
     spikes.clear();
@@ -92,6 +93,9 @@ void Map::addTextures(SDL_Renderer* renderer) {
 
     for (walker& w : walkers)
         w.setTexture(resourceManager::getTexture(renderer, w.getType()));
+
+    for (fish& f : fishes)
+        f.setTexture(resourceManager::getTexture(renderer, f.getType()));
 }
 
 /// <summary>
@@ -178,6 +182,13 @@ bool Map::eraseAt(int col, int row, TileLayer layer ) {
         for (int i = (int)walkers.size() - 1; i >= 0; i--) {
             if (walkers[i].getCol() == col && walkers[i].getRow() == row) {
                 walkers.erase(walkers.begin() + i);
+                dirty = true;
+                return true;
+            }
+        }
+        for (int i = (int)fishes.size() - 1; i >= 0; i--) {
+            if (fishes[i].getCol() == col && fishes[i].getRow() == row) {
+                fishes.erase(fishes.begin() + i);
                 dirty = true;
                 return true;
             }
@@ -285,6 +296,12 @@ void Map::addDecorAnim(int col, int row, std::string animKey) {
 void Map::addFlyer(int col, int row, int patrol) {
     flyers.emplace_back(col, row, patrol);
     flyers.back().setTexture(resourceManager::getTexture(rend, flyers.back().getType()));
+    dirty = true;
+}
+
+void Map::addFish(int col, int row, int patrol) {
+    fishes.emplace_back(col, row, patrol);
+    fishes.back().setTexture(resourceManager::getTexture(rend, fishes.back().getType()));
     dirty = true;
 }
 
@@ -471,6 +488,7 @@ bool Map::load(const std::string& path) {
 
             if (ss >> col >> row >> type >> patrol) {
                 if (type == "flyer") addFlyer(col, row, patrol);
+                else if (type == "fish") addFish(col, row, patrol);
                 else if (type == "walker" || type == "walker1") addWalker(col, row, patrol, 1);
                 else if (type == "walker2") addWalker(col, row, patrol, 2);
                 else if (type == "walker3") addWalker(col, row, patrol, 3);
@@ -604,6 +622,10 @@ bool Map::save(const std::string& path) {
         file << w.getCol() << " " << w.getRow() << " "
             << w.getType() << " " << w.getPatrol() << "\n";
     }
+    for (fish& f : fishes) {
+        file << f.getCol() << " " << f.getRow() << " "
+            << f.getType() << " " << f.getPatrol() << "\n";
+    }
     file << "</enemy>\n";
 
     // Ghi laddder vào file 
@@ -677,6 +699,7 @@ void Map::updateRenderRect() {
     for (Switch& sw : switches) sw.updRenderRect(cam);
     for (flyer& f : flyers) f.updRenderRect(cam);
     for (walker& w : walkers) w.updRenderRect(cam);
+    for (fish& f : fishes) f.updRenderRect(cam);
     for (ladder& l : ladders) l.updRenderRect(cam);   // thang cũng theo camera
     for (spike& sp : spikes) sp.updRenderRect(cam);
     for (Coin& c : coins) c.updRenderRect(cam);

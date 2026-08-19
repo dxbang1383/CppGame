@@ -177,6 +177,7 @@
 44 14 walker3 3
 30 8 flyer 4
 52 28 walker1 5
+35 8 fish 1
 </enemy>
 <ladder>
 12 21 ladder
