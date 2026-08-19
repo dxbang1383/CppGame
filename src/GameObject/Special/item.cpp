@@ -21,11 +21,11 @@ Item::Item(int col, int row, ItemType type)
 	IvelocityY = 0.0;
 }
 
-void Item::update() {
+void Item::update(float deltaTime) {
 	if (collected) return;
-	IvelocityY += 0.3;
-	setX(getX() + IvelocityX);
-	setY(getY() + IvelocityY);
+	IvelocityY = IvelocityY + 500 * deltaTime;
+	setX(getX() + IvelocityX * deltaTime);
+	setY(getY() + IvelocityY * deltaTime);
 
 }
 

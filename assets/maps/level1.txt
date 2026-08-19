@@ -258,3 +258,10 @@
 7 7 ladder_down
 7 6 ladder_top
 </ladder>
+<switch>
+</switch>
+<spike>
+</spike>
+<box>
+29 10 item
+</box>

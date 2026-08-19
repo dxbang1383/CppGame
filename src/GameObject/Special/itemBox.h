@@ -12,10 +12,12 @@ enum class BoxType {
 class itemBox : public specialObject
 {
 private:
-	static constexpr float FRAME_SIZE = 22.0f;
+	static constexpr float FRAME_SIZE = 18.0f;
+	float pY; // biến này lưu tọa độ gốc của khối
 
 	BoxType boxType;
 
+	// đã kích hoạt sinh reward chưa 
 	bool activated = false;
 	// chưa viết ---
 	bool bouncing = false; // đang nảy 

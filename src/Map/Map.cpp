@@ -7,19 +7,6 @@ static const char* boxTexKey(BoxType t) {
     return "box_coin";
 }
 
-static const char* itemTexKey(ItemType t) {
-    switch (t) {
-    case ItemType::STAR:        return "i_star";
-    case ItemType::SPEED:       return "i_speed";
-    case ItemType::HEART:       return "i_heart";
-    case ItemType::NO_GRAVITY:  return "i_nogravity";
-    case ItemType::DOUBLE_JUMP: return "i_doublejump";
-    case ItemType::HIGH_JUMP:   return "i_highjump";
-    }
-    return "i_coin";
-}
-
-
 Map::Map() : mainPlayer(0, 0) {
 }
 
@@ -75,10 +62,6 @@ void Map::addTextures(SDL_Renderer* renderer) {
 
     for (itemBox& b : boxes) {
         b.setTexture(resourceManager::getTexture(renderer, boxTexKey(b.getBoxType())));
-    }
-
-    for (Item& it : items) {
-        it.setTexture(resourceManager::getTexture(renderer, itemTexKey(it.getItemType())));
     }
 
     // Animation player
@@ -164,15 +147,6 @@ bool Map::eraseAt(int col, int row, TileLayer layer ) {
             }
         }
     }
-    else if (layer == TileLayer::LAYER_ITEM) {
-        for (int i = (int)items.size() - 1; i >= 0; i--) {
-            if (items[i].getCol() == col && items[i].getRow() == row) {
-                items.erase(items.begin() + i);
-                dirty = true;
-                return true;
-            }
-        }
-    }
     else if (layer == TileLayer::LAYER_ENEMY) {
         for (int i = (int)flyers.size() - 1; i >= 0; i--) {
             if (flyers[i].getCol() == col && flyers[i].getRow() == row) {
@@ -201,12 +175,6 @@ void Map::addLadder(int col, int row, std::string texKey) {
 void Map::addBox(int col, int row, BoxType type) {
     boxes.emplace_back(col, row, type);
     boxes.back().setTexture(resourceManager::getTexture(rend, boxTexKey(type)));
-    dirty = true;
-}
-
-void Map::addItem(int col, int row, ItemType type) {
-    items.emplace_back(col, row, type);
-    items.back().setTexture(resourceManager::getTexture(rend, itemTexKey(type)));
     dirty = true;
 }
 
@@ -270,7 +238,6 @@ bool Map::load(const std::string& path) {
     bool inSwitchBlock = false;
     bool inSpikeBlock = false;
     bool inBoxBlock = false;
-    bool inItemBlock = false;
 
     while (std::getline(file, line)) {
         if (true) {
@@ -344,14 +311,6 @@ bool Map::load(const std::string& path) {
             }
             if (line == "</box>") {
                 inBoxBlock = false;
-                continue;
-            }
-            if (line == "<item>") {
-                inItemBlock = true;
-                continue;
-            }
-            if (line == "</item>") {
-                inItemBlock = false;
                 continue;
             }
         }
@@ -442,23 +401,6 @@ bool Map::load(const std::string& path) {
                 else if (type == "question") addBox(col, row, BoxType::QUESTION);
                 else if (type == "item")     addBox(col, row, BoxType::ITEM);
                 else std::cout << "Khong biet loai hop: " << type << std::endl;
-            }
-        }
-
-        if (inItemBlock) {
-            std::istringstream ss(line);
-            int col, row;
-            std::string type;
-
-            if (ss >> col >> row >> type) {
-                if (type == "coin")             addItem(col, row, ItemType::COIN1);
-                else if (type == "star")        addItem(col, row, ItemType::STAR);
-                else if (type == "speed")       addItem(col, row, ItemType::SPEED);
-                else if (type == "heart")       addItem(col, row, ItemType::HEART);
-                else if (type == "nogravity")   addItem(col, row, ItemType::NO_GRAVITY);
-                else if (type == "doublejump")  addItem(col, row, ItemType::DOUBLE_JUMP);
-                else if (type == "highjump")    addItem(col, row, ItemType::HIGH_JUMP);
-                else std::cout << "Khong biet loai vat pham: " << type << std::endl;
             }
         }
     }
@@ -557,22 +499,6 @@ bool Map::save(const std::string& path) {
         file << b.getCol() << " " << b.getRow() << " " << t << "\n";
     }
     file << "</box>\n";
-
-    // Ghi item vào file
-    file << "<item>\n";
-    for (Item& it : items) {
-        std::string t = "coin";
-        switch (it.getItemType()) {
-        case ItemType::STAR:        t = "star";       break;
-        case ItemType::SPEED:       t = "speed";      break;
-        case ItemType::HEART:       t = "heart";      break;
-        case ItemType::NO_GRAVITY:  t = "nogravity";  break;
-        case ItemType::DOUBLE_JUMP: t = "doublejump"; break;
-        case ItemType::HIGH_JUMP:   t = "highjump";   break;
-        }
-        file << it.getCol() << " " << it.getRow() << " " << t << "\n";
-    }
-    file << "</item>\n";
 
     // Đóng file .
     file.close();

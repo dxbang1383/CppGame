@@ -17,7 +17,6 @@ enum class TileLayer {
 	LAYER_SWITCH,
 	LAYER_SPIKE,
 	LAYER_BOX,
-	LAYER_ITEM
 };
 
 /*
@@ -42,7 +41,7 @@ private:
 	SDL_FRect content{ 0.0f, 0.0f, 0.0f, 0.0f };
 
 	PaletteMode mode = PaletteMode::CLOSED; // trạng thái của palette
-	TileLayer layer = TileLayer::LAYER_PLATFORM; // addPlatform....
+	TileLayer layer = TileLayer::LAYER_PLATFORM; // addPlatform.... là lớp được chọn để lần sau thêm vào map
 
 	std::string texKey = "map1"; // biên chonj texture để vẽ 
 	int srcX = 0, srcY = 0; // src

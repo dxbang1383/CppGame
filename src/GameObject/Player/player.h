@@ -17,7 +17,7 @@ private:
     double gravity = 980.0; // tốc độ của trọng lực
     double jumpForce = 600.0; // tốc độ nhảy 
     bool onGround = false; // trêm mặt đất hay không 
-    //Item
+    // Item
     bool hasDoubleJump = false;
     bool doubleJumpUsed = false;
     bool noGravity = false;

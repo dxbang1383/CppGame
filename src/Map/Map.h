@@ -73,7 +73,6 @@ public:
     void addSwitch(int col, int row, std::string texKey = "switch");
     void addSpike(int col, int row, std::string texKey = "spike");
     void addBox(int col, int row, BoxType type);
-    void addItem(int col, int row, ItemType type);
     void addWalker(int col, int row, int patrol, int kind = 1);
 
     bool eraseAt(int col, int row, TileLayer layer);

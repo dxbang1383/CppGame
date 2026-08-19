@@ -48,15 +48,6 @@ void sceneEditor::placeAt(int col, int row) {
         else if (key == "box_item")  map.addBox(col, row, BoxType::ITEM);
         else                         map.addBox(col, row, BoxType::COIN);
         break;
-    case TileLayer::LAYER_ITEM:
-        if (key == "i_star")             map.addItem(col, row, ItemType::STAR);
-        else if (key == "i_speed")       map.addItem(col, row, ItemType::SPEED);
-        else if (key == "i_heart")       map.addItem(col, row, ItemType::HEART);
-        else if (key == "i_nogravity")   map.addItem(col, row, ItemType::NO_GRAVITY);
-        else if (key == "i_doublejump")  map.addItem(col, row, ItemType::DOUBLE_JUMP);
-        else if (key == "i_highjump")    map.addItem(col, row, ItemType::HIGH_JUMP);
-        else                             map.addItem(col, row, ItemType::COIN1);
-        break;
     }
 }
 

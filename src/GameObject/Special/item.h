@@ -42,7 +42,7 @@ public:
 	int getRow() const { return (int)(getY() / TILE_SIZE); }
 
 	void setIVelocityY(double velocity);
-	void update();
+	void update(float deltaTime) override;
 	void render(SDL_Renderer* renderer);
 	ItemType getItemType() const;
 	bool isCollected() const;

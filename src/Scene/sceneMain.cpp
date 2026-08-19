@@ -1,5 +1,6 @@
 ﻿#include "sceneMain.h"
 #include "../engine/soundManager.h"
+
 // Constructor
 sceneMain::sceneMain() {
 // Toan bo man choi (dia hinh, thang, quai, switch, spike) nap tu level2.txt
@@ -57,13 +58,17 @@ void sceneMain::update(float deltaTime) {
     for (flyer& f : map.getFlyers())       f.update(deltaTime);
     for (walker& w : map.getWalkers())     w.update(deltaTime);
     for (Switch& s : map.getSwitches())    s.update(deltaTime);
-    for (spike& sp : map.getSpikes())               sp.update(deltaTime);
+    for (spike& sp : map.getSpikes())      sp.update(deltaTime);
+    for (Item& i : map.getItems())         i.update(deltaTime);
     for (itemBox& b : map.getBoxes())      b.update(deltaTime);
-
     map.getPlayer().update(deltaTime);
 
+    // xóa phần box rơi ra ngoài map
+    std::erase_if(map.getBoxes(), [this](const itemBox& b) {
+        return b.getY() > deathY;
+        });
+
     handleCollision(deltaTime);
-    handleEnemyCollision();
     focusPlayer();
 
     map.updateRenderRect();
@@ -73,8 +78,6 @@ void sceneMain::update(float deltaTime) {
         soundManager::playEffect("lose");
     }
 }
-
-
 
 void sceneMain::render(SDL_Renderer* renderer) {
     SDL_FRect bkgRect = { 0, 0, W, H };
@@ -122,8 +125,7 @@ bool sceneMain::overlapsLadder(ladder& l) {
         && p.getY() + p.getHeight() >= l.getY();
 }
 
-void sceneMain::handleCollision(float deltaTime) {
-
+void sceneMain::handlePlatformCollision(float deltaTime) {
     player& p = map.getPlayer();
 
     bool onAnyGround = false;
@@ -163,6 +165,13 @@ void sceneMain::handleCollision(float deltaTime) {
         }
     }
 
+    // Cap nhat lai trang thai dung tren mat dat cho player
+    p.setOnGround(onAnyGround);
+}
+
+void sceneMain::handleItemBoxCollision(float deltaTime) {
+    player& p = map.getPlayer();
+
     // Player cung dau vao hop
     for (itemBox& box : map.getBoxes()) {
 
@@ -174,10 +183,10 @@ void sceneMain::handleCollision(float deltaTime) {
             p.getY() < box.getY() + box.getHeight() &&
             p.getY() + p.getHeight() > box.getY();
 
-        // Đang nhảy lên và chạm box
         if (p.getVelocityY() < 0 &&
             horizontalOverlap &&
-            verticalOverlap)
+            verticalOverlap && 
+            !box.isActivated())
         {
             // Đưa player xuống ngay dưới box
             p.setY(box.getY() + box.getHeight());
@@ -186,18 +195,17 @@ void sceneMain::handleCollision(float deltaTime) {
             p.setVelocityY(0);
 
             // Chỉ box chưa kích hoạt mới activate
-            // Chỉ box chưa kích hoạt mới activate
             if (!box.isActivated()) {
 
                 box.activate();
                 ItemType itemType = ItemType::COIN1;
 
                 if (box.getBoxType() == BoxType::COIN) {
-                    
+
                     itemType = ItemType::COIN1;
                 }
                 else if (box.getBoxType() == BoxType::QUESTION) {
-                   
+
                     static const ItemType questionPool[] = {
                         ItemType::HEART,
                         ItemType::SPEED,
@@ -206,12 +214,12 @@ void sceneMain::handleCollision(float deltaTime) {
                     itemType = questionPool[rand() % 3];
                 }
                 else if (box.getBoxType() == BoxType::ITEM) {
-                   
+
                     static const ItemType itemPool[] = {
                         ItemType::NO_GRAVITY,
                         ItemType::HIGH_JUMP,
                         ItemType::STAR,
-                    
+
                     };
                     itemType = itemPool[rand() % 3];
                 }
@@ -262,9 +270,14 @@ void sceneMain::handleCollision(float deltaTime) {
             }
         }
     }
+}
 
-    // --- Thang ---
+void sceneMain::handleLadderCollision(float deltaTime) {
+    player& p = map.getPlayer();
+
+    // Biến này để kiểm tra xem player có đang chạm với ladder nào không 
     bool touchingLadder = false;
+
     for (ladder& l : map.getLadders()) {
         if (overlapsLadder(l)) {
             touchingLadder = true;
@@ -280,11 +293,11 @@ void sceneMain::handleCollision(float deltaTime) {
 
     // Neu dang treo thang thi khong can xu li voi mat dat
     if (p.getIsClimbing()) return;
+}
 
-    // Cap nhat lai trang thai dung tren mat dat cho player
-    p.setOnGround(onAnyGround);
-
-    //Xu li player cham cong tac
+void sceneMain::handleSwitchCollision(float deltaTime) {
+    player& p = map.getPlayer();
+    // Xu li player cham cong tac
     for (Switch& sw : map.getSwitches()) {
         if (!sw.getIsActivated() && checkCollision(p, sw)) {
             sw.trigger();
@@ -304,6 +317,10 @@ void sceneMain::handleCollision(float deltaTime) {
                 });
         }
     }
+}
+
+void sceneMain::handleSpikeCollison(float deltaTime) {
+    player& p = map.getPlayer();
 
     // Cham spike -> thua, tru khi dang bat bien nho STAR
     if (!p.isInvincible()) {
@@ -315,7 +332,10 @@ void sceneMain::handleCollision(float deltaTime) {
             }
         }
     }
+}
 
+void sceneMain::handleItemCollison(float deltaTime) {
+    player& p = map.getPlayer();
     // Kiểm tra player nhặt item
     for (Item& item : map.getItems()) {
         if (!item.isCollected() && checkCollision(p, item)) {
@@ -330,7 +350,7 @@ void sceneMain::handleCollision(float deltaTime) {
         });
 }
 
-void sceneMain::handleEnemyCollision() {
+void sceneMain::handleEnemyCollision(float deltaTime) {
     player& p = map.getPlayer();
     float px = p.getX(), py = p.getY(), pw = p.getWidth(), ph = p.getHeight();
 
@@ -379,7 +399,23 @@ void sceneMain::handleEnemyCollision() {
     }
 }
 
-// xá»­ lÃ½ input 
+void sceneMain::handleCollision(float deltaTime) {
+
+    // Va chạm player và platform 
+    handlePlatformCollision(deltaTime);
+    // Va chạm player và ItemBox
+    handleItemBoxCollision(deltaTime);
+    // Va chạm player và ItemBox
+    handleLadderCollision(deltaTime);
+    // Va chạm switch và player 
+    handleSwitchCollision(deltaTime);
+    // Cham spike -> thua, tru khi dang bat bien nho STAR
+    handleSpikeCollison(deltaTime);
+    // Va chạm item với player 
+    handleItemCollison(deltaTime);
+    // Va chạm enemy với player 
+    handleEnemyCollision(deltaTime);
+}
 
 void sceneMain::handleInput(const SDL_Event& event) {
     if ((paused || lost)
