@@ -52,7 +52,7 @@ public:
     // set rộng & cao hcn thế giới
     void setSize(double newWidth, double newHeight);
     // set tex tài nguyên 
-    void setTexture(SDL_Texture* tex);
+    virtual void setTexture(SDL_Texture* tex);
     // set hcn vẽ lên màn hình ( hcn được tính qua camera )
     void setRenderRect(SDL_FRect* rec);
 

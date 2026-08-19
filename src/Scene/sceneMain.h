@@ -52,6 +52,7 @@ private:
     SettingsMenu settings;
     const float deathY = 2000.0f;
 
+    // set = 0.5 ở player atcell
     float teleportCooldown = 0.0f;
     int sceneAction = SCENE_NONE;
 

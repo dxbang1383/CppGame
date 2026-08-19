@@ -49,6 +49,7 @@ void sceneMain::resetPlayer() {
     p.setDirection(1);
 }
 
+
 void sceneMain::update(float deltaTime) {
     if (paused || lost) return;
     settings.close();
@@ -92,6 +93,7 @@ void sceneMain::render(SDL_Renderer* renderer) {
     for (spike& sp : map.getSpikes()) sp.render(renderer);
     for (itemBox& box : map.getBoxes()) box.render(renderer);
     for (Item& it : map.getItems()) it.render(renderer);
+    for (teleport& t : map.getTeleports()) t.render(renderer);
     map.getPlayer().render(renderer);
 
     if (paused) pauseMenu.render(renderer);
@@ -410,7 +412,7 @@ bool sceneMain::playerAtCell(int col, int row) {
 void sceneMain::movePlayerToCell(int col, int row) {
     player& p = map.getPlayer();
     p.setX(col * tile::TILE_SIZE);
-    p.setY(row * tile::TILE_SIZE);
+    p.setY(row * tile::TILE_SIZE - tile::TILE_SIZE / 2);
     p.setVelocityY(-100);
     p.setOnGround(false);
     teleportCooldown = 0.5f;

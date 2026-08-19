@@ -587,4 +587,5 @@ void Map::updateRenderRect() {
     for (walker& w : walkers) w.updRenderRect(cam);
     for (ladder& l : ladders) l.updRenderRect(cam);   // thang cũng theo camera
     for (spike& sp : spikes) sp.updRenderRect(cam);
+    for (teleport& t : teleports) t.updRenderRect(cam);
 }
