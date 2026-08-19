@@ -79,6 +79,17 @@ private:
     // ve co dung dua tai o dich cua man choi
     void renderGoalFlag(SDL_Renderer* renderer);
 
+    // ---- Chuoi uu tien xu li input ----
+    // Tra ve true = "da nuot event nay", cac lop duoi khong nhan nua
+    bool handleSettingsInput(const SDL_Event& event);
+    bool handleGameOverInput(const SDL_Event& event);
+    bool handlePauseToggle(const SDL_Event& event);
+    bool handlePauseMenuInput(const SDL_Event& event);
+    // Dieu khien nhan vat, chi chay khi khong co menu nao dang mo
+    void handlePlayerInput(const SDL_Event& event);
+    void handlePlayerKeyDown(SDL_Keycode key);
+    void handlePlayerKeyUp(SDL_Keycode key);
+
 public:
     sceneMain();
     void preLoad(SDL_Renderer* renderer) override;

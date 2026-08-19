@@ -61,7 +61,6 @@ void sceneMain::resetPlayer() {
     p.setDirection(1);
 }
 
-
 void sceneMain::update(float deltaTime) {
     if (paused || lost) return;
     settings.close();
@@ -499,134 +498,163 @@ void sceneMain::handleCollision(float deltaTime) {
 }
 
 void sceneMain::handleInput(const SDL_Event& event) {
-    if ((paused || lost )
-        && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
-        && event.button.button == SDL_BUTTON_LEFT) {
-        int base = lost ? 0 : 1;
-        float sx = 1220.0f - base * 50.0f;
-        if (settings.handleClick(event.button.x, event.button.y, sx, 20.0f)) return;
-    }
+    if (handleSettingsInput(event))  return;
+    if (handleGameOverInput(event))  return;
+    if (handlePauseToggle(event))    return;
+    if (handlePauseMenuInput(event)) return;
 
-    if (lost ) {
-        if (event.type == SDL_EVENT_MOUSE_MOTION) {
-            gameOverMenu.handleMouseMove(event.motion.x, event.motion.y);
-        }
-        else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
-                 && event.button.button == SDL_BUTTON_LEFT) {
-            gameOverMenu.handleClick(event.button.x, event.button.y);
-            int a = gameOverMenu.getAction();
-            if (a == GAMEOVER_REPLAY)     { resetGame(); lost = false; }
-            else if (a == GAMEOVER_MODE2) { resetGame(); lost = false; sceneAction = SCENE_EDITOR; }
-            else if (a == GAMEOVER_MENU)  { resetGame(); lost = false; sceneAction = SCENE_MENU; }
-            else if (a == GAMEOVER_QUIT)  { sceneAction = SCENE_QUIT; }
-            gameOverMenu.resetAction();
-        }
-        return;
-    }
+    handlePlayerInput(event);
+}
 
-    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
+// nút bánh răng 
+bool sceneMain::handleSettingsInput(const SDL_Event& event) {
+    if (!paused && !lost) return false; // đang chơi game thì tiếp 
+    if (event.type != SDL_EVENT_MOUSE_BUTTON_DOWN) return false; // tạm thời chỉ nhận input chuột trái
+    if (event.button.button != SDL_BUTTON_LEFT) return false;
+
+    int base = lost ? 0 : 1;
+    float sx = 1220.0f - base * 50.0f;
+    return settings.handleClick(event.button.x, event.button.y, sx, 20.0f);
+}
+
+// Khi thua, menu game over nuot toan bo input
+bool sceneMain::handleGameOverInput(const SDL_Event& event) {
+    if (!lost) return false;
+
+    if (event.type == SDL_EVENT_MOUSE_MOTION) {
+        gameOverMenu.handleMouseMove(event.motion.x, event.motion.y);
+    }
+    else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
+             && event.button.button == SDL_BUTTON_LEFT) {
+        gameOverMenu.handleClick(event.button.x, event.button.y);
+        int a = gameOverMenu.getAction();
+        if (a == GAMEOVER_REPLAY)     { resetGame(); lost = false; }
+        else if (a == GAMEOVER_MODE2) { resetGame(); lost = false; sceneAction = SCENE_EDITOR; }
+        else if (a == GAMEOVER_MENU)  { resetGame(); lost = false; sceneAction = SCENE_MENU; }
+        else if (a == GAMEOVER_QUIT)  { sceneAction = SCENE_QUIT; }
+        gameOverMenu.resetAction();
+    }
+    return true;
+}
+
+// Hai duong bat/tat tam dung: bam icon hoac phim P
+bool sceneMain::handlePauseToggle(const SDL_Event& event) {
+    bool clickIcon =
+        event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
         && event.button.button == SDL_BUTTON_LEFT
         && event.button.x >= toggleBtnRect.x && event.button.x <= toggleBtnRect.x + toggleBtnRect.w
-        && event.button.y >= toggleBtnRect.y && event.button.y <= toggleBtnRect.y + toggleBtnRect.h) {
-        paused = !paused;
+        && event.button.y >= toggleBtnRect.y && event.button.y <= toggleBtnRect.y + toggleBtnRect.h;
+
+    bool pressP = event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_P;
+
+    if (!clickIcon && !pressP) return false;
+
+    paused = !paused;
+    pauseMenu.resetAction();
+    return true;
+}
+
+// Khi tam dung, menu pause nuot toan bo input
+bool sceneMain::handlePauseMenuInput(const SDL_Event& event) {
+    if (!paused) return false;
+
+    if (event.type == SDL_EVENT_MOUSE_MOTION) {
+        pauseMenu.handleMouseMove(event.motion.x, event.motion.y);
+    }
+    else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
+             && event.button.button == SDL_BUTTON_LEFT) {
+        pauseMenu.handleClick(event.button.x, event.button.y);
+        int a = pauseMenu.getAction();
+        if (a == PAUSE_RESUME)      paused = false;
+        else if (a == PAUSE_REPLAY) { resetGame(); paused = false; }
+        else if (a == PAUSE_MENU)   { resetGame(); sceneAction = SCENE_MENU; paused = false; }
+        else if (a == PAUSE_QUIT)   sceneAction = SCENE_QUIT;
         pauseMenu.resetAction();
-        return;
     }
+    return true;
+}
 
-    if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_P) {
-        paused = !paused;
-        pauseMenu.resetAction();
-        return;
+void sceneMain::handlePlayerInput(const SDL_Event& event) {
+    if (event.type == SDL_EVENT_KEY_DOWN)    handlePlayerKeyDown(event.key.key);
+    else if (event.type == SDL_EVENT_KEY_UP) handlePlayerKeyUp(event.key.key);
+}
+
+void sceneMain::handlePlayerKeyDown(SDL_Keycode key) {
+    player& p = map.getPlayer();
+
+    switch (key) {
+    case SDLK_A:
+    case SDLK_LEFT:
+        p.setDirection(-1);
+        p.setMovingLeft(true);
+        break;
+
+    case SDLK_D:
+    case SDLK_RIGHT:
+        p.setMovingRight(true);
+        p.setDirection(1);
+        break;
+
+    case SDLK_SPACE:
+    case SDLK_W:
+    case SDLK_UP:
+        // 1. Ưu tiên kiểm tra trạng thái Không trọng lực (No Gravity)
+        if (p.isNoGravity()) {
+            p.setMovingUp(true);
+        }
+        // 2. Nếu đang chạm thang thì leo lên
+        else if (p.IsTouchingLadder()) {
+            p.setIsClimbing(true);
+            p.setOnGround(false);
+            p.setMovingUp(true);
+        }
+        // 3. Bình thường thì nhảy
+        else {
+            p.jump();
+        }
+        break;
+
+    case SDLK_S:
+    case SDLK_DOWN:
+        p.setMovingDown(true);
+
+        // đang chạm vào thang thì set thành đang trèo
+        if (!p.isNoGravity() && p.IsTouchingLadder()) {
+            p.setIsClimbing(true);
+        }
+        break;
+
+    case SDLK_L:
+        map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
+        std::cout << "load " << std::endl;
+        break;
     }
+}
 
-    if (paused) {
-        if (event.type == SDL_EVENT_MOUSE_MOTION) {
-            pauseMenu.handleMouseMove(event.motion.x, event.motion.y);
-        }
-        else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
-                 && event.button.button == SDL_BUTTON_LEFT) {
-            pauseMenu.handleClick(event.button.x, event.button.y);
-            int a = pauseMenu.getAction();
-            if (a == PAUSE_RESUME)      paused = false;
-            else if (a == PAUSE_REPLAY) { resetGame(); paused = false; }
-            else if (a == PAUSE_MENU)   { resetGame(); sceneAction = SCENE_MENU; paused = false; }
-            else if (a == PAUSE_QUIT)   sceneAction = SCENE_QUIT;
-            pauseMenu.resetAction();
-        }
-        return;
-    }
+void sceneMain::handlePlayerKeyUp(SDL_Keycode key) {
+    player& p = map.getPlayer();
 
-    if (event.type == SDL_EVENT_KEY_DOWN) {
-        switch (event.key.key) {
-        case SDLK_A:
-        case SDLK_LEFT:
-            map.getPlayer().setDirection(-1);
-            map.getPlayer().setMovingLeft(true);
-            break;
+    switch (key) {
+    case SDLK_A:
+    case SDLK_LEFT:
+        p.setMovingLeft(false);
+        break;
 
-        case SDLK_D:
-        case SDLK_RIGHT:
-            map.getPlayer().setMovingRight(true);
-            map.getPlayer().setDirection(1);
-            break;
+    case SDLK_D:
+    case SDLK_RIGHT:
+        p.setMovingRight(false);
+        break;
 
-        case SDLK_SPACE:
-        case SDLK_W:
-        case SDLK_UP:
-            // 1. Ưu tiên kiểm tra trạng thái Không trọng lực (No Gravity)
-            if (map.getPlayer().isNoGravity()) {
-                map.getPlayer().setMovingUp(true);
-            }
-            // 2. Nếu đang chạm thang thì leo lên
-            else if (map.getPlayer().IsTouchingLadder()) {
-                map.getPlayer().setIsClimbing(true);
-                map.getPlayer().setOnGround(false);
-                map.getPlayer().setMovingUp(true);
-            }
-            // 3. Bình thường thì nhảy
-            else {
-                map.getPlayer().jump();
-            }
-            break;
+    case SDLK_SPACE:
+    case SDLK_W:
+    case SDLK_UP:
+        p.setMovingUp(false);
+        break;
 
-        case SDLK_S:
-        case SDLK_DOWN:
-            map.getPlayer().setMovingDown(true);
-
-            // đang chạm vào thang thì set thành đang trèo 
-            if (!map.getPlayer().isNoGravity() && map.getPlayer().IsTouchingLadder()) {
-                map.getPlayer().setIsClimbing(true);
-            }
-            break;
-        case SDLK_L:
-            map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
-            std::cout << "load " << std::endl;
-            break;
-        }
-
-    }
-    else if (event.type == SDL_EVENT_KEY_UP) {
-        switch (event.key.key) {
-        case SDLK_A:
-        case SDLK_LEFT:
-            map.getPlayer().setMovingLeft(false);
-            break;
-
-        case SDLK_D:
-        case SDLK_RIGHT:
-            map.getPlayer().setMovingRight(false);
-            break;
-        case SDLK_SPACE:
-        case SDLK_W:
-        case SDLK_UP:
-            map.getPlayer().setMovingUp(false); // Thả phím W/UP -> Dừng bay lên / Dừng leo
-            break;
-
-        case SDLK_S:
-        case SDLK_DOWN:
-            map.getPlayer().setMovingDown(false); // Thả phím S/DOWN -> Dừng bay xuống / Dừng leo
-            break;
-        }
+    case SDLK_S:
+    case SDLK_DOWN:
+        p.setMovingDown(false);
+        break;
     }
 }
 
