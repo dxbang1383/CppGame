@@ -80,7 +80,7 @@ public:
     void addItem(int col, int row, ItemType type);
     void addWalker(int col, int row, int patrol, int kind = 1);
     void addCoin(int col, int row);
-    void addDiamond(int col, int row);
+    void addDiamonds(int col, int row);
 
     bool eraseAt(int col, int row, TileLayer layer);
 

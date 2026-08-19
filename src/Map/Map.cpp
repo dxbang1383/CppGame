@@ -286,7 +286,7 @@ void Map::addCoin(int col, int row) {
     dirty = true;
 }
 
-void Map::addDiamond(int col, int row) {
+void Map::addDiamonds(int col, int row) {
     diamonds.emplace_back(col, row, "diamond");
     diamonds.back().setTexture(resourceManager::getTexture(rend, "diamond"));
     dirty = true;
@@ -531,7 +531,7 @@ bool Map::load(const std::string& path) {
             std::istringstream ss(line);
             int col, row;
             if (ss >> col >> row) {
-                addDiamond(col, row); // Hàm addDiamond tự định nghĩa trong Map
+                addDiamonds(col, row); // Hàm addDiamond tự định nghĩa trong Map
             }
         }
     }

@@ -1,4 +1,4 @@
-#ifndef COIN_H
+ï»¿#ifndef COIN_H
 #define COIN_H
 
 #include <SDL3/SDL.h>
@@ -15,7 +15,7 @@ private:
 public:
     using tile::tile;
 
-    // Gán texture cho Animation ?? nó tính toán frameW, frameH
+    // Gï¿½n texture cho Animation ?? nï¿½ tï¿½nh toï¿½n frameW, frameH
     void setTexture(SDL_Texture* tex) {
         tile::setTexture(tex);
         anim.setTexture(tex);

@@ -4,9 +4,9 @@
 #include <SDL3/SDL.h>
 #include <vector>
 #include <iostream>
-#include <SDL3_ttf/SDL_ttf.h>
 
 #include "scene.h"
+#include "../engine/UI/Text.h"
 #include "../GameObject/Player/player.h"
 #include "../GameObject/Enemy/enemy.h"
 #include "../GameObject/Tile/ladder.h"
@@ -37,7 +37,6 @@ private:
     Map map = Map();
 
     //coin and diamond
-    TTF_Font* font = nullptr;           
     SDL_Texture* NDiamonds = nullptr;
 
     const float TILE = 36.0f;
@@ -68,11 +67,9 @@ private:
 
     void resetPlayer();
     void renderHUD(SDL_Renderer* renderer);
-    SDL_Texture* renderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, SDL_Color color);
 
 public:
     sceneMain();
-    ~sceneMain() override;
     void preLoad(SDL_Renderer* renderer) override;
     void handleInput(const SDL_Event& event) override;
     void update(float deltaTime) override;

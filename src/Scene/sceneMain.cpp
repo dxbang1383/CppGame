@@ -1,27 +1,9 @@
 ﻿#include "sceneMain.h"
 #include "../engine/soundManager.h"
-#include <SDL3_ttf/SDL_ttf.h>
 
-SDL_Texture* sceneMain::renderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, SDL_Color color) {
-    if (!font) return nullptr;
-    SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), text.length(), color);
-    if (!surface) return nullptr;
-
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_DestroySurface(surface);
-    return texture;
-}
 // Constructor
 sceneMain::sceneMain() {
 // Toan bo man choi (dia hinh, thang, quai, switch, spike) nap tu level2.txt
-}
-
-// Destruction 
-sceneMain::~sceneMain() {
-    if (font) {
-        TTF_CloseFont(font);
-        font = nullptr;
-    }
 }
 
 void sceneMain::preLoad(SDL_Renderer* renderer) {
@@ -45,9 +27,6 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     Inogravity = resourceManager::getTexture(renderer, "i_nogravity");
     Idoublejump = resourceManager::getTexture(renderer, "i_doublejump");
     Ihighjump = resourceManager::getTexture(renderer, "i_highjump");
-   /* SDL_Texture* Ncoins = resourceManager::getTexture(renderer, "coins");
-    SDL_Texture* NDiamonds = resourceManager::getTexture(renderer, "diamonds");*/
-    font = TTF_OpenFont("assets/fonts/arial.ttf", 20);
     NDiamonds = resourceManager::getTexture(renderer, "diamond");
 
 }
@@ -595,45 +574,24 @@ void sceneMain::renderHUD(SDL_Renderer* renderer) {
     // Chuẩn bị màu chữ đen
     SDL_Color textColor = { 0, 0, 0, 255 };
 
+    
+    float scale = 0.42f;
+
     // 2. Dòng 1: COIN (: X)
     SDL_FRect coinIconRect = { 35.0f, 35.0f, 32.0f, 32.0f };
     SDL_RenderTexture(renderer, Icoin, nullptr, &coinIconRect);
-
-    std::string coinStr = ": " + std::to_string(p.getCoins());
-    SDL_Texture* coinTex = renderText(renderer, font, coinStr, textColor);
-    if (coinTex) {
-        float w, h;
-        SDL_GetTextureSize(coinTex, &w, &h);
-        SDL_FRect textRect = { 75.0f, 38.0f, w, h };
-        SDL_RenderTexture(renderer, coinTex, nullptr, &textRect);
-        SDL_DestroyTexture(coinTex); // Nhớ hủy texture sau khi vẽ xong
-    }
+    Text::draw(renderer, ": " + std::to_string(p.getCoins()),
+               75.0f, 38.0f, textColor, scale);
 
     // 3. Dòng 2: HEART (: X)
     SDL_FRect heartIconRect = { 35.0f, 80.0f, 32.0f, 32.0f };
     SDL_RenderTexture(renderer, Iheart, nullptr, &heartIconRect);
+    Text::draw(renderer, ": " + std::to_string(p.getHealth()),
+               75.0f, 83.0f, textColor, scale);
 
-    std::string heartStr = ": " + std::to_string(p.getHealth());
-    SDL_Texture* heartTex = renderText(renderer, font, heartStr, textColor);
-    if (heartTex) {
-        float w, h;
-        SDL_GetTextureSize(heartTex, &w, &h);
-        SDL_FRect textRect = { 75.0f, 83.0f, w, h };
-        SDL_RenderTexture(renderer, heartTex, nullptr, &textRect);
-        SDL_DestroyTexture(heartTex);
-    }
-
-    // 4. Dòng 3: DIAMOND (: X/3)
+    // 4. Dòng 3: DIAMOND 
     SDL_FRect diamondIconRect = { 35.0f, 125.0f, 32.0f, 32.0f };
     SDL_RenderTexture(renderer, NDiamonds, nullptr, &diamondIconRect);
-
-    std::string diamondStr = ": " + std::to_string(p.getDiamonds()) + "/3";
-    SDL_Texture* diamondTex = renderText(renderer, font, diamondStr, textColor);
-    if (diamondTex) {
-        float w, h;
-        SDL_GetTextureSize(diamondTex, &w, &h);
-        SDL_FRect textRect = { 75.0f, 128.0f, w, h };
-        SDL_RenderTexture(renderer, diamondTex, nullptr, &textRect);
-        SDL_DestroyTexture(diamondTex);
-    }
+    Text::draw(renderer, ": " + std::to_string(p.getDiamonds()),
+        75.0f, 128.0f, textColor, scale);
 }
