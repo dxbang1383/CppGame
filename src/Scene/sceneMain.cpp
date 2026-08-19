@@ -12,9 +12,10 @@ sceneMain::~sceneMain() {
 }
 
 void sceneMain::preLoad(SDL_Renderer* renderer) {
+    gameRenderer = renderer;
     map.addTextures(renderer); // bkg, platform, decor, enemy, player
 
-    std::string mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level2.txt";
+    mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level2.txt";
     if (!map.load(mapPath)) {
         SDL_Log("Khong nap duoc map: %s -> dung map mac dinh", mapPath.c_str());
     }
@@ -34,22 +35,32 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     Ihighjump = resourceManager::getTexture(renderer, "i_highjump");
 }
 
-void sceneMain::resetPlayer() {
-    player& p = map.getPlayer();
-    p.setX(map.getStartX());
-    p.setY(map.getStartY());
-    p.setVelocityX(0);
-    p.setVelocityY(0);
-    p.setOnGround(false);
-    p.setIsClimbing(false);
-    p.setMovingLeft(false);
-    p.setMovingRight(false);
-    p.setMovingUp(false);
-    p.setMovingDown(false);
-    p.setDirection(1);
+void sceneMain::resetLevel() {
+    map.load(mapPath);
+    map.addTextures(gameRenderer);
+    map.getPlayer().reset();
+    lost = false;
+    paused = false;
+    loseSoundPending = false;
+}
+
+void sceneMain::playerDies(bool byTrap) {
+    if (lost) return;
+    lost = true;
+    if (byTrap) soundManager::playEffect("punji");
+    loseTimer = 2.0f;
+    loseSoundPending = true;
 }
 
 void sceneMain::update(float deltaTime) {
+    if (loseSoundPending) {
+        loseTimer -= deltaTime;
+        if (loseTimer <= 0.0f) {
+            soundManager::playEffect("lose");
+            loseSoundPending = false;
+        }
+    }
+
     if (paused || lost) return;
     settings.close();
 
@@ -69,14 +80,26 @@ void sceneMain::update(float deltaTime) {
         });
 
     handleCollision(deltaTime);
+
+    {
+        player& pl = map.getPlayer();
+        if (pl.getIsClimbing() && pl.getVelocityY() != 0.0) {
+            ladderSoundTimer -= deltaTime;
+            if (ladderSoundTimer <= 0.0f) {
+                soundManager::playEffect("ladder");
+                ladderSoundTimer = 0.3f;
+            }
+        }
+        else {
+            ladderSoundTimer = 0.0f;
+        }
+    }
+
     focusPlayer();
 
     map.updateRenderRect();
 
-    if (map.getPlayer().getY() > deathY) {
-        lost = true;
-        soundManager::playEffect("lose");
-    }
+    if (map.getPlayer().getY() > deathY) playerDies();
 }
 
 void sceneMain::render(SDL_Renderer* renderer) {
@@ -198,6 +221,7 @@ void sceneMain::handleItemBoxCollision(float deltaTime) {
             if (!box.isActivated()) {
 
                 box.activate();
+                soundManager::playEffect("itembox");
                 ItemType itemType = ItemType::COIN1;
 
                 if (box.getBoxType() == BoxType::COIN) {
@@ -301,6 +325,7 @@ void sceneMain::handleSwitchCollision(float deltaTime) {
     for (Switch& sw : map.getSwitches()) {
         if (!sw.getIsActivated() && checkCollision(p, sw)) {
             sw.trigger();
+            soundManager::playEffect("switch");
 
             float switchCenterX = sw.getX() + sw.getWidth() / 2.0f;
             float switchCenterY = sw.getY() + sw.getHeight() / 2.0f;
@@ -326,8 +351,7 @@ void sceneMain::handleSpikeCollison(float deltaTime) {
     if (!p.isInvincible()) {
         for (spike& sp : map.getSpikes()) {
             if (sp.isActive() && checkCollision(p, sp)) {
-                lost = true;
-                soundManager::playEffect("lose");
+                playerDies(true);
                 break;
             }
         }
@@ -340,7 +364,9 @@ void sceneMain::handleItemCollison(float deltaTime) {
     for (Item& item : map.getItems()) {
         if (!item.isCollected() && checkCollision(p, item)) {
             item.collect();
-            p.collectItem(item.getItemType()); // Kích hoạt hiệu ứng cho player
+            p.collectItem(item.getItemType());
+            if (item.getItemType() == ItemType::COIN1) soundManager::playEffect("earncoin");
+            else soundManager::playEffect("item");
         }
     }
 
@@ -386,17 +412,48 @@ void sceneMain::handleEnemyCollision(float deltaTime) {
 
         int k = w.getKind();
         if (k == 1) {
+            bool wasStopped = w.isStopped();
             w.stop();
-            if (side == 2) lost = true;
+            if (side == 2 && !p.isInvincible()) playerDies(true);
+            else if (!wasStopped) soundManager::playEffect("enemy");
         }
         else if (k == 2) {
+            bool wasStopped = w.isStopped();
             w.stop();
-            if (side != 2) lost = true;
+            if (side != 2 && !p.isInvincible()) playerDies(true);
+            else if (side == 2 && !wasStopped) soundManager::playEffect("enemy");
         }
         else if (k == 3) {
-            if (side == 2) w.stop();
+            if (side == 2 && !w.isStopped()) {
+                w.stop();
+                soundManager::playEffect("enemy");
+            }
         }
     }
+
+    px = p.getX(); py = p.getY();
+    for (flyer& f : map.getFlyers()) {
+        float fx = f.getX(), fy = f.getY(), fw = f.getWidth(), fh = f.getHeight();
+        bool over = px <= fx + fw && px + pw >= fx && py <= fy + fh && py + ph >= fy;
+        if (!over) continue;
+
+        float oTop = (py + ph) - fy;
+        float oBottom = (fy + fh) - py;
+        float oLeft = (px + pw) - fx;
+        float oRight = (fx + fw) - px;
+        bool vertical = std::min(oTop, oBottom) < std::min(oLeft, oRight);
+        bool fromBelow = vertical && (oBottom < oTop);
+
+        if (fromBelow) {
+            f.kill();
+            p.setVelocityY(0);
+            soundManager::playEffect("enemy");
+        }
+        else if (!p.isInvincible()) {
+            playerDies(true);
+        }
+    }
+    std::erase_if(map.getFlyers(), [](const flyer& f) { return !f.isAlive(); });
 }
 
 void sceneMain::handleCollision(float deltaTime) {
@@ -434,9 +491,9 @@ void sceneMain::handleInput(const SDL_Event& event) {
                  && event.button.button == SDL_BUTTON_LEFT) {
             gameOverMenu.handleClick(event.button.x, event.button.y);
             int a = gameOverMenu.getAction();
-            if (a == GAMEOVER_REPLAY)     { resetPlayer(); lost = false; }
-            else if (a == GAMEOVER_MODE2) { resetPlayer(); lost = false; sceneAction = SCENE_EDITOR; }
-            else if (a == GAMEOVER_MENU)  { resetPlayer(); lost = false; sceneAction = SCENE_MENU; }
+            if (a == GAMEOVER_REPLAY)     { resetLevel(); lost = false; }
+            else if (a == GAMEOVER_MODE2) { resetLevel(); lost = false; sceneAction = SCENE_EDITOR; }
+            else if (a == GAMEOVER_MENU)  { resetLevel(); lost = false; sceneAction = SCENE_MENU; }
             else if (a == GAMEOVER_QUIT)  { sceneAction = SCENE_QUIT; }
             gameOverMenu.resetAction();
         }
@@ -467,8 +524,8 @@ void sceneMain::handleInput(const SDL_Event& event) {
             pauseMenu.handleClick(event.button.x, event.button.y);
             int a = pauseMenu.getAction();
             if (a == PAUSE_RESUME)      paused = false;
-            else if (a == PAUSE_REPLAY) { resetPlayer(); paused = false; }
-            else if (a == PAUSE_MENU)   { resetPlayer(); sceneAction = SCENE_MENU; paused = false; }
+            else if (a == PAUSE_REPLAY) { resetLevel(); paused = false; }
+            else if (a == PAUSE_MENU)   { resetLevel(); sceneAction = SCENE_MENU; paused = false; }
             else if (a == PAUSE_QUIT)   sceneAction = SCENE_QUIT;
             pauseMenu.resetAction();
         }
@@ -504,6 +561,8 @@ void sceneMain::handleInput(const SDL_Event& event) {
             }
             // 3. Bình thường thì nhảy
             else {
+                if (map.getPlayer().isOnGround() || map.getPlayer().canDoubleJump())
+                    soundManager::playEffect("jump");
                 map.getPlayer().jump();
             }
             break;

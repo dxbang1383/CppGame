@@ -179,3 +179,39 @@ void player::jump() {
 }
 
 
+
+
+void player::reset() {
+    velocityX = 0.0;
+    velocityY = 0.0;
+    direction = 1;
+    onGround = false;
+
+    hasDoubleJump = false;
+    doubleJumpUsed = false;
+    noGravity = false;
+    highJump = false;
+    speedBoost = false;
+    starPower = false;
+
+    coins = 0;
+    health = 3;
+
+    jumpForce = normalJumpForce;
+    speed = normalSpeed;
+
+    starTimer = 0.0;
+    noGravityTimer = 0.0;
+    highJumpTimer = 0.0;
+    speedTimer = 0.0;
+
+    isMovingLeft = false;
+    isMovingRight = false;
+    isMovingUp = false;
+    isMovingDown = false;
+
+    isClimbing = false;
+    isTouchingLadder = false;
+
+    current = &idleAnim;
+}

@@ -105,6 +105,7 @@ public:
     void collectItem(ItemType type);
     void updateItem(float deltaTime);
     void jump();
+    void reset();
 
     bool isNoGravity()   const { return noGravity; }
     bool isInvincible()  const { return starPower; }

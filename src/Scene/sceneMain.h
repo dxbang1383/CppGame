@@ -4,6 +4,7 @@
 #include <SDL3/SDL.h>
 #include <vector>
 #include <iostream>
+#include <string>
 
 #include "scene.h"
 #include "../GameObject/Player/player.h"
@@ -47,11 +48,16 @@ private:
 
     bool paused = false;
     bool lost = false;
+    float loseTimer = 0.0f;
+    bool loseSoundPending = false;
+    float ladderSoundTimer = 0.0f;
     PauseMenu pauseMenu;
     GameOverMenu gameOverMenu;
     SettingsMenu settings;
     const float deathY = 2000.0f;
     int sceneAction = SCENE_NONE;
+    std::string mapPath;
+    SDL_Renderer* gameRenderer = nullptr;
 
     SDL_Texture* iconTex = nullptr;
     SDL_FRect pauseIconSrc = { 545.0f, 337.0f, 40.0f, 40.0f };
@@ -59,7 +65,8 @@ private:
     SDL_FRect toggleBtnRect = { 1220.0f, 20.0f, 40.0f, 40.0f };
     SDL_FRect iconBSrc = { 397.0f, 278.0f, 40.0f, 40.0f };
 
-    void resetPlayer();
+    void resetLevel();
+    void playerDies(bool byTrap = false);
 
 public:
     sceneMain();
