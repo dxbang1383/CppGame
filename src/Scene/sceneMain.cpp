@@ -7,9 +7,10 @@ sceneMain::sceneMain() {
 }
 
 void sceneMain::preLoad(SDL_Renderer* renderer) {
+    gameRenderer = renderer;
     map.addTextures(renderer); // bkg, platform, decor, enemy, player
 
-    std::string mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level2.txt";
+    mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level2.txt";
     if (!map.load(mapPath)) {
         SDL_Log("Khong nap duoc map: %s -> dung map mac dinh", mapPath.c_str());
     }
@@ -61,7 +62,38 @@ void sceneMain::resetPlayer() {
     p.setDirection(1);
 }
 
+// Nap lai ca man choi. map.load() tu dat lai vi tri player ve o start,
+// player.reset() xoa het item/mau/toc do, con clearHurt() xoa mien thuong
+void sceneMain::resetLevel() {
+    map.load(mapPath);
+    map.addTextures(gameRenderer);
+    map.getPlayer().reset();
+    map.getPlayer().clearHurt();
+    lost = false;
+    paused = false;
+    complete = false;
+    loseSoundPending = false;
+}
+
+// het mau hoac roi xuong vuc.
+// Cham bay/quai chi tru mau qua takeDamage(), khong goi thang vao day
+void sceneMain::playerDies(bool byTrap) {
+    if (lost) return;
+    lost = true;
+    if (byTrap) soundManager::playEffect("punji");
+    loseTimer = 2.0f;
+    loseSoundPending = true;
+}
+
 void sceneMain::update(float deltaTime) {
+    if (loseSoundPending) {
+        loseTimer -= deltaTime;
+        if (loseTimer <= 0.0f) {
+            soundManager::playEffect("lose");
+            loseSoundPending = false;
+        }
+    }
+
     if (paused || lost) return;
     settings.close();
 
@@ -87,14 +119,28 @@ void sceneMain::update(float deltaTime) {
 
     handleCollision(deltaTime);
     checkCollectables();
+
+    {
+        player& pl = map.getPlayer();
+        if (pl.getIsClimbing() && pl.getVelocityY() != 0.0) {
+            ladderSoundTimer -= deltaTime;
+            if (ladderSoundTimer <= 0.0f) {
+                soundManager::playEffect("ladder");
+                ladderSoundTimer = 0.3f;
+            }
+        }
+        else {
+            ladderSoundTimer = 0.0f;
+        }
+    }
+
     focusPlayer();
 
     map.updateRenderRect();
 
-    if (map.getPlayer().getY() > deathY) {
-        lost = true;
-        soundManager::playEffect("lose");
-    }
+    // Roi xuong vuc: chet ngay, khong tru mau
+    if (map.getPlayer().getY() > deathY) playerDies();
+
     checkEnd();
 }
 
@@ -225,6 +271,7 @@ void sceneMain::handleItemBoxCollision(float deltaTime) {
             if (!box.isActivated()) {
 
                 box.activate();
+                soundManager::playEffect("itembox");
                 ItemType itemType = ItemType::COIN1;
 
                 if (box.getBoxType() == BoxType::COIN) {
@@ -328,6 +375,7 @@ void sceneMain::handleSwitchCollision(float deltaTime) {
     for (Switch& sw : map.getSwitches()) {
         if (!sw.getIsActivated() && checkCollision(p, sw)) {
             sw.trigger();
+            soundManager::playEffect("switch");
 
             float switchCenterX = sw.getX() + sw.getWidth() / 2.0f;
             float switchCenterY = sw.getY() + sw.getHeight() / 2.0f;
@@ -349,10 +397,12 @@ void sceneMain::handleSwitchCollision(float deltaTime) {
 void sceneMain::handleSpikeCollison(float deltaTime) {
     player& p = map.getPlayer();
 
-    // Cham spike 
+    // Cham spike: tru 1 mau + tieng punji. takeDamage() tu lo phan mien thuong,
+    // het mau thi checkEnd() moi goi playerDies()
     for (spike& sp : map.getSpikes()) {
         if (sp.isActive() && checkCollision(p, sp)) {
             if (p.takeDamage()) {
+                soundManager::playEffect("punji");
                 p.setVelocityY(-350);   // bat lui len
             }
             break;
@@ -366,7 +416,9 @@ void sceneMain::handleItemCollison(float deltaTime) {
     for (Item& item : map.getItems()) {
         if (!item.isCollected() && checkCollision(p, item)) {
             item.collect();
-            p.collectItem(item.getItemType()); // Kích hoạt hiệu ứng cho player
+            p.collectItem(item.getItemType());
+            if (item.getItemType() == ItemType::COIN1) soundManager::playEffect("earncoin");
+            else soundManager::playEffect("item");
         }
     }
 
@@ -416,23 +468,55 @@ void sceneMain::handleEnemyCollision(float deltaTime) {
         int k = w.getKind();
         // kind 1 đầu đinh
         if (k == 1) {
+            bool wasStopped = w.isStopped();
             w.stop();
-            if (side == 2 && p.takeDamage()) {
-                p.setVelocityY(-350);
+            // giam len dau dinh -> mat mau; huc ben hong -> ha duoc quai
+            if (side == 2) {
+                if (p.takeDamage()) {
+                    soundManager::playEffect("punji");
+                    p.setVelocityY(-350);
+                }
             }
+            else if (!wasStopped) soundManager::playEffect("enemy");
         }
         // kind 2 quái nhỏ
         else if (k == 2) {
+            bool wasStopped = w.isStopped();
             w.stop();
-            if (side != 2 && p.takeDamage()) {
-                p.setVelocityY(-350);
+            // cham ben hong -> mat mau; giam len dau -> ha duoc quai
+            if (side != 2) {
+                if (p.takeDamage()) {
+                    soundManager::playEffect("punji");
+                    p.setVelocityY(-350);
+                }
             }
+            else if (!wasStopped) soundManager::playEffect("enemy");
         }
         // kind 3 quái lớn 
         else if (k == 3) {
-            if (side == 2) w.stop();
+            if (side == 2 && !w.isStopped()) {
+                w.stop();
+                soundManager::playEffect("enemy");
+            }
         }
     }
+
+    px = p.getX(); py = p.getY();
+
+    for (flyer& f : map.getFlyers()) {
+        if (!f.isAlive()) continue;// còn sồngs
+        if (!checkCollision(p, f)) continue; // va chạm 
+
+        f.kill(); // alive = false
+        soundManager::playEffect("enemy");
+
+        // dang mien thuong thi takeDamage() tra false -> quai van chet, player khong mat mau
+        if (p.takeDamage()) {
+            soundManager::playEffect("punji");
+            p.setVelocityY(-350);
+        }
+    }
+    std::erase_if(map.getFlyers(), [](const flyer& f) { return !f.isAlive(); });
 }
 
 // tâm của người chơi đang ở ô nào 
@@ -528,9 +612,9 @@ bool sceneMain::handleGameOverInput(const SDL_Event& event) {
              && event.button.button == SDL_BUTTON_LEFT) {
         gameOverMenu.handleClick(event.button.x, event.button.y);
         int a = gameOverMenu.getAction();
-        if (a == GAMEOVER_REPLAY)     { resetGame(); lost = false; }
-        else if (a == GAMEOVER_MODE2) { resetGame(); lost = false; sceneAction = SCENE_EDITOR; }
-        else if (a == GAMEOVER_MENU)  { resetGame(); lost = false; sceneAction = SCENE_MENU; }
+        if (a == GAMEOVER_REPLAY)     { resetLevel(); lost = false; }
+        else if (a == GAMEOVER_MODE2) { resetLevel(); lost = false; sceneAction = SCENE_EDITOR; }
+        else if (a == GAMEOVER_MENU)  { resetLevel(); lost = false; sceneAction = SCENE_MENU; }
         else if (a == GAMEOVER_QUIT)  { sceneAction = SCENE_QUIT; }
         gameOverMenu.resetAction();
     }
@@ -566,8 +650,8 @@ bool sceneMain::handlePauseMenuInput(const SDL_Event& event) {
         pauseMenu.handleClick(event.button.x, event.button.y);
         int a = pauseMenu.getAction();
         if (a == PAUSE_RESUME)      paused = false;
-        else if (a == PAUSE_REPLAY) { resetGame(); paused = false; }
-        else if (a == PAUSE_MENU)   { resetGame(); sceneAction = SCENE_MENU; paused = false; }
+        else if (a == PAUSE_REPLAY) { resetLevel(); paused = false; }
+        else if (a == PAUSE_MENU)   { resetLevel(); sceneAction = SCENE_MENU; paused = false; }
         else if (a == PAUSE_QUIT)   sceneAction = SCENE_QUIT;
         pauseMenu.resetAction();
     }
@@ -610,6 +694,8 @@ void sceneMain::handlePlayerKeyDown(SDL_Keycode key) {
         }
         // 3. Bình thường thì nhảy
         else {
+            // chỉ kêu khi thực sự nhảy
+            if (p.isOnGround() || p.canDoubleJump()) soundManager::playEffect("jump");
             p.jump();
         }
         break;
@@ -684,7 +770,6 @@ void sceneMain::checkCollectables() {
             p.addDiamond();
         }
     }
-    // --- XOÁ COIN VÀ DIAMOND ĐÃ ĂN KHỎI VECTOR ---
     std::erase_if(map.getCoins(), [](const Coin& c) {
         return c.isCollected();
     });
@@ -732,14 +817,14 @@ void sceneMain::renderHUD(SDL_Renderer* renderer) {
 }
 
 void sceneMain::checkEnd() {
-    if (map.getPlayer().getHealth() <= 0) {
-        lost = true;
-        soundManager::playEffect("lose");
-    }
+    // Het mau -> chet. Di qua playerDies() de tieng "lose" cung phat tre 2s
+    // giong luc roi vuc, va khong bi phat lai moi frame
+    if (map.getPlayer().getHealth() <= 0) playerDies();
+
     if (playerAtCell(map.getGoalCol(), map.getGoalRow())) {
         complete = true;
         lost = true; // chưa làm phần complete nên tamj như là lost
-        soundManager::playEffect("lose");
+        soundManager::playEffect("win");
     }
 }
 

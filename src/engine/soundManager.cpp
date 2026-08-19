@@ -7,6 +7,14 @@ std::map<std::string, std::string> soundManager::pathTable = {
     { "click","assets/kenney_pixel-platformer/Sounds/Click.wav" },
     { "win",  "assets/kenney_pixel-platformer/Sounds/Youwin.wav" },
     { "lose", "assets/kenney_pixel-platformer/Sounds/Youlose.wav" },
+    { "earncoin","assets/kenney_pixel-platformer/Sounds/Earncoin.wav" },
+    { "enemy",   "assets/kenney_pixel-platformer/Sounds/Enemy.wav" },
+    { "item",    "assets/kenney_pixel-platformer/Sounds/Item.wav" },
+    { "itembox", "assets/kenney_pixel-platformer/Sounds/Itembox.wav" },
+    { "jump",    "assets/kenney_pixel-platformer/Sounds/Jump.wav" },
+    { "ladder",  "assets/kenney_pixel-platformer/Sounds/Ladder.wav" },
+    { "punji",   "assets/kenney_pixel-platformer/Sounds/Punji.wav" },
+    { "switch",  "assets/kenney_pixel-platformer/Sounds/Switch.wav" },
 };
 
 SDL_AudioStream* soundManager::musicStream = nullptr;

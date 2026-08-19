@@ -4,6 +4,7 @@
 #include <SDL3/SDL.h>
 #include <vector>
 #include <iostream>
+#include <string>
 
 #include "scene.h"
 #include "../engine/UI/Text.h"
@@ -51,13 +52,18 @@ private:
     SDL_Texture* Idoublejump = nullptr;
     SDL_Texture* Ihighjump = nullptr;
 
-
-
     Animation goalFlag{ 2, 0.3f };
 
     bool paused = false;
     bool lost = false;
     bool complete = false;
+
+    // Am thanh:
+    // tieng thua phat tre 2s de tieng punji/enemy keu truoc
+    float loseTimer = 0.0f;
+    bool loseSoundPending = false;
+    float ladderSoundTimer = 0.0f;
+
     PauseMenu pauseMenu;
     GameOverMenu gameOverMenu;
     SettingsMenu settings;
@@ -66,6 +72,8 @@ private:
     // set = 0.5 ở player atcell
     float teleportCooldown = 0.0f;
     int sceneAction = SCENE_NONE;
+    std::string mapPath;
+    SDL_Renderer* gameRenderer = nullptr;
 
     SDL_Texture* iconTex = nullptr;
     SDL_FRect pauseIconSrc = { 545.0f, 337.0f, 40.0f, 40.0f };
@@ -75,12 +83,15 @@ private:
 
     void resetGame();
     void resetPlayer();
+    // Nap lai man choi
+    void resetLevel();
+    // Goi khi nguoi choi that su chet het mau / roi vuc
+    void playerDies(bool byTrap = false);
     void renderHUD(SDL_Renderer* renderer);
     // ve co dung dua tai o dich cua man choi
     void renderGoalFlag(SDL_Renderer* renderer);
 
     // ---- Chuoi uu tien xu li input ----
-    // Tra ve true = "da nuot event nay", cac lop duoi khong nhan nua
     bool handleSettingsInput(const SDL_Event& event);
     bool handleGameOverInput(const SDL_Event& event);
     bool handlePauseToggle(const SDL_Event& event);

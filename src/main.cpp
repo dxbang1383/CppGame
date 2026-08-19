@@ -1,5 +1,6 @@
 #include <SDL3/SDL.h>
 #include <iostream>
+#include <ctime>
 
 #include "../src/Scene/sceneMenu.h"
 #include "../src/Scene/sceneMain.h"
