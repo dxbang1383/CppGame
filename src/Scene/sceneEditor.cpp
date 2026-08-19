@@ -37,6 +37,26 @@ void sceneEditor::placeAt(int col, int row) {
     case TileLayer::LAYER_ENEMY:
         map.addFlyer(col, row, 1);
         break;
+    case TileLayer::LAYER_SWITCH:
+        map.addSwitch(col, row, key);
+        break;
+    case TileLayer::LAYER_SPIKE:
+        map.addSpike(col, row, key);
+        break;
+    case TileLayer::LAYER_BOX:
+        if (key == "box_question")   map.addBox(col, row, BoxType::QUESTION);
+        else if (key == "box_item")  map.addBox(col, row, BoxType::ITEM);
+        else                         map.addBox(col, row, BoxType::COIN);
+        break;
+    case TileLayer::LAYER_ITEM:
+        if (key == "i_star")             map.addItem(col, row, ItemType::STAR);
+        else if (key == "i_speed")       map.addItem(col, row, ItemType::SPEED);
+        else if (key == "i_heart")       map.addItem(col, row, ItemType::HEART);
+        else if (key == "i_nogravity")   map.addItem(col, row, ItemType::NO_GRAVITY);
+        else if (key == "i_doublejump")  map.addItem(col, row, ItemType::DOUBLE_JUMP);
+        else if (key == "i_highjump")    map.addItem(col, row, ItemType::HIGH_JUMP);
+        else                             map.addItem(col, row, ItemType::COIN1);
+        break;
     }
 }
 
@@ -56,6 +76,10 @@ void sceneEditor::update(float deltaTime) {
     for (ladder& l : map.getLadders()) l.updRenderRect(map.getCam());
     for (flyer& f : map.getFlyers()) f.updRenderRect(map.getCam());
     for (walker& w : map.getWalkers()) w.updRenderRect(map.getCam());
+    for (Switch& sw : map.getSwitches()) sw.updRenderRect(map.getCam());
+    for (spike& sp : map.getSpikes()) sp.updRenderRect(map.getCam());
+    for (itemBox& b : map.getBoxes()) b.updRenderRect(map.getCam());
+    for (Item& it : map.getItems()) it.updRenderRect(map.getCam());
 }
 
 // in ra bên ngoài 
@@ -75,6 +99,10 @@ void sceneEditor::render(SDL_Renderer* renderer) {
 
     for (flyer& f : map.getFlyers()) f.render(renderer);
     for (walker& w : map.getWalkers()) w.render(renderer);
+    for (Switch& sw : map.getSwitches()) sw.render(renderer);
+    for (spike& sp : map.getSpikes()) sp.render(renderer);
+    for (itemBox& b : map.getBoxes()) b.render(renderer);
+    for (Item& it : map.getItems()) it.render(renderer);
 
     if (rendergrid == true) {
         renderGrid(renderer);

@@ -32,7 +32,6 @@ enum SceneAction {
 class sceneMain : public scene {
 private:
     Map map = Map();
-    std::vector<spike> spikes;   // bay chong, dung san trong constructor
 
     const float TILE = 36.0f;
     const float W = 1280.0f, H = 720.0f;

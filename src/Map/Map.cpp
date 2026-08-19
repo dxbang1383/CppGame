@@ -1,61 +1,26 @@
 #include "Map.h"
 
+// Khoa texture cua tung loai hop / vat pham
+static const char* boxTexKey(BoxType t) {
+    if (t == BoxType::QUESTION) return "box_question";
+    if (t == BoxType::ITEM)     return "box_item";
+    return "box_coin";
+}
+
+static const char* itemTexKey(ItemType t) {
+    switch (t) {
+    case ItemType::STAR:        return "i_star";
+    case ItemType::SPEED:       return "i_speed";
+    case ItemType::HEART:       return "i_heart";
+    case ItemType::NO_GRAVITY:  return "i_nogravity";
+    case ItemType::DOUBLE_JUMP: return "i_doublejump";
+    case ItemType::HIGH_JUMP:   return "i_highjump";
+    }
+    return "i_coin";
+}
+
+
 Map::Map() : mainPlayer(0, 0) {
-    // Dia hinh (platform / decor / thang / quai) nap tu file level2.txt.
-    // Duoi day chi la box va item dung san, clear() khong dong toi nen van con sau load().
-
-    boxes.emplace_back(
-        15 * platform::TILE_SIZE,
-        25 * platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        BoxType::COIN
-    );
-
-    boxes.emplace_back(
-        20 * platform::TILE_SIZE,
-        25 * platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        BoxType::QUESTION
-    );
-
-    boxes.emplace_back(
-        28 * platform::TILE_SIZE,
-        25 * platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        BoxType::ITEM
-    );
-    boxes.emplace_back(
-        26 * platform::TILE_SIZE,
-        11 * platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        BoxType::QUESTION
-    );
-    items.emplace_back(
-        10 * platform::TILE_SIZE,
-        10 * platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        ItemType::COIN1
-    );
-
-   items.emplace_back(
-        12 * platform::TILE_SIZE,
-        10 * platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        ItemType::NO_GRAVITY
-    );
-   items.emplace_back(
-       16 * platform::TILE_SIZE,
-       10 * platform::TILE_SIZE,
-       platform::TILE_SIZE,
-       platform::TILE_SIZE,
-       ItemType::HIGH_JUMP
-   );
 }
 
 void Map::clear() {
@@ -64,6 +29,10 @@ void Map::clear() {
     flyers.clear();
     walkers.clear();
     ladders.clear();
+    switches.clear();
+    spikes.clear();
+    boxes.clear();
+    items.clear();
 
     cols = rows = 0;
 
@@ -94,6 +63,22 @@ void Map::addTextures(SDL_Renderer* renderer) {
 
     for (ladder& l : ladders) {
         l.setTexture(resourceManager::getTexture(renderer, l.getType()));
+    }
+
+    for (Switch& sw : switches) {
+        sw.setTexture(resourceManager::getTexture(renderer, sw.getType()));
+    }
+
+    for (spike& sp : spikes) {
+        sp.setTexture(resourceManager::getTexture(renderer, sp.getType()));
+    }
+
+    for (itemBox& b : boxes) {
+        b.setTexture(resourceManager::getTexture(renderer, boxTexKey(b.getBoxType())));
+    }
+
+    for (Item& it : items) {
+        it.setTexture(resourceManager::getTexture(renderer, itemTexKey(it.getItemType())));
     }
 
     // Animation player
@@ -152,6 +137,42 @@ bool Map::eraseAt(int col, int row, TileLayer layer ) {
             }
         }
     }
+    else if (layer == TileLayer::LAYER_SWITCH) {
+        for (int i = (int)switches.size() - 1; i >= 0; i--) {
+            if (switches[i].getCol() == col && switches[i].getRow() == row) {
+                switches.erase(switches.begin() + i);
+                dirty = true;
+                return true;
+            }
+        }
+    }
+    else if (layer == TileLayer::LAYER_SPIKE) {
+        for (int i = (int)spikes.size() - 1; i >= 0; i--) {
+            if (spikes[i].getCol() == col && spikes[i].getRow() == row) {
+                spikes.erase(spikes.begin() + i);
+                dirty = true;
+                return true;
+            }
+        }
+    }
+    else if (layer == TileLayer::LAYER_BOX) {
+        for (int i = (int)boxes.size() - 1; i >= 0; i--) {
+            if (boxes[i].getCol() == col && boxes[i].getRow() == row) {
+                boxes.erase(boxes.begin() + i);
+                dirty = true;
+                return true;
+            }
+        }
+    }
+    else if (layer == TileLayer::LAYER_ITEM) {
+        for (int i = (int)items.size() - 1; i >= 0; i--) {
+            if (items[i].getCol() == col && items[i].getRow() == row) {
+                items.erase(items.begin() + i);
+                dirty = true;
+                return true;
+            }
+        }
+    }
     else if (layer == TileLayer::LAYER_ENEMY) {
         for (int i = (int)flyers.size() - 1; i >= 0; i--) {
             if (flyers[i].getCol() == col && flyers[i].getRow() == row) {
@@ -174,6 +195,30 @@ bool Map::eraseAt(int col, int row, TileLayer layer ) {
 void Map::addLadder(int col, int row, std::string texKey) {
     ladders.emplace_back(col, row, texKey);
     ladders.back().setTexture(resourceManager::getTexture(rend, texKey));
+    dirty = true;
+}
+
+void Map::addBox(int col, int row, BoxType type) {
+    boxes.emplace_back(col, row, type);
+    boxes.back().setTexture(resourceManager::getTexture(rend, boxTexKey(type)));
+    dirty = true;
+}
+
+void Map::addItem(int col, int row, ItemType type) {
+    items.emplace_back(col, row, type);
+    items.back().setTexture(resourceManager::getTexture(rend, itemTexKey(type)));
+    dirty = true;
+}
+
+void Map::addSwitch(int col, int row, std::string texKey) {
+    switches.emplace_back(col, row, texKey);
+    switches.back().setTexture(resourceManager::getTexture(rend, texKey));
+    dirty = true;
+}
+
+void Map::addSpike(int col, int row, std::string texKey) {
+    spikes.emplace_back(col, row, texKey);
+    spikes.back().setTexture(resourceManager::getTexture(rend, texKey));
     dirty = true;
 }
 
@@ -222,55 +267,93 @@ bool Map::load(const std::string& path) {
     bool inStateBlock = false;
     bool inLadderBlock = false;
     bool inAnimBlock = false;
+    bool inSwitchBlock = false;
+    bool inSpikeBlock = false;
+    bool inBoxBlock = false;
+    bool inItemBlock = false;
 
     while (std::getline(file, line)) {
-        if (line == "<state>") {
-            inStateBlock = true;
-            continue;
-        }
-        if (line == "</state>") {
-            inStateBlock = false;
-            continue;
-        }
-        if (line == "<platform>") {
-            inPlatformBlock = true;
-            continue;
-        }
-        if (line == "</platform>") {
-            inPlatformBlock = false;
-            continue;
-        }
-        if (line == "<decor>") {
-            inDecorBlock = true;
-            continue;
-        }
-        if (line == "</decor>") {
-            inDecorBlock = false;
-            continue;
-        }
-        if (line == "<animation>") {
-            inAnimBlock = true;
-            continue;
-        }
-        if (line == "</animation>") {
-            inAnimBlock = false;
-            continue;
-        }
-        if (line == "<enemy>") {
-            inEnemyBlock = true;
-            continue;
-        }
-        if (line == "</enemy>") {
-            inEnemyBlock = false;
-            continue;
-        }
-        if (line == "<ladder>") {
-            inLadderBlock = true;
-            continue;
-        }
-        if (line == "</ladder>") {
-            inLadderBlock = false;
-            continue;
+        if (true) {
+            if (line == "<state>") {
+                inStateBlock = true;
+                continue;
+            }
+            if (line == "</state>") {
+                inStateBlock = false;
+                continue;
+            }
+            if (line == "<platform>") {
+                inPlatformBlock = true;
+                continue;
+            }
+            if (line == "</platform>") {
+                inPlatformBlock = false;
+                continue;
+            }
+            if (line == "<decor>") {
+                inDecorBlock = true;
+                continue;
+            }
+            if (line == "</decor>") {
+                inDecorBlock = false;
+                continue;
+            }
+            if (line == "<animation>") {
+                inAnimBlock = true;
+                continue;
+            }
+            if (line == "</animation>") {
+                inAnimBlock = false;
+                continue;
+            }
+            if (line == "<enemy>") {
+                inEnemyBlock = true;
+                continue;
+            }
+            if (line == "</enemy>") {
+                inEnemyBlock = false;
+                continue;
+            }
+            if (line == "<ladder>") {
+                inLadderBlock = true;
+                continue;
+            }
+            if (line == "</ladder>") {
+                inLadderBlock = false;
+                continue;
+            }
+            if (line == "<switch>") {
+                inSwitchBlock = true;
+                continue;
+            }
+            if (line == "</switch>") {
+                inSwitchBlock = false;
+                continue;
+            }
+            if (line == "<spike>") {
+                inSpikeBlock = true;
+                continue;
+            }
+            if (line == "</spike>") {
+                inSpikeBlock = false;
+                continue;
+            }
+            if (line == "<box>") {
+                inBoxBlock = true;
+                continue;
+            }
+            if (line == "</box>") {
+                inBoxBlock = false;
+                continue;
+            }
+            if (line == "<item>") {
+                inItemBlock = true;
+                continue;
+            }
+            if (line == "</item>") {
+                inItemBlock = false;
+                continue;
+            }
         }
 
         if (inStateBlock) {
@@ -329,6 +412,54 @@ bool Map::load(const std::string& path) {
             std::string texKey;
             ss >> col >> row >> texKey;
             addLadder(col, row, texKey);
+        }
+
+        if (inSwitchBlock) {
+            std::istringstream ss(line);
+            int col, row;
+
+            if (ss >> col >> row) {
+                addSwitch(col, row);
+            }
+        }
+
+        if (inSpikeBlock) {
+            std::istringstream ss(line);
+            int col, row;
+
+            if (ss >> col >> row) {
+                addSpike(col, row);
+            }
+        }
+
+        if (inBoxBlock) {
+            std::istringstream ss(line);
+            int col, row;
+            std::string type;
+
+            if (ss >> col >> row >> type) {
+                if (type == "coin")          addBox(col, row, BoxType::COIN);
+                else if (type == "question") addBox(col, row, BoxType::QUESTION);
+                else if (type == "item")     addBox(col, row, BoxType::ITEM);
+                else std::cout << "Khong biet loai hop: " << type << std::endl;
+            }
+        }
+
+        if (inItemBlock) {
+            std::istringstream ss(line);
+            int col, row;
+            std::string type;
+
+            if (ss >> col >> row >> type) {
+                if (type == "coin")             addItem(col, row, ItemType::COIN1);
+                else if (type == "star")        addItem(col, row, ItemType::STAR);
+                else if (type == "speed")       addItem(col, row, ItemType::SPEED);
+                else if (type == "heart")       addItem(col, row, ItemType::HEART);
+                else if (type == "nogravity")   addItem(col, row, ItemType::NO_GRAVITY);
+                else if (type == "doublejump")  addItem(col, row, ItemType::DOUBLE_JUMP);
+                else if (type == "highjump")    addItem(col, row, ItemType::HIGH_JUMP);
+                else std::cout << "Khong biet loai vat pham: " << type << std::endl;
+            }
         }
     }
 
@@ -402,6 +533,47 @@ bool Map::save(const std::string& path) {
     }
     file << "</ladder>\n";
 
+    // Ghi switch vào file
+    file << "<switch>\n";
+    for (Switch& sw : switches) {
+        file << sw.getCol() << " " << sw.getRow() << "\n";
+    }
+    file << "</switch>\n";
+
+    // Ghi spike vào file
+    file << "<spike>\n";
+    for (spike& sp : spikes) {
+        file << sp.getCol() << " " << sp.getRow() << "\n";
+    }
+    file << "</spike>\n";
+
+    // Ghi box vào file
+    file << "<box>\n";
+    for (itemBox& b : boxes) {
+        std::string t = "coin";
+        if (b.getBoxType() == BoxType::QUESTION) t = "question";
+        else if (b.getBoxType() == BoxType::ITEM) t = "item";
+
+        file << b.getCol() << " " << b.getRow() << " " << t << "\n";
+    }
+    file << "</box>\n";
+
+    // Ghi item vào file
+    file << "<item>\n";
+    for (Item& it : items) {
+        std::string t = "coin";
+        switch (it.getItemType()) {
+        case ItemType::STAR:        t = "star";       break;
+        case ItemType::SPEED:       t = "speed";      break;
+        case ItemType::HEART:       t = "heart";      break;
+        case ItemType::NO_GRAVITY:  t = "nogravity";  break;
+        case ItemType::DOUBLE_JUMP: t = "doublejump"; break;
+        case ItemType::HIGH_JUMP:   t = "highjump";   break;
+        }
+        file << it.getCol() << " " << it.getRow() << " " << t << "\n";
+    }
+    file << "</item>\n";
+
     // Đóng file .
     file.close();
     dirty = false;
@@ -417,4 +589,6 @@ void Map::updateRenderRect() {
     for (Switch& sw : switches) sw.updRenderRect(cam);
     for (flyer& f : flyers) f.updRenderRect(cam);
     for (walker& w : walkers) w.updRenderRect(cam);
+    for (ladder& l : ladders) l.updRenderRect(cam);   // thang cũng theo camera
+    for (spike& sp : spikes) sp.updRenderRect(cam);
 }

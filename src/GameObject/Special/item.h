@@ -31,6 +31,16 @@ public:
 		ItemType type
 	);
 
+	// Theo dia chi o tren map (item dat san trong file).
+	// Sau khi bat ra khoi hop thi Item bay tu do nen KHONG ke thua specialObject.
+	Item(int col, int row, ItemType type);
+
+	static constexpr float TILE_SIZE = 36;
+
+	// Chi dung luc ghi file, khi item con dung yen tai o cua no
+	int getCol() const { return (int)(getX() / TILE_SIZE); }
+	int getRow() const { return (int)(getY() / TILE_SIZE); }
+
 	void setIVelocityY(double velocity);
 	void update();
 	void render(SDL_Renderer* renderer);

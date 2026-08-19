@@ -2,46 +2,7 @@
 #include "../engine/soundManager.h"
 // Constructor
 sceneMain::sceneMain() {
-// Map da tu dung san trong constructor cua no
-// Thang (ladder) nap tu file level2.txt nen khong dung o day nua
-
-    // =========================================================
-    // SWITCH
-    // =========================================================
-
-    // Switch 1: khu vực đầu map
-    map.getSwitches().emplace_back(10, 20);
-
-    // Switch 2: khu vực giữa map
-    map.getSwitches().emplace_back(27, 11);
-
-    // Switch 3: gần cuối map
-    map.getSwitches().emplace_back(50, 19);
-
-
-    // =========================================================
-    // SPIKE
-    // =========================================================
-
-    // Bẫy 1: sau khu vực platform đầu
-    for (int col = 11; col <= 13; col++) {
-        spikes.emplace_back(col, 20);
-    }
-
-    // Bẫy 2: khu vực giữa map
-    for (int col = 28; col <= 31; col++) {
-        spikes.emplace_back(col, 20);
-    }
-
-    // Bẫy 3: khu vực cầu
-    for (int col = 37; col <= 38; col++) {
-        spikes.emplace_back(col, 20);
-    }
-
-    // Bẫy 4: gần cuối map
-    for (int col = 46; col <= 49; col++) {
-        spikes.emplace_back(col, 20);
-    }
+// Toan bo man choi (dia hinh, thang, quai, switch, spike) nap tu level2.txt
 }
 
 // Destruction 
@@ -57,26 +18,11 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
         SDL_Log("Khong nap duoc map: %s -> dung map mac dinh", mapPath.c_str());
     }
 
-
     pauseMenu.preLoad(renderer);
     gameOverMenu.preLoad(renderer);
     settings.preLoad(renderer);
+
     iconTex = resourceManager::getTexture(renderer, "menu");
-
-    SDL_Texture* switchTex = resourceManager::getTexture(renderer, "switch");
-    for (Switch& sw : map.getSwitches()) {
-        sw.setTexture(switchTex);
-    }
-
-
-    SDL_Texture* spikeTex = resourceManager::getTexture(renderer, "spike");
-    for (spike& sp : spikes) {
-        sp.setTexture(spikeTex);
-    }
-
-    SDL_Texture* boxCoin = resourceManager::getTexture(renderer, "box_coin");
-    SDL_Texture* boxQuestion = resourceManager::getTexture(renderer, "box_question");
-    SDL_Texture* boxItem = resourceManager::getTexture(renderer, "box_item");
 
     Icoin = resourceManager::getTexture(renderer, "i_coin");
     Istar = resourceManager::getTexture(renderer, "i_star");
@@ -85,74 +31,6 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     Inogravity = resourceManager::getTexture(renderer, "i_nogravity");
     Idoublejump = resourceManager::getTexture(renderer, "i_doublejump");
     Ihighjump = resourceManager::getTexture(renderer, "i_highjump");
-
-    for (itemBox& box : map.getBoxes()) {
-        switch (box.getBoxType()) {
-
-        case BoxType::COIN:
-            box.setTexture(boxCoin);
-            break;
-
-        case BoxType::QUESTION:
-            box.setTexture(boxQuestion);
-            break;
-
-        case BoxType::ITEM:
-            box.setTexture(boxItem);
-            break;
-        }
-    }
-
-    for (Item& it : map.getItems()) {
-        switch (it.getItemType()) {
-        case ItemType::COIN1:
-            it.setTexture(Icoin);
-            break;
-        case ItemType::STAR:
-            it.setTexture(Istar);
-            break;
-        case ItemType::SPEED:
-            it.setTexture(Ispeed);
-            break;
-        case ItemType::HEART:
-            it.setTexture(Iheart);
-            break;
-        case ItemType::NO_GRAVITY:
-            it.setTexture(Inogravity);
-            break;
-        case ItemType::DOUBLE_JUMP:
-            it.setTexture(Idoublejump);
-            break;
-        case ItemType::HIGH_JUMP:
-            it.setTexture(Ihighjump);
-            break;
-        }
-    }
-    /*map.getItems().clear();
-
-    map.getItems().emplace_back(
-        10 * platform::TILE_SIZE,
-        10 * platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        ItemType::COIN
-    );
-    if (Icoin != nullptr) {
-        map.getItems().back().setTexture(Icoin);
-    }
-    map.getItems().back().updRenderRect(map.getCam());
-
-    map.getItems().emplace_back(
-        12 * platform::TILE_SIZE,
-        10 * platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        platform::TILE_SIZE,
-        ItemType::STAR
-    );
-    if (Istar != nullptr) {
-        map.getItems().back().setTexture(Istar);
-    }
-    map.getItems().back().updRenderRect(map.getCam());*/
 }
 
 void sceneMain::resetPlayer() {
@@ -179,7 +57,7 @@ void sceneMain::update(float deltaTime) {
     for (flyer& f : map.getFlyers())       f.update(deltaTime);
     for (walker& w : map.getWalkers())     w.update(deltaTime);
     for (Switch& s : map.getSwitches())    s.update(deltaTime);
-    for (spike& sp : spikes)               sp.update(deltaTime);
+    for (spike& sp : map.getSpikes())               sp.update(deltaTime);
     for (itemBox& b : map.getBoxes())      b.update(deltaTime);
 
     map.getPlayer().update(deltaTime);
@@ -189,8 +67,6 @@ void sceneMain::update(float deltaTime) {
     focusPlayer();
 
     map.updateRenderRect();
-    for (ladder& l : map.getLadders()) l.updRenderRect(map.getCam());   // thang cũng theo camera
-    for (spike& sp : spikes) sp.updRenderRect(map.getCam());
 
     if (map.getPlayer().getY() > deathY) {
         lost = true;
@@ -210,7 +86,7 @@ void sceneMain::render(SDL_Renderer* renderer) {
     for (flyer& f : map.getFlyers()) f.render(renderer);
     for (walker& w : map.getWalkers()) w.render(renderer);
     for (Switch& sw : map.getSwitches()) sw.render(renderer);
-    for (spike& sp : spikes) sp.render(renderer);
+    for (spike& sp : map.getSpikes()) sp.render(renderer);
     for (itemBox& box : map.getBoxes()) box.render(renderer);
     for (Item& it : map.getItems()) it.render(renderer);
     map.getPlayer().render(renderer);
@@ -418,7 +294,7 @@ void sceneMain::handleCollision(float deltaTime) {
 
             float radius = 400.0f;
 
-            std::erase_if(spikes, [switchCenterX, switchCenterY, radius](const spike& sp) {
+            std::erase_if(map.getSpikes(), [switchCenterX, switchCenterY, radius](const spike& sp) {
                 float spikeCenterX = sp.getX() + sp.getWidth() / 2.0f;
                 float spikeCenterY = sp.getY() + sp.getHeight() / 2.0f;
 
@@ -431,7 +307,7 @@ void sceneMain::handleCollision(float deltaTime) {
 
     // Cham spike -> thua, tru khi dang bat bien nho STAR
     if (!p.isInvincible()) {
-        for (spike& sp : spikes) {
+        for (spike& sp : map.getSpikes()) {
             if (sp.isActive() && checkCollision(p, sp)) {
                 lost = true;
                 soundManager::playEffect("lose");

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL3/SDL.h>
-#include "../src/GameObject/gameObject.h"
+#include "specialObject.h"
 
 enum class BoxType {
 	COIN,
@@ -9,31 +9,25 @@ enum class BoxType {
 	ITEM
 };
 
-
-class itemBox : public gameObject
+class itemBox : public specialObject
 {
 private:
+	static constexpr float FRAME_SIZE = 22.0f;
+
 	BoxType boxType;
 
 	bool activated = false;
-	int currentFrame = 0;
-	bool bouncing = false;
-	float bounceOffset = 0.0f;
-	float bounceVelocity = 0.0f;
+	// chưa viết ---
+	bool bouncing = false; // đang nảy 
+	float bounceOffset = 0.0f; // độ lệch so với vị trí gốc
+	float bounceVelocity = 0.0f; // vận tốc di chuyển của box khi nảy lên 
 
 public:
-	itemBox(
-		double x,
-		double y,
-		double width,
-		double height,
-		BoxType type
-	);
-	// Render
-	void render(SDL_Renderer* renderer);
+	// khởi tạo bằng col row (world)
+	itemBox(int col, int row, BoxType type);
 
-	// Player run cung tuong duoi
-	bool hitFromBelow(double playerX, double playerY);
+	// Che setTexture cua lop cha de cat khung theo trang thai
+	void setTexture(SDL_Texture* tex);
 
 	// Kich hoat hop
 	void activate();
@@ -46,10 +40,8 @@ public:
 	bool isBouncing() const;
 
 	BoxType getBoxType() const;
-	
 
-	// Lay vi tri reward
-
+	// vị trí item sinh ra
 	double getRewardX() const;
 	double getRewardY() const;
 

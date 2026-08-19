@@ -22,7 +22,6 @@
 #include "../GameObject/Special/item.h"
 #include "../engine/resourceManager.h"
 #include "../engine/UI/Palette.h"
-#include "../GameObject/Tile/ladder.h"
 #include <fstream>   // std::ofstream, std::ifstream
 #include <sstream>   // std::istringstream
 
@@ -38,6 +37,7 @@ private:
     std::vector<Switch> switches;
     std::vector<itemBox> boxes;
     std::vector<Item> items;
+    std::vector<spike> spikes;
 
 
     SDL_Texture* bkg = nullptr;
@@ -70,6 +70,10 @@ public:
     void addFlyer(int col, int row, int patrol);
     void addWalker(int col, int row, int patrol);
     void addLadder(int col, int row, std::string texKey);
+    void addSwitch(int col, int row, std::string texKey = "switch");
+    void addSpike(int col, int row, std::string texKey = "spike");
+    void addBox(int col, int row, BoxType type);
+    void addItem(int col, int row, ItemType type);
     void addWalker(int col, int row, int patrol, int kind = 1);
 
     bool eraseAt(int col, int row, TileLayer layer);
@@ -93,6 +97,7 @@ public:
     std::vector<Switch>& getSwitches() { return switches; }
     std::vector<itemBox>& getBoxes() { return boxes; }
     std::vector<Item>& getItems() { return items; }
+    std::vector<spike>& getSpikes() { return spikes; }
     player& getPlayer() { return mainPlayer; }
     // Chuyển từ địa chỉ col sang x 
     float getStartX() const { return startCol * tile::TILE_SIZE; }

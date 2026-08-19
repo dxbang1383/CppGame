@@ -13,6 +13,14 @@ Item::Item(
 	IvelocityY = 0.0;
 }
 
+Item::Item(int col, int row, ItemType type)
+	: gameObject(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE), type(type)
+{
+	collected = false;
+	IvelocityX = 0.0;
+	IvelocityY = 0.0;
+}
+
 void Item::update() {
 	if (collected) return;
 	IvelocityY += 0.3;

@@ -1,63 +1,27 @@
 #include "itemBox.h"
 
-itemBox::itemBox(
-	double x,
-	double y,
-	double width,
-	double height,
-	BoxType type
-) : gameObject(x, y, width, height), boxType(type)
+itemBox::itemBox(int col, int row, BoxType type)
+	: specialObject(col, row), boxType(type)
 {
 }
 
-void itemBox::render(SDL_Renderer* renderer) {
-	if (!getTexture()) {
-		return;
-	}
-
-	SDL_FRect srcRect;
-	srcRect.x = currentFrame * 22;
-	srcRect.y = 0;
-
-	srcRect.w = 22;
-	srcRect.h = 22;
-
-	SDL_RenderTexture(
-		renderer,
-		getTexture(),
-		&srcRect,
-		&renderRect
-	);
+// Khung trai = chua mo. activate() se doi sang khung phai.
+void itemBox::setTexture(SDL_Texture* tex) {
+	gameObject::setTexture(tex);
+	if (tex == nullptr) return;
+	// khởi tạo là ở khung hình thứ nhất
+	setSrcRect({ 0.0f, 0.0f, FRAME_SIZE, FRAME_SIZE });
 }
 
-bool itemBox::hitFromBelow(double playerX, double playerY) {
-	if (activated) return false;
-
-	double playerRight = playerX + getWidth();
-	double boxRight = getX() + getWidth();
-
-	double playerTop = playerY;
-
-	bool horizontalOverlap =
-		playerX < boxRight && playerRight > getX();
-	
-	bool verticalCollison =
-		playerTop <= getY() + getHeight() &&
-		playerTop >= getY() + getHeight() - 15;
-
-	if (horizontalOverlap && verticalCollison) {
-		activate();
-		return true;
-	}
-	return false;
-} 
-
+// hàm này chuyển trạng thái sang active 
+// frame sang ô thứ 2
 void itemBox::activate() {
 	if (activated) {
 		return;
 	}
 	activated = true;
-	currentFrame = 1;
+	bouncing = true;
+	setSrcRect({ FRAME_SIZE, 0.0f, FRAME_SIZE, FRAME_SIZE });   // doi sang khung DA MO
 }
 
 void itemBox::update(float deltaTime) {
@@ -75,8 +39,6 @@ void itemBox::update(float deltaTime) {
 		bouncing = false;
 	}
 }
-
-
 
 bool itemBox::isActivated() const { return activated; }
 bool itemBox::isBouncing() const { return bouncing; }

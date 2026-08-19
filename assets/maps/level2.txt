@@ -216,3 +216,34 @@
 53 19 ladder
 53 20 ladder
 </ladder>
+<switch>
+10 20
+27 11
+50 19
+</switch>
+<spike>
+11 20
+12 20
+13 20
+28 20
+29 20
+30 20
+31 20
+37 20
+38 20
+46 20
+47 20
+48 20
+49 20
+</spike>
+<box>
+15 25 coin
+20 25 question
+28 25 item
+26 11 question
+</box>
+<item>
+10 10 coin
+12 10 nogravity
+16 10 highjump
+</item>
