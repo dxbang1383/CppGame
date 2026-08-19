@@ -6,11 +6,6 @@ sceneMain::sceneMain() {
 // Toan bo man choi (dia hinh, thang, quai, switch, spike) nap tu level2.txt
 }
 
-// Destruction 
-sceneMain::~sceneMain() {
-                
-}
-
 void sceneMain::preLoad(SDL_Renderer* renderer) {
     map.addTextures(renderer); // bkg, platform, decor, enemy, player
 
@@ -32,6 +27,8 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     Inogravity = resourceManager::getTexture(renderer, "i_nogravity");
     Idoublejump = resourceManager::getTexture(renderer, "i_doublejump");
     Ihighjump = resourceManager::getTexture(renderer, "i_highjump");
+    NDiamonds = resourceManager::getTexture(renderer, "diamond");
+
 }
 
 void sceneMain::resetPlayer() {
@@ -62,6 +59,10 @@ void sceneMain::update(float deltaTime) {
     for (spike& sp : map.getSpikes())      sp.update(deltaTime);
     for (Item& i : map.getItems())         i.update(deltaTime);
     for (itemBox& b : map.getBoxes())      b.update(deltaTime);
+    for (Coin& c : map.getCoins())         c.update(deltaTime);
+    for (Diamond& dia : map.getDiamond())    dia.update(deltaTime);
+
+
     map.getPlayer().update(deltaTime);
 
     // xóa phần box rơi ra ngoài map
@@ -70,6 +71,7 @@ void sceneMain::update(float deltaTime) {
         });
 
     handleCollision(deltaTime);
+    checkCollectables();
     focusPlayer();
 
     map.updateRenderRect();
@@ -93,9 +95,13 @@ void sceneMain::render(SDL_Renderer* renderer) {
     for (spike& sp : map.getSpikes()) sp.render(renderer);
     for (itemBox& box : map.getBoxes()) box.render(renderer);
     for (Item& it : map.getItems()) it.render(renderer);
+    for (Coin& c : map.getCoins()) { c.render(renderer); }
+    for (Diamond& dia : map.getDiamond()) { dia.render(renderer); }
+
     for (teleport& t : map.getTeleports()) t.render(renderer);
     map.getPlayer().render(renderer);
 
+    renderHUD(renderer);
     if (paused) pauseMenu.render(renderer);
     if (lost) gameOverMenu.render(renderer);
 
@@ -601,4 +607,69 @@ void sceneMain::focusPlayer() {
 
 void sceneMain::switchScene() {
     //sau nay khoi tao nhan sk ban phim 
+}
+
+void sceneMain::checkCollectables() {
+    player& p = map.getPlayer();
+
+    // 1. Kiểm tra ăn Coin
+    for (Coin& c : map.getCoins()) {
+        if (!c.isCollected() && checkCollision(p, c)) {
+            c.setCollected(true);
+            p.addCoins(c.getValue());
+        }
+    }
+
+    // 2. Kiểm tra ăn Kim Cương (Diamond)   
+    for (Diamond& dia : map.getDiamond()) {
+        if (!dia.isCollected() && checkCollision(p, dia)) {
+            dia.setCollected(true);
+            p.addDiamond();
+        }
+    }
+    // --- XOÁ COIN VÀ DIAMOND ĐÃ ĂN KHỎI VECTOR ---
+    std::erase_if(map.getCoins(), [](const Coin& c) {
+        return c.isCollected();
+    });
+
+    std::erase_if(map.getDiamond(), [](const Diamond& dia) {
+        return dia.isCollected();
+    });
+}
+
+void sceneMain::renderHUD(SDL_Renderer* renderer) {
+    player& p = map.getPlayer();
+
+    // 1. Vẽ khung nền bảng HUD
+    SDL_FRect bgRect = { 20.0f, 20.0f, 180.0f, 160.0f };
+    SDL_SetRenderDrawColor(renderer, 220, 220, 220, 255); // Màu xám sáng
+    SDL_RenderFillRect(renderer, &bgRect);
+
+    // Vẽ viền xám đậm xung quanh khung
+    SDL_SetRenderDrawColor(renderer, 80, 80, 80, 255);
+    SDL_RenderRect(renderer, &bgRect);
+
+    // Chuẩn bị màu chữ đen
+    SDL_Color textColor = { 0, 0, 0, 255 };
+
+    
+    float scale = 0.42f;
+
+    // 2. Dòng 1: COIN (: X)
+    SDL_FRect coinIconRect = { 35.0f, 35.0f, 32.0f, 32.0f };
+    SDL_RenderTexture(renderer, Icoin, nullptr, &coinIconRect);
+    Text::draw(renderer, ": " + std::to_string(p.getCoins()),
+               75.0f, 38.0f, textColor, scale);
+
+    // 3. Dòng 2: HEART (: X)
+    SDL_FRect heartIconRect = { 35.0f, 80.0f, 32.0f, 32.0f };
+    SDL_RenderTexture(renderer, Iheart, nullptr, &heartIconRect);
+    Text::draw(renderer, ": " + std::to_string(p.getHealth()),
+               75.0f, 83.0f, textColor, scale);
+
+    // 4. Dòng 3: DIAMOND 
+    SDL_FRect diamondIconRect = { 35.0f, 125.0f, 32.0f, 32.0f };
+    SDL_RenderTexture(renderer, NDiamonds, nullptr, &diamondIconRect);
+    Text::draw(renderer, ": " + std::to_string(p.getDiamonds()),
+        75.0f, 128.0f, textColor, scale);
 }

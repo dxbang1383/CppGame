@@ -21,6 +21,8 @@ void Map::clear() {
     teleports.clear();
     boxes.clear();
     items.clear();
+    coins.clear();
+    diamonds.clear();
 
     cols = rows = 0;
 
@@ -65,6 +67,14 @@ void Map::addTextures(SDL_Renderer* renderer) {
         b.setTexture(resourceManager::getTexture(renderer, boxTexKey(b.getBoxType())));
     }
 
+
+    for (Coin& c : coins) {
+        c.setTexture(resourceManager::getTexture(renderer, "coin"));
+    }
+
+    for (Diamond& dia : diamonds) {
+        dia.setTexture(resourceManager::getTexture(renderer, "diamond"));
+    }
     // Animation player
     SDL_Texture* idle = resourceManager::getTexture(renderer, "player_idle");
     SDL_Texture* run = resourceManager::getTexture(renderer, "player_run");
@@ -173,6 +183,24 @@ bool Map::eraseAt(int col, int row, TileLayer layer ) {
             }
         }
     }
+    else if (layer == TileLayer::LAYER_COIN) {
+        for (int i = (int)coins.size() - 1; i >= 0; i--) {
+            if (coins[i].getCol() == col && coins[i].getRow() == row) {
+                coins.erase(coins.begin() + i);
+                dirty = true;
+                return true;
+            }
+        }
+    }
+    else if (layer == TileLayer::LAYER_DIAMOND) {
+        for (int i = (int)diamonds.size() - 1; i >= 0; i--) {
+            if (diamonds[i].getCol() == col && diamonds[i].getRow() == row) {
+                diamonds.erase(diamonds.begin() + i);
+                dirty = true;
+                return true;
+            }
+        }
+    }
     return false;
 }
 
@@ -266,7 +294,19 @@ void Map::addWalker(int col, int row, int patrol, int kind) {
     dirty = true;
 }
 
-bool Map::load(const std::string& path) {
+void Map::addCoin(int col, int row) {
+    coins.emplace_back(col, row, "coin");
+    coins.back().setTexture(resourceManager::getTexture(rend, "coin"));
+    dirty = true;
+}
+
+void Map::addDiamonds(int col, int row) {
+    diamonds.emplace_back(col, row, "diamond");
+    diamonds.back().setTexture(resourceManager::getTexture(rend, "diamond"));
+    dirty = true;
+}
+
+bool Map::load(const std::string& path) {   
     std::ifstream file(path);      // mở file để đọc
     if (!file.is_open()) {
         return false;
@@ -284,6 +324,8 @@ bool Map::load(const std::string& path) {
     bool inSpikeBlock = false;
     bool inTeleportBlock = false;
     bool inBoxBlock = false;
+    bool inCoinBlock = false;
+    bool inDiamondBlock = false;
 
     while (std::getline(file, line)) {
         if (true) {
@@ -365,6 +407,22 @@ bool Map::load(const std::string& path) {
             }
             if (line == "</box>") {
                 inBoxBlock = false;
+                continue;
+            }
+            if (line == "<coin>") {
+                inCoinBlock = true;  
+                continue;
+            }
+            if (line == "</coin>") {
+                inCoinBlock = false;
+                continue;
+            }
+            if (line == "<diamond>") {
+                inDiamondBlock = true; 
+                continue;
+            }
+            if (line == "</diamond>") {
+                inDiamondBlock = false;
                 continue;
             }
         }
@@ -464,6 +522,23 @@ bool Map::load(const std::string& path) {
                 else if (type == "question") addBox(col, row, BoxType::QUESTION);
                 else if (type == "item")     addBox(col, row, BoxType::ITEM);
                 else std::cout << "Khong biet loai hop: " << type << std::endl;
+            }
+        }
+
+       
+        if (inCoinBlock) {
+            std::istringstream ss(line);
+            int col, row;
+            if (ss >> col >> row) {
+                addCoin(col, row); // Hàm addCoin tự định nghĩa trong Map
+            }
+        }
+
+        if (inDiamondBlock) {
+            std::istringstream ss(line);
+            int col, row;
+            if (ss >> col >> row) {
+                addDiamonds(col, row); // Hàm addDiamond tự định nghĩa trong Map
             }
         }
     }
@@ -570,6 +645,22 @@ bool Map::save(const std::string& path) {
     }
     file << "</box>\n";
 
+    // Ghi coin vao file
+    file << "<coin>\n";
+    for (Coin& c : coins) {
+        file << c.getCol() << " " << c.getRow() << "\n";
+    }
+    file << "</coin>\n";
+
+    // Ghi diamond vào file
+    file << "<diamond>\n";
+    for (Diamond& dia : diamonds) {
+        file << dia.getCol() << " " << dia.getRow() << "\n";
+    }
+    file << "</diamond>\n";
+
+    
+
     // Đóng file .
     file.close();
     dirty = false;
@@ -587,5 +678,7 @@ void Map::updateRenderRect() {
     for (walker& w : walkers) w.updRenderRect(cam);
     for (ladder& l : ladders) l.updRenderRect(cam);   // thang cũng theo camera
     for (spike& sp : spikes) sp.updRenderRect(cam);
+    for (Coin& c : coins) c.updRenderRect(cam);
+    for (Diamond& dia : diamonds) dia.updRenderRect(cam);
     for (teleport& t : teleports) t.updRenderRect(cam);
 }

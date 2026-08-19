@@ -240,9 +240,18 @@
 15 25 coin
 20 25 question
 28 25 item
-26 11 question
+26 11 question	
 </box>
 <teleport>
 5 28 1
 48 14 1
 </teleport>
+<coin>
+5 10
+7 10
+9 10
+</coin>
+<diamond>
+12 10
+15 10
+</diamond>

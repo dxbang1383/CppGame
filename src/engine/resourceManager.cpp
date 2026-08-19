@@ -29,6 +29,7 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{ "walker1",     "assets/kenney_pixel-platformer/Tiles/Enemy/walker1.png" },
 	{ "walker2",     "assets/kenney_pixel-platformer/Tiles/Enemy/walker2.png" },
 	{ "walker3",     "assets/kenney_pixel-platformer/Tiles/Enemy/walker3.png" },
+	{ "menu", "assets/kenney_pixel-platformer/menu.png" },
 
 	{ "menu",        "assets/kenney_pixel-platformer/menu.png" },
 	 
@@ -59,11 +60,13 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	// item 
 	{ "i_coin",			"assets/kenney_pixel-platformer/Tiles/tile_coin1.png"},
 	{ "i_heart",		"assets/kenney_pixel-platformer/Tiles/tile_heart.png"},
-	{ "i_star",			"assets/kenney_pixel-platformer/Tiles/tile_star.png" },
-	{ "i_highjump",		"assets/kenney_pixel-platformer/Tiles/tile_highjump.png" },
-	{ "i_speed",		"assets/kenney_pixel-platformer/Tiles/tile_speed.png" },
-	{ "i_doublejump",	"assets/kenney_pixel-platformer/Tiles/tile_doublejump.png" },
-	{ "i_nogravity",	"assets/kenney_pixel-platformer/Tiles/tile_nogravity.png" }
+	{"i_star",			"assets/kenney_pixel-platformer/Tiles/tile_star.png" },
+	{"i_highjump",		"assets/kenney_pixel-platformer/Tiles/tile_highjump.png" },
+	{"i_speed",			"assets/kenney_pixel-platformer/Tiles/tile_speed.png" },
+	{"i_doublejump",	"assets/kenney_pixel-platformer/Tiles/tile_doublejump.png" },
+	{"i_nogravity",		"assets/kenney_pixel-platformer/Tiles/tile_nogravity.png" },
+	{"coin",			"assets/kenney_pixel-platformer/Tiles/tile_coin2.png" },
+	{"diamond",		"assets/kenney_pixel-platformer/Tiles/tile_0067.png" }
 
 };
 

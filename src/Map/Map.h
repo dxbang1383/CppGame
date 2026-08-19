@@ -21,6 +21,8 @@
 #include "../GameObject/Tile/decor.h"
 #include "../GameObject/Special/itembox.h"
 #include "../GameObject/Special/item.h"
+#include "../GameObject/Special/coin.h"
+#include "../GameObject/Special/diamond.h"
 #include "../engine/resourceManager.h"
 #include "../engine/UI/Palette.h"
 #include <fstream>   // std::ofstream, std::ifstream
@@ -40,6 +42,8 @@ private:
     std::vector<Item> items;
     std::vector<spike> spikes;
     std::vector<teleport> teleports;
+    std::vector<Coin> coins;
+    std::vector<Diamond> diamonds;
 
 
     SDL_Texture* bkg = nullptr;
@@ -81,6 +85,8 @@ public:
     int nextTeleportGroup();
     void addBox(int col, int row, BoxType type);
     void addWalker(int col, int row, int patrol, int kind = 1);
+    void addCoin(int col, int row);
+    void addDiamonds(int col, int row);
 
     bool eraseAt(int col, int row, TileLayer layer);
 
@@ -105,6 +111,8 @@ public:
     std::vector<Item>& getItems() { return items; }
     std::vector<spike>& getSpikes() { return spikes; }
     std::vector<teleport>& getTeleports() { return teleports; }
+    std::vector<Coin>& getCoins() { return coins; }
+    std::vector<Diamond>& getDiamond() { return diamonds;}
     player& getPlayer() { return mainPlayer; }
     // Chuyển từ địa chỉ col sang x 
     float getStartX() const { return startCol * tile::TILE_SIZE; }

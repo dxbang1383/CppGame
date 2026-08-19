@@ -269,3 +269,12 @@
 <box>
 29 10 item
 </box>
+<coin>
+5 10
+7 10
+9 10
+</coin>
+<diamond>
+12 10
+15 10
+</diamond>
