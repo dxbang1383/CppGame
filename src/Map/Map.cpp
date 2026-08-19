@@ -430,6 +430,7 @@ bool Map::load(const std::string& path) {
         if (inStateBlock) {
             std::istringstream ss(line); // chuyển thành giống như cin 
             ss >> startCol >> startRow >> goalCol >> goalRow;
+            hasGoal = true;
             mainPlayer.setPosition(getStartX(), getStartY());
         }
 

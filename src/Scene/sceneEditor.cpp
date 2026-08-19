@@ -57,7 +57,39 @@ void sceneEditor::placeAt(int col, int row) {
     case TileLayer::LAYER_DIAMOND:
         map.addDiamonds(col, row);
         break;
+    case TileLayer::LAYER_START:
+        map.setStart(col, row);
+        break;
+    case TileLayer::LAYER_GOAL:
+        map.setGoal(col, row);
+        break;
     }
+}
+
+// hàm này chỉ để vẽ các ô mờ 
+void sceneEditor::renderCell(SDL_Renderer* renderer, int col, int row,
+                             SDL_Color color, const std::string& label) {
+    camera& cam = map.getCam();
+
+    SDL_FRect r;
+    r.x = SDL_roundf(cam.xWorldToScreen(col * tile::TILE_SIZE));
+    r.y = SDL_roundf(cam.yWorldToScreen(row * tile::TILE_SIZE));
+    r.w = tile::TILE_SIZE * cam.getScale();
+    r.h = tile::TILE_SIZE * cam.getScale();
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+    // nen
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 90);
+    SDL_RenderFillRect(renderer, &r);
+
+    // vien
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+    SDL_RenderRect(renderer, &r);
+
+    // chu danh dau
+    SDL_Color white = { 255, 255, 255, 255 };
+    Text::draw(renderer, label, r.x + 4.0f, r.y + 4.0f, white, 0.35f);
 }
 
 // cập nhật mỗi vòng lặp
@@ -106,6 +138,11 @@ void sceneEditor::render(SDL_Renderer* renderer) {
     for (teleport& t : map.getTeleports()) t.render(renderer);
     for (Coin& c : map.getCoins()) c.render(renderer);
     for (Diamond& dia : map.getDiamond()) dia.render(renderer);
+
+    renderCell(renderer, map.getStartCol(), map.getStartRow(), SDL_Color{ 235, 200, 60, 255 }, "S");
+    if (map.getHasGoal()) {
+        renderCell(renderer, map.getGoalCol(), map.getGoalRow(), SDL_Color{ 220, 60, 60, 255 }, "G");
+    }
 
     if (rendergrid == true) {
         renderGrid(renderer);

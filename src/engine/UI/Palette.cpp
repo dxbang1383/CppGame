@@ -15,7 +15,7 @@ static constexpr float NAMED_CELL = 78.0f;  // canh 1 o anh roi
 static constexpr float NAMED_GAP = 12.0f;   // ho giua 2 o anh roi
 
 // So luong nut chon loai
-static constexpr int CAT_COUNT = 11;
+static constexpr int CAT_COUNT = 13;
 
 
 void Palette::preLoad(SDL_Renderer* renderer, float w, float h) {
@@ -49,7 +49,7 @@ void Palette::preLoad(SDL_Renderer* renderer, float w, float h) {
 // Tao 5 nut chon loai, xep doc trong cot trai
 void Palette::buildCategoryButtons() {
 	std::string labels[CAT_COUNT] = {
-		"PLATFORM", "DECOR", "DECOR ANIM", "LADDER", "ENEMY", "SWITCH", "SPIKE", "BOX", "TELEPORT", "COIN", "DIAMOND"
+		"PLATFORM", "DECOR", "DECOR ANIM", "LADDER", "ENEMY", "SWITCH", "SPIKE", "BOX", "TELEPORT", "COIN", "DIAMOND", "START", "GOAL"
 	};
 	TileLayer layers[CAT_COUNT] = {
 		TileLayer::LAYER_PLATFORM,
@@ -62,7 +62,9 @@ void Palette::buildCategoryButtons() {
 		TileLayer::LAYER_BOX,
 		TileLayer::LAYER_TELEPORT,
 		TileLayer::LAYER_COIN,
-		TileLayer::LAYER_DIAMOND
+		TileLayer::LAYER_DIAMOND,
+		TileLayer::LAYER_START,
+		TileLayer::LAYER_GOAL
 	};
 
 	catBtns.clear();
@@ -223,6 +225,14 @@ void Palette::openLayer(TileLayer l) {
 	}
 	else if (l == TileLayer::LAYER_DIAMOND) {
 		named.push_back("diamond");
+		mode = PaletteMode::PICK_NAMED;
+	}
+	else if (l == TileLayer::LAYER_START) {
+		named.push_back("start");
+		mode = PaletteMode::PICK_NAMED;
+	}
+	else if (l == TileLayer::LAYER_GOAL) {
+		named.push_back("goal");
 		mode = PaletteMode::PICK_NAMED;
 	}
 	else if (l == TileLayer::LAYER_BOX) {

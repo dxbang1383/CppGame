@@ -19,7 +19,10 @@ enum class TileLayer {
 	LAYER_BOX,
 	LAYER_TELEPORT,
 	LAYER_COIN,
-	LAYER_DIAMOND
+	LAYER_DIAMOND,
+	// Hai cai nay khong phai object, chi doi toa do o trong Map
+	LAYER_START,
+	LAYER_GOAL
 };
 
 /*
@@ -93,9 +96,9 @@ public:
 	static constexpr float BTN_X = 20.0f;
 	static constexpr float BTN_W = 180.0f;
 
-	static constexpr float BTN_H = 44.0f;
+	static constexpr float BTN_H = 40.0f;
 	// kc trên dưới 2btn
-	static constexpr float BTN_GAP = 10.0f;
+	static constexpr float BTN_GAP = 8.0f;
 	// dọa độ y của btn đaafu tiên 
 	static constexpr float BTN_Y0 = 74.0f;
 	// căn lề cho content

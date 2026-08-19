@@ -51,8 +51,13 @@ private:
     SDL_Texture* Idoublejump = nullptr;
     SDL_Texture* Ihighjump = nullptr;
 
+
+
+    Animation goalFlag{ 2, 0.3f };
+
     bool paused = false;
     bool lost = false;
+    bool complete = false;
     PauseMenu pauseMenu;
     GameOverMenu gameOverMenu;
     SettingsMenu settings;
@@ -68,8 +73,11 @@ private:
     SDL_FRect toggleBtnRect = { 1220.0f, 20.0f, 40.0f, 40.0f };
     SDL_FRect iconBSrc = { 397.0f, 278.0f, 40.0f, 40.0f };
 
+    void resetGame();
     void resetPlayer();
     void renderHUD(SDL_Renderer* renderer);
+    // ve co dung dua tai o dich cua man choi
+    void renderGoalFlag(SDL_Renderer* renderer);
 
 public:
     sceneMain();
@@ -92,11 +100,12 @@ public:
     bool playerAtCell(int col, int row);
     // dịch chuyển người chơi đến hàng row cột col 
     void movePlayerToCell(int col, int row);
+    void checkEnd();
 
     void focusPlayer();
     void switchScene() override;
     void checkCollectables();
-    int getSceneAction() const { return sceneAction; }
+    int  getSceneAction() const { return sceneAction; }
     void resetSceneAction() { sceneAction = SCENE_NONE; }
     bool checkCollision(const gameObject& a, const gameObject& b) {
         return (a.getX() < b.getX() + b.getWidth() &&

@@ -1,5 +1,5 @@
 <state>
-9 0 0 0
+1 13 33 13
 </state>
 <platform>
 0 14 map1 2 4
@@ -181,13 +181,10 @@
 19 6 map1 8 6
 3 12 map1 5 7
 24 13 map1 5 7
-32 13 map1 11 5
 15 6 map1 15 4
 27 13 map1 15 4
 </decor>
 <animation>
-9 9 flag
-17 6 flag
 14 8 waterfall_top
 14 9 waterfall_mid
 14 10 waterfall_bot
@@ -231,8 +228,6 @@
 34 16 water
 35 16 water
 36 16 water
-30 13 flag
-20 6 flag
 </animation>
 <enemy>
 4 4 flyer 1

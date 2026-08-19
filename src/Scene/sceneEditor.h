@@ -25,6 +25,8 @@ private:
 
 
     void placeAt(int col, int row);   // dat tile theo layer dang chon
+    // ve mot o mau tai (col, row) - dung cho diem bat dau / ket thuc
+    void renderCell(SDL_Renderer* renderer, int col, int row, SDL_Color color, const std::string& label);
 
 public :
 

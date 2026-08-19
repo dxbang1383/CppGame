@@ -26,6 +26,11 @@ void player::update(float deltaTime) {
 
     updateState();
     updateAnimation(deltaTime);
+
+    if (hurtTimer > 0.0) {
+        hurtTimer -= deltaTime;
+        if (hurtTimer < 0.0) hurtTimer = 0.0;
+    }
 }
 
 void player::updateState() {
@@ -77,6 +82,9 @@ void player::updateVelocityY(float deltaTime) {
 
 void player::render(SDL_Renderer* renderer) {
     if (renderer == nullptr) return;
+
+    // return để không in hình 10 lần 1 /s
+    if (hurtTimer > 0.0 && ((int)(hurtTimer * 10) % 2) == 0) return;
 
     SDL_Texture* tex = current->getTexture();
     SDL_FRect* pRect = getRenderRect();

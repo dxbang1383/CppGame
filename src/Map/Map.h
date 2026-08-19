@@ -93,11 +93,21 @@ public:
     void setStart(int col, int row) {
         this->startCol = col;
         this->startRow = row;
+        dirty = true;
     }
     void setGoal(int col, int row) {
         this->goalCol = col;
         this->goalRow = row;
+        this->hasGoal = true;
+        dirty = true;
     }
+
+    // Toa do o cua diem xuat phat / dich, dung de ve o mau trong editor
+    int getStartCol() const { return startCol; }
+    int getStartRow() const { return startRow; }
+    int getGoalCol()  const { return goalCol; }
+    int getGoalRow()  const { return goalRow; }
+    bool getHasGoal() const { return hasGoal; }
 
     SDL_Texture* getBkg() { return bkg; }
     std::vector<flyer>& getFlyers() { return flyers; }

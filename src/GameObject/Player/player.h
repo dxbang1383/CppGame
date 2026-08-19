@@ -28,23 +28,29 @@ private:
     
     int coins = 0;
     int diamonds = 0;
-    int health = 5;
-   
+    int health = 3;
 
     double normalJumpForce = 600.0;  // khop voi jumpForce o tren
     double normalSpeed = 300.0;      // khop voi speed o tren
-    //TimerItem
+
+    // TimerItem
     double starTimer = 0.0;
     double noGravityTimer = 0.0;
     double highJumpTimer = 0.0;
     double speedTimer = 0.0;
 
+    // Mien thuong ngan sau khi trung don
+    double hurtTimer = 0.0;
+    static constexpr double HURT_TIME = 1.0;
+
     // Animation cho tung trang thai, moi cai giu nhip frame rieng
     Animation idleAnim{ 2, 0.10f };
     Animation runAnim { 2, 0.05f };
     Animation jumpAnim{ 1, 0.10f };
+
     // Animation dang duoc chay, luon tro toi 1 cai hop le
     Animation* current = &idleAnim;
+
     // Trạng thái nút bấm
     bool isMovingLeft = false;
     bool isMovingRight = false;
@@ -83,6 +89,15 @@ public:
             doubleJumpUsed = false;
         }
     }
+
+    // Tru mau. Tra ve false neu dang mien thuong 
+    bool takeDamage() {
+        if (hurtTimer > 0.0 || starPower) return false;
+        health = health - 1;
+        hurtTimer = HURT_TIME;
+        return true;
+    }
+
     // Ham sceneMain nap anh vao cho player
     void setIdleTexture(SDL_Texture* tex) { idleAnim.setTexture(tex); }
     void setRunTexture(SDL_Texture* tex) { runAnim.setTexture(tex); }
@@ -91,6 +106,9 @@ public:
     bool IsTouchingLadder() const { return this->isTouchingLadder; }
     bool getIsClimbing() { return isClimbing; }
     void setIsClimbing(bool climbing) { isClimbing = climbing; }
+    void setHealth(int h = 3) { this->health = h; }
+   
+    void clearHurt() { hurtTimer = 0.0; }
 
     void updateState();
     // hàm này chỉ cập nhật hcn vị trí in ảnh 
@@ -110,14 +128,17 @@ public:
     void jump();
 
     bool isNoGravity()   const { return noGravity; }
-    bool isInvincible()  const { return starPower; }
+    // vua trung don, dung de nhap nhay khi ve
+    bool isHurt()        const { return hurtTimer > 0.0; }
+    
+    bool isInvincible()  const { return starPower || hurtTimer > 0.0; }
     bool hasHighJump()   const { return highJump; }
     bool hasSpeedBoost() const { return speedBoost; }
     bool canDoubleJump() const { return hasDoubleJump && !doubleJumpUsed; }
     void addCoins(int val) { coins += val; }
     void addDiamond(int val = 1) { diamonds += val; }
     int  getCoins()      const { return coins; }
-    int getDiamonds() const { return diamonds; }
+    int  getDiamonds() const { return diamonds; }
     int  getHealth()     const { return health; }
 };
 

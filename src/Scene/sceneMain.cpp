@@ -13,6 +13,10 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     if (!map.load(mapPath)) {
         SDL_Log("Khong nap duoc map: %s -> dung map mac dinh", mapPath.c_str());
     }
+    // animation cho goal 
+    goalFlag.setTexture(resourceManager::getTexture(renderer, "flag"));
+
+    renderGoalFlag(renderer);
 
     pauseMenu.preLoad(renderer);
     gameOverMenu.preLoad(renderer);
@@ -31,8 +35,19 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
 
 }
 
+void sceneMain::resetGame() {
+    std::string mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level2.txt";
+    if (!map.load(mapPath)) {
+        SDL_Log("Khong nap duoc map: %s -> dung map mac dinh", mapPath.c_str());
+    }
+    resetPlayer();
+}
+
 void sceneMain::resetPlayer() {
     player& p = map.getPlayer();
+
+    p.setHealth(3);
+    p.clearHurt();
     p.setX(map.getStartX());
     p.setY(map.getStartY());
     p.setVelocityX(0);
@@ -64,6 +79,7 @@ void sceneMain::update(float deltaTime) {
 
 
     map.getPlayer().update(deltaTime);
+    goalFlag.update(deltaTime);
 
     // xóa phần box rơi ra ngoài map
     std::erase_if(map.getBoxes(), [this](const itemBox& b) {
@@ -80,6 +96,7 @@ void sceneMain::update(float deltaTime) {
         lost = true;
         soundManager::playEffect("lose");
     }
+    checkEnd();
 }
 
 void sceneMain::render(SDL_Renderer* renderer) {
@@ -97,9 +114,12 @@ void sceneMain::render(SDL_Renderer* renderer) {
     for (Item& it : map.getItems()) it.render(renderer);
     for (Coin& c : map.getCoins()) { c.render(renderer); }
     for (Diamond& dia : map.getDiamond()) { dia.render(renderer); }
-
     for (teleport& t : map.getTeleports()) t.render(renderer);
+
+    renderGoalFlag(renderer);
+
     map.getPlayer().render(renderer);
+
 
     renderHUD(renderer);
     if (paused) pauseMenu.render(renderer);
@@ -330,14 +350,13 @@ void sceneMain::handleSwitchCollision(float deltaTime) {
 void sceneMain::handleSpikeCollison(float deltaTime) {
     player& p = map.getPlayer();
 
-    // Cham spike -> thua, tru khi dang bat bien nho STAR
-    if (!p.isInvincible()) {
-        for (spike& sp : map.getSpikes()) {
-            if (sp.isActive() && checkCollision(p, sp)) {
-                lost = true;
-                soundManager::playEffect("lose");
-                break;
+    // Cham spike 
+    for (spike& sp : map.getSpikes()) {
+        if (sp.isActive() && checkCollision(p, sp)) {
+            if (p.takeDamage()) {
+                p.setVelocityY(-350);   // bat lui len
             }
+            break;
         }
     }
 }
@@ -363,11 +382,14 @@ void sceneMain::handleEnemyCollision(float deltaTime) {
     float px = p.getX(), py = p.getY(), pw = p.getWidth(), ph = p.getHeight();
 
     for (walker& w : map.getWalkers()) {
+        
+        // 4 tham số này bo quanh enemy
         float wx = w.getX() + w.getInsetSide();
         float wy = w.getY() + w.getInsetTop();
         float ww = w.getWidth() - 2 * w.getInsetSide();
         float wh = w.getHeight() - w.getInsetTop();
 
+        // nếu có va chạm với player
         bool over = px <= wx + ww && px + pw >= wx && py <= wy + wh && py + ph >= wy;
         if (!over) continue;
 
@@ -393,14 +415,21 @@ void sceneMain::handleEnemyCollision(float deltaTime) {
         px = p.getX(); py = p.getY();
 
         int k = w.getKind();
+        // kind 1 đầu đinh
         if (k == 1) {
             w.stop();
-            if (side == 2) lost = true;
+            if (side == 2 && p.takeDamage()) {
+                p.setVelocityY(-350);
+            }
         }
+        // kind 2 quái nhỏ
         else if (k == 2) {
             w.stop();
-            if (side != 2) lost = true;
+            if (side != 2 && p.takeDamage()) {
+                p.setVelocityY(-350);
+            }
         }
+        // kind 3 quái lớn 
         else if (k == 3) {
             if (side == 2) w.stop();
         }
@@ -470,7 +499,7 @@ void sceneMain::handleCollision(float deltaTime) {
 }
 
 void sceneMain::handleInput(const SDL_Event& event) {
-    if ((paused || lost)
+    if ((paused || lost )
         && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN
         && event.button.button == SDL_BUTTON_LEFT) {
         int base = lost ? 0 : 1;
@@ -478,7 +507,7 @@ void sceneMain::handleInput(const SDL_Event& event) {
         if (settings.handleClick(event.button.x, event.button.y, sx, 20.0f)) return;
     }
 
-    if (lost) {
+    if (lost ) {
         if (event.type == SDL_EVENT_MOUSE_MOTION) {
             gameOverMenu.handleMouseMove(event.motion.x, event.motion.y);
         }
@@ -486,9 +515,9 @@ void sceneMain::handleInput(const SDL_Event& event) {
                  && event.button.button == SDL_BUTTON_LEFT) {
             gameOverMenu.handleClick(event.button.x, event.button.y);
             int a = gameOverMenu.getAction();
-            if (a == GAMEOVER_REPLAY)     { resetPlayer(); lost = false; }
-            else if (a == GAMEOVER_MODE2) { resetPlayer(); lost = false; sceneAction = SCENE_EDITOR; }
-            else if (a == GAMEOVER_MENU)  { resetPlayer(); lost = false; sceneAction = SCENE_MENU; }
+            if (a == GAMEOVER_REPLAY)     { resetGame(); lost = false; }
+            else if (a == GAMEOVER_MODE2) { resetGame(); lost = false; sceneAction = SCENE_EDITOR; }
+            else if (a == GAMEOVER_MENU)  { resetGame(); lost = false; sceneAction = SCENE_MENU; }
             else if (a == GAMEOVER_QUIT)  { sceneAction = SCENE_QUIT; }
             gameOverMenu.resetAction();
         }
@@ -519,8 +548,8 @@ void sceneMain::handleInput(const SDL_Event& event) {
             pauseMenu.handleClick(event.button.x, event.button.y);
             int a = pauseMenu.getAction();
             if (a == PAUSE_RESUME)      paused = false;
-            else if (a == PAUSE_REPLAY) { resetPlayer(); paused = false; }
-            else if (a == PAUSE_MENU)   { resetPlayer(); sceneAction = SCENE_MENU; paused = false; }
+            else if (a == PAUSE_REPLAY) { resetGame(); paused = false; }
+            else if (a == PAUSE_MENU)   { resetGame(); sceneAction = SCENE_MENU; paused = false; }
             else if (a == PAUSE_QUIT)   sceneAction = SCENE_QUIT;
             pauseMenu.resetAction();
         }
@@ -672,4 +701,34 @@ void sceneMain::renderHUD(SDL_Renderer* renderer) {
     SDL_RenderTexture(renderer, NDiamonds, nullptr, &diamondIconRect);
     Text::draw(renderer, ": " + std::to_string(p.getDiamonds()),
         75.0f, 128.0f, textColor, scale);
+}
+
+void sceneMain::checkEnd() {
+    if (map.getPlayer().getHealth() <= 0) {
+        lost = true;
+        soundManager::playEffect("lose");
+    }
+    if (playerAtCell(map.getGoalCol(), map.getGoalRow())) {
+        complete = true;
+        lost = true; // chưa làm phần complete nên tamj như là lost
+        soundManager::playEffect("lose");
+    }
+}
+
+void sceneMain::renderGoalFlag(SDL_Renderer* renderer) {
+    if (!map.getHasGoal()) return;
+
+    SDL_Texture* tex = goalFlag.getTexture();
+    if (tex == nullptr) return;
+
+    camera& cam = map.getCam();
+
+    SDL_FRect dst;
+    dst.x = SDL_roundf(cam.xWorldToScreen(map.getGoalCol() * tile::TILE_SIZE));
+    dst.y = SDL_roundf(cam.yWorldToScreen(map.getGoalRow() * tile::TILE_SIZE));
+    dst.w = tile::TILE_SIZE * cam.getScale();
+    dst.h = tile::TILE_SIZE * cam.getScale();
+
+    SDL_FRect src = goalFlag.getSrcRect();
+    SDL_RenderTexture(renderer, tex, &src, &dst);
 }
