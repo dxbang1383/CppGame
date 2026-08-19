@@ -15,6 +15,7 @@
 #include "../GameObject/Tile/switch.h"
 #include "../GameObject/Tile/ladder.h"
 #include "../GameObject/Tile/spike.h"
+#include "../GameObject/Tile/teleport.h"
 
 #include "../GameObject/Player/player.h"
 #include "../GameObject/Tile/decor.h"
@@ -38,6 +39,7 @@ private:
     std::vector<itemBox> boxes;
     std::vector<Item> items;
     std::vector<spike> spikes;
+    std::vector<teleport> teleports;
 
 
     SDL_Texture* bkg = nullptr;
@@ -72,6 +74,11 @@ public:
     void addLadder(int col, int row, std::string texKey);
     void addSwitch(int col, int row, std::string texKey = "switch");
     void addSpike(int col, int row, std::string texKey = "spike");
+    void addTeleport(int col, int row, int groupId);
+    // Tra ve teleport cung nhom nhung khac vi tri, nullptr neu khong co
+    teleport* findPartner(const teleport& from);
+
+    int nextTeleportGroup();
     void addBox(int col, int row, BoxType type);
     void addWalker(int col, int row, int patrol, int kind = 1);
 
@@ -97,6 +104,7 @@ public:
     std::vector<itemBox>& getBoxes() { return boxes; }
     std::vector<Item>& getItems() { return items; }
     std::vector<spike>& getSpikes() { return spikes; }
+    std::vector<teleport>& getTeleports() { return teleports; }
     player& getPlayer() { return mainPlayer; }
     // Chuyển từ địa chỉ col sang x 
     float getStartX() const { return startCol * tile::TILE_SIZE; }

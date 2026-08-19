@@ -18,6 +18,7 @@ void Map::clear() {
     ladders.clear();
     switches.clear();
     spikes.clear();
+    teleports.clear();
     boxes.clear();
     items.clear();
 
@@ -138,6 +139,15 @@ bool Map::eraseAt(int col, int row, TileLayer layer ) {
             }
         }
     }
+    else if (layer == TileLayer::LAYER_TELEPORT) {
+        for (int i = (int)teleports.size() - 1; i >= 0; i--) {
+            if (teleports[i].getCol() == col && teleports[i].getRow() == row) {
+                teleports.erase(teleports.begin() + i);
+                dirty = true;
+                return true;
+            }
+        }
+    }
     else if (layer == TileLayer::LAYER_BOX) {
         for (int i = (int)boxes.size() - 1; i >= 0; i--) {
             if (boxes[i].getCol() == col && boxes[i].getRow() == row) {
@@ -190,6 +200,41 @@ void Map::addSpike(int col, int row, std::string texKey) {
     dirty = true;
 }
 
+void Map::addTeleport(int col, int row, int groupId) {
+    teleports.emplace_back(col, row, groupId);
+    dirty = true;
+}
+
+// tìm nhóm để tele 
+teleport* Map::findPartner(const teleport& from) {
+    for (teleport& t : teleports) {
+        if (t.getGroupId() != from.getGroupId()) continue; // khác nhóm 
+        if (t.getCol() == from.getCol() && t.getRow() == from.getRow()) continue; // cùng nhóm nhưng là chính nó 
+        return &t;
+    }
+    return nullptr;
+}
+
+// tạm thười bỏ qua nếu xóa cả 2 cổng
+// trả về cổng đang có 1 , nếu không trả về cổng mới 
+int Map::nextTeleportGroup() {
+    std::map<int, int> dem;
+    int maxId = 0;
+
+    // tạo map link đếm số lượng các cổng còn lại trên map
+    for (teleport& t : teleports) {
+        dem[t.getGroupId()]++;
+        if (t.getGroupId() > maxId) maxId = t.getGroupId();
+    }
+
+    // cổng nào chỉ có 1 cổng thì thêm cổng đố vào 
+    for (auto& c : dem) {
+        if (c.second == 1) return c.first;
+    }
+
+    return maxId + 1;   // da du cap het -> mo nhom moi
+}
+
 void Map::addPlatform(int col, int row, std::string texKey,
                         int srcX, int srcY) {
     plat.emplace_back(col, row, texKey, srcX, srcY);
@@ -237,6 +282,7 @@ bool Map::load(const std::string& path) {
     bool inAnimBlock = false;
     bool inSwitchBlock = false;
     bool inSpikeBlock = false;
+    bool inTeleportBlock = false;
     bool inBoxBlock = false;
 
     while (std::getline(file, line)) {
@@ -303,6 +349,14 @@ bool Map::load(const std::string& path) {
             }
             if (line == "</spike>") {
                 inSpikeBlock = false;
+                continue;
+            }
+            if (line == "<teleport>") {
+                inTeleportBlock = true;
+                continue;
+            }
+            if (line == "</teleport>") {
+                inTeleportBlock = false;
                 continue;
             }
             if (line == "<box>") {
@@ -388,6 +442,15 @@ bool Map::load(const std::string& path) {
 
             if (ss >> col >> row) {
                 addSpike(col, row);
+            }
+        }
+
+        if (inTeleportBlock) {
+            std::istringstream ss(line);
+            int col, row, groupId;
+
+            if (ss >> col >> row >> groupId) {
+                addTeleport(col, row, groupId);
             }
         }
 
@@ -488,6 +551,13 @@ bool Map::save(const std::string& path) {
         file << sp.getCol() << " " << sp.getRow() << "\n";
     }
     file << "</spike>\n";
+
+    // Ghi teleport vào file
+    file << "<teleport>\n";
+    for (teleport& t : teleports) {
+        file << t.getCol() << " " << t.getRow() << " " << t.getGroupId() << "\n";
+    }
+    file << "</teleport>\n";
 
     // Ghi box vào file
     file << "<box>\n";

@@ -17,6 +17,7 @@ enum class TileLayer {
 	LAYER_SWITCH,
 	LAYER_SPIKE,
 	LAYER_BOX,
+	LAYER_TELEPORT
 };
 
 /*

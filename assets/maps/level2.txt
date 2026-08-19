@@ -242,8 +242,7 @@
 28 25 item
 26 11 question
 </box>
-<item>
-10 10 coin
-12 10 nogravity
-16 10 highjump
-</item>
+<teleport>
+5 28 1
+48 14 1
+</teleport>

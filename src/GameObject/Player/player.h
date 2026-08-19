@@ -69,6 +69,7 @@ public:
     void setMovingRight(bool right) { isMovingRight = right; }
     void setMovingUp(bool up) { isMovingUp = up; }
     void setMovingDown(bool down) { isMovingDown = down; }
+    bool getIsMovingDown() const { return isMovingDown; }
     void setVelocityX(double x) { velocityX = x; }
     void setVelocityY(double y) { velocityY = y; }
     double getVelocityX() const { return velocityX; }

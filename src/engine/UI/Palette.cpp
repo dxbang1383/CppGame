@@ -15,7 +15,7 @@ static constexpr float NAMED_CELL = 78.0f;  // canh 1 o anh roi
 static constexpr float NAMED_GAP = 12.0f;   // ho giua 2 o anh roi
 
 // So luong nut chon loai
-static constexpr int CAT_COUNT = 8;
+static constexpr int CAT_COUNT = 9;
 
 
 void Palette::preLoad(SDL_Renderer* renderer, float w, float h) {
@@ -49,7 +49,7 @@ void Palette::preLoad(SDL_Renderer* renderer, float w, float h) {
 // Tao 5 nut chon loai, xep doc trong cot trai
 void Palette::buildCategoryButtons() {
 	std::string labels[CAT_COUNT] = {
-		"PLATFORM", "DECOR", "DECOR ANIM", "LADDER", "ENEMY", "SWITCH", "SPIKE", "BOX"
+		"PLATFORM", "DECOR", "DECOR ANIM", "LADDER", "ENEMY", "SWITCH", "SPIKE", "BOX", "TELEPORT"
 	};
 	TileLayer layers[CAT_COUNT] = {
 		TileLayer::LAYER_PLATFORM,
@@ -59,7 +59,8 @@ void Palette::buildCategoryButtons() {
 		TileLayer::LAYER_ENEMY,
 		TileLayer::LAYER_SWITCH,
 		TileLayer::LAYER_SPIKE,
-		TileLayer::LAYER_BOX
+		TileLayer::LAYER_BOX,
+		TileLayer::LAYER_TELEPORT
 	};
 
 	catBtns.clear();
@@ -208,6 +209,10 @@ void Palette::openLayer(TileLayer l) {
 	}
 	else if (l == TileLayer::LAYER_SPIKE) {
 		named.push_back("spike");
+		mode = PaletteMode::PICK_NAMED;
+	}
+	else if (l == TileLayer::LAYER_TELEPORT) {
+		named.push_back("teleport");
 		mode = PaletteMode::PICK_NAMED;
 	}
 	else if (l == TileLayer::LAYER_BOX) {

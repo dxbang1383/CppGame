@@ -23,6 +23,7 @@ private:
     SDL_Renderer* rend = nullptr;
     bool rendergrid = true;
 
+
     void placeAt(int col, int row);   // dat tile theo layer dang chon
 
 public :

@@ -19,6 +19,7 @@ target_sources(CppGame PRIVATE
      "src/GameObject/Tile/ladder.h"
      "src/GameObject/Tile/switch.h"
      "src/GameObject/Tile/spike.h"
+     "src/GameObject/Tile/teleport.h"
      "src/GameObject/Special/specialObject.h"
      "src/GameObject/Special/itemBox.cpp"
      "src/GameObject/Special/itemBox.h"

@@ -27,8 +27,8 @@ public:
 	void setType(std::string t) { type = t; }
 	void setSrcRect(SDL_FRect rect) { srcRect = rect; }
 
-	int getCol() { return floor(getX()) / TILE_SIZE; }
-	int getRow() { return floor(getY()) / TILE_SIZE; }
+	int getCol() const { return floor(getX()) / TILE_SIZE; }
+	int getRow() const { return floor(getY()) / TILE_SIZE; }
 	int getSrcX() { return srcRect.x / TILE_MAP; }
 	int getSrcY() { return srcRect.y / TILE_MAP; }
 

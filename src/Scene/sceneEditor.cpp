@@ -48,6 +48,9 @@ void sceneEditor::placeAt(int col, int row) {
         else if (key == "box_item")  map.addBox(col, row, BoxType::ITEM);
         else                         map.addBox(col, row, BoxType::COIN);
         break;
+    case TileLayer::LAYER_TELEPORT:
+        map.addTeleport(col, row, map.nextTeleportGroup());
+        break;
     }
 }
 
@@ -71,6 +74,7 @@ void sceneEditor::update(float deltaTime) {
     for (spike& sp : map.getSpikes()) sp.updRenderRect(map.getCam());
     for (itemBox& b : map.getBoxes()) b.updRenderRect(map.getCam());
     for (Item& it : map.getItems()) it.updRenderRect(map.getCam());
+    for (teleport& t : map.getTeleports()) t.updRenderRect(map.getCam());
 }
 
 // in ra bên ngoài 
@@ -78,28 +82,25 @@ void sceneEditor::render(SDL_Renderer* renderer) {
     //std::cout << "ground :" << mainPlayer.isOnGround() << std::endl;
     //map.getCam().getInfo();
 
-    // dong nay them tam de add tai nguyeen 
-    // ---------------------------------------------------------------------------------------------jlll
-
     SDL_FRect bkgRect = { 0, 0, 1280, 720 };
     SDL_RenderTexture(renderer, map.getBkg(), nullptr, &bkgRect);
 
     for (platform& p : map.getPlatforms()) p.render(renderer);
     for (ladder& l : map.getLadders()) l.render(renderer);
     for (decor& d : map.getDecors()) d.render(renderer);
-
     for (flyer& f : map.getFlyers()) f.render(renderer);
     for (walker& w : map.getWalkers()) w.render(renderer);
     for (Switch& sw : map.getSwitches()) sw.render(renderer);
     for (spike& sp : map.getSpikes()) sp.render(renderer);
     for (itemBox& b : map.getBoxes()) b.render(renderer);
     for (Item& it : map.getItems()) it.render(renderer);
+    for (teleport& t : map.getTeleports()) t.render(renderer);
 
     if (rendergrid == true) {
         renderGrid(renderer);
     }
 
-    palette.render(renderer);   // tu thoat neu dang dong
+    palette.render(renderer); 
 }
 
 // xử lý input của scene này

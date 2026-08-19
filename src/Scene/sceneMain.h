@@ -51,6 +51,8 @@ private:
     GameOverMenu gameOverMenu;
     SettingsMenu settings;
     const float deathY = 2000.0f;
+
+    float teleportCooldown = 0.0f;
     int sceneAction = SCENE_NONE;
 
     SDL_Texture* iconTex = nullptr;
@@ -76,8 +78,14 @@ public:
     void handleSpikeCollison(float deltaTime);
     void handleItemCollison(float deltaTime);
     void handleEnemyCollision(float deltaTime);
+    void handleTeleportCollision(float deltaTime);
     bool overlaps(platform& p);
     bool overlapsLadder(ladder& l);
+    // kiểm tra ng chơi có ở ô này không
+    bool playerAtCell(int col, int row);
+    // dịch chuyển người chơi đến hàng row cột col 
+    void movePlayerToCell(int col, int row);
+
     void focusPlayer();
     void switchScene() override;
 

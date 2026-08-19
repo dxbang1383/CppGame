@@ -182,6 +182,8 @@
 3 12 map1 5 7
 24 13 map1 5 7
 32 13 map1 11 5
+15 6 map1 15 4
+27 13 map1 15 4
 </decor>
 <animation>
 9 9 flag
@@ -262,6 +264,10 @@
 </switch>
 <spike>
 </spike>
+<teleport>
+15 6 1
+27 13 1
+</teleport>
 <box>
 29 10 item
 </box>

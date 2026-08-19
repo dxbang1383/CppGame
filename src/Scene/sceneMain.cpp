@@ -399,6 +399,48 @@ void sceneMain::handleEnemyCollision(float deltaTime) {
     }
 }
 
+// tâm của người chơi đang ở ô nào 
+bool sceneMain::playerAtCell(int col, int row) {
+    player& p = map.getPlayer();
+    int pc = (int)((p.getX() + p.getWidth()  / 2) / tile::TILE_SIZE);
+    int pr = (int)((p.getY() + p.getHeight() / 2) / tile::TILE_SIZE);
+    return pc == col && pr == row;
+}
+
+void sceneMain::movePlayerToCell(int col, int row) {
+    player& p = map.getPlayer();
+    p.setX(col * tile::TILE_SIZE);
+    p.setY(row * tile::TILE_SIZE);
+    p.setVelocityY(-100);
+    p.setOnGround(false);
+    teleportCooldown = 0.5f;
+    soundManager::playEffect("click");
+}
+
+void sceneMain::handleTeleportCollision(float deltaTime) {
+    if (teleportCooldown > 0.0f) {
+        teleportCooldown -= deltaTime;
+        return;
+    }
+
+    player& p = map.getPlayer();
+
+    if (!p.getIsMovingDown()) return;
+
+    for (teleport& t : map.getTeleports()) {
+        if (!playerAtCell(t.getCol(), t.getRow())) continue;
+        teleport* dest = map.findPartner(t);
+
+        if (dest == nullptr) {
+            continue; // tele lỗi chỉ có 1 cổng
+            std::cout << "cong nay loi chi co 1 port" << std::endl;
+        }
+
+        movePlayerToCell(dest->getCol(), dest->getRow());
+        break;
+    }
+}
+
 void sceneMain::handleCollision(float deltaTime) {
 
     // Va chạm player và platform 
@@ -415,6 +457,8 @@ void sceneMain::handleCollision(float deltaTime) {
     handleItemCollison(deltaTime);
     // Va chạm enemy với player 
     handleEnemyCollision(deltaTime);
+    // tele khi có moving down và có gần 1 cổng 
+    handleTeleportCollision(deltaTime);
 }
 
 void sceneMain::handleInput(const SDL_Event& event) {
@@ -510,15 +554,11 @@ void sceneMain::handleInput(const SDL_Event& event) {
 
         case SDLK_S:
         case SDLK_DOWN:
-            // 1. Kiểm tra trạng thái Không trọng lực
-            if (map.getPlayer().isNoGravity()) {
-                map.getPlayer().setMovingDown(true);
-            }
-            // 2. Nếu đang chạm thang thì leo xuống
-            else if (map.getPlayer().IsTouchingLadder()) {
+            map.getPlayer().setMovingDown(true);
+
+            // đang chạm vào thang thì set thành đang trèo 
+            if (!map.getPlayer().isNoGravity() && map.getPlayer().IsTouchingLadder()) {
                 map.getPlayer().setIsClimbing(true);
-                map.getPlayer().setMovingDown(true);
-                map.getPlayer().setMovingDown(true); // Đã sửa lỗi cũ (trước đó bạn để setMovingUp)
             }
             break;
         case SDLK_L:
