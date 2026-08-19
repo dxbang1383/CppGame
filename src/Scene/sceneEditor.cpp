@@ -51,6 +51,12 @@ void sceneEditor::placeAt(int col, int row) {
     case TileLayer::LAYER_TELEPORT:
         map.addTeleport(col, row, map.nextTeleportGroup());
         break;
+    case TileLayer::LAYER_COIN:
+        map.addCoin(col, row);
+        break;
+    case TileLayer::LAYER_DIAMOND:
+        map.addDiamonds(col, row);
+        break;
     }
 }
 
@@ -61,6 +67,7 @@ void sceneEditor::update(float deltaTime) {
     for (platform& x : map.getPlatforms()) x.update(deltaTime);
     for (decor& d : map.getDecors()) d.update(deltaTime);
     for (ladder& l : map.getLadders()) l.update(deltaTime);
+    for (Coin& c : map.getCoins()) c.update(deltaTime);
 
     // Camera chốt vị trí
 
@@ -75,6 +82,8 @@ void sceneEditor::update(float deltaTime) {
     for (itemBox& b : map.getBoxes()) b.updRenderRect(map.getCam());
     for (Item& it : map.getItems()) it.updRenderRect(map.getCam());
     for (teleport& t : map.getTeleports()) t.updRenderRect(map.getCam());
+    for (Coin& c : map.getCoins()) c.updRenderRect(map.getCam());
+    for (Diamond& dia : map.getDiamond()) dia.updRenderRect(map.getCam());
 }
 
 // in ra bên ngoài 
@@ -95,6 +104,8 @@ void sceneEditor::render(SDL_Renderer* renderer) {
     for (itemBox& b : map.getBoxes()) b.render(renderer);
     for (Item& it : map.getItems()) it.render(renderer);
     for (teleport& t : map.getTeleports()) t.render(renderer);
+    for (Coin& c : map.getCoins()) c.render(renderer);
+    for (Diamond& dia : map.getDiamond()) dia.render(renderer);
 
     if (rendergrid == true) {
         renderGrid(renderer);
