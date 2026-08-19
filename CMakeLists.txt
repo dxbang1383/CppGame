@@ -62,7 +62,7 @@ target_sources(CppGame PRIVATE
      "src/GameObject/Enemy/flyer.h"
      "src/GameObject/Enemy/flyer.cpp"
      "src/GameObject/Enemy/walker.h"
-     "src/GameObject/Enemy/walker.cpp")
+     "src/GameObject/Enemy/walker.cpp" "src/GameObject/Special/coin.cpp" "src/GameObject/Special/coin.h" "src/GameObject/Special/diamond.cpp" "src/GameObject/Special/diamond.h")
 
 target_include_directories(CppGame PRIVATE
     SDL3/include

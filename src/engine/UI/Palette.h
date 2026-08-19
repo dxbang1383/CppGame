@@ -17,7 +17,9 @@ enum class TileLayer {
 	LAYER_SWITCH,
 	LAYER_SPIKE,
 	LAYER_BOX,
-	LAYER_ITEM
+	LAYER_ITEM,
+	LAYER_COIN,
+	LAYER_DIAMOND
 };
 
 /*

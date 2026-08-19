@@ -240,10 +240,19 @@
 15 25 coin
 20 25 question
 28 25 item
-26 11 question
+26 11 question	
 </box>
 <item>
 10 10 coin
 12 10 nogravity
 16 10 highjump
 </item>
+<coin>
+5 10
+7 10
+9 10
+</coin>
+<diamond>
+12 10
+15 10
+</diamond>

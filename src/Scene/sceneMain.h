@@ -4,6 +4,7 @@
 #include <SDL3/SDL.h>
 #include <vector>
 #include <iostream>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include "scene.h"
 #include "../GameObject/Player/player.h"
@@ -20,6 +21,8 @@
 #include "../engine/UI/PauseMenu.h"
 #include "../engine/UI/GameOverMenu.h"
 #include "../engine/UI/SettingsMenu.h"
+#include "../GameObject/Special/coin.h"    
+#include "../GameObject/Special/diamond.h"
 #include "../Map/Map.h"
 
 enum SceneAction {
@@ -32,6 +35,10 @@ enum SceneAction {
 class sceneMain : public scene {
 private:
     Map map = Map();
+
+    //coin and diamond
+    TTF_Font* font = nullptr;           
+    SDL_Texture* NDiamonds = nullptr;
 
     const float TILE = 36.0f;
     const float W = 1280.0f, H = 720.0f;
@@ -60,6 +67,8 @@ private:
     SDL_FRect iconBSrc = { 397.0f, 278.0f, 40.0f, 40.0f };
 
     void resetPlayer();
+    void renderHUD(SDL_Renderer* renderer);
+    SDL_Texture* renderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, SDL_Color color);
 
 public:
     sceneMain();
@@ -74,7 +83,7 @@ public:
     bool overlapsLadder(ladder& l);
     void focusPlayer();
     void switchScene() override;
-
+    void checkCollectables();
     int getSceneAction() const { return sceneAction; }
     void resetSceneAction() { sceneAction = SCENE_NONE; }
     bool checkCollision(const gameObject& a, const gameObject& b) {

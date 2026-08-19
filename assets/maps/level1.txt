@@ -258,3 +258,12 @@
 7 7 ladder_down
 7 6 ladder_top
 </ladder>
+<coin>
+5 10
+7 10
+9 10
+</coin>
+<diamond>
+12 10
+15 10
+</diamond>

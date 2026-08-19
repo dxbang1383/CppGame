@@ -27,7 +27,9 @@ private:
     bool starPower = false;
     
     int coins = 0;
-    int health = 3;
+    int diamonds = 0;
+    int health = 5;
+   
 
     double normalJumpForce = 600.0;  // khop voi jumpForce o tren
     double normalSpeed = 300.0;      // khop voi speed o tren
@@ -111,7 +113,10 @@ public:
     bool hasHighJump()   const { return highJump; }
     bool hasSpeedBoost() const { return speedBoost; }
     bool canDoubleJump() const { return hasDoubleJump && !doubleJumpUsed; }
+    void addCoins(int val) { coins += val; }
+    void addDiamond(int val = 1) { diamonds += val; }
     int  getCoins()      const { return coins; }
+    int getDiamonds() const { return diamonds; }
     int  getHealth()     const { return health; }
 };
 

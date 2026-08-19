@@ -25,13 +25,13 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{ "walker1",     "assets/kenney_pixel-platformer/Tiles/Enemy/walker1.png" },
 	{ "walker2",     "assets/kenney_pixel-platformer/Tiles/Enemy/walker2.png" },
 	{ "walker3",     "assets/kenney_pixel-platformer/Tiles/Enemy/walker3.png" },
-	{ "menu", "assets/kenney_pixel-platformer/menu.png" },
+	{ "menu",			"assets/kenney_pixel-platformer/menu.png" },
 
-	{ "water",         "assets/kenney_pixel-platformer/Tiles/Animation/water.png" },
-	{ "waterfall_top", "assets/kenney_pixel-platformer/Tiles/Animation/waterfall_top.png" },
-	{ "waterfall_mid", "assets/kenney_pixel-platformer/Tiles/Animation/waterfall_mid.png" },
-	{ "waterfall_bot", "assets/kenney_pixel-platformer/Tiles/Animation/waterfall_bot.png" },
-	{ "flag",          "assets/kenney_pixel-platformer/Tiles/Animation/flag.png" },
+	{ "water",          "assets/kenney_pixel-platformer/Tiles/Animation/water.png" },
+	{ "waterfall_top",  "assets/kenney_pixel-platformer/Tiles/Animation/waterfall_top.png" },
+	{ "waterfall_mid",  "assets/kenney_pixel-platformer/Tiles/Animation/waterfall_mid.png" },
+	{ "waterfall_bot",  "assets/kenney_pixel-platformer/Tiles/Animation/waterfall_bot.png" },
+	{ "flag",           "assets/kenney_pixel-platformer/Tiles/Animation/flag.png" },
 	{ "bkg",			"assets/kenney_pixel-platformer/bkg.png" },
 	{ "P",				"assets/kenney_pixel-platformer/Tiles/tile_0002.png" },
 	{ "player",			"assets/kenney_pixel-platformer/Tiles/Characters/tile_0000.png" },
@@ -52,7 +52,9 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{"i_highjump",		"assets/kenney_pixel-platformer/Tiles/tile_highjump.png" },
 	{"i_speed",			"assets/kenney_pixel-platformer/Tiles/tile_speed.png" },
 	{"i_doublejump",	"assets/kenney_pixel-platformer/Tiles/tile_doublejump.png" },
-	{"i_nogravity",		"assets/kenney_pixel-platformer/Tiles/tile_nogravity.png" }
+	{"i_nogravity",		"assets/kenney_pixel-platformer/Tiles/tile_nogravity.png" },
+	{"coin",			"assets/kenney_pixel-platformer/Tiles/tile_coin2.png" },
+	{"diamond",		"assets/kenney_pixel-platformer/Tiles/tile_0067.png" }
 
 };
 
