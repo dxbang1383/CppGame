@@ -15,6 +15,10 @@ private:
 
     SDL_Texture* iconTex = nullptr;
     SDL_FRect iconBSrc = { 397.0f, 278.0f, 40.0f, 40.0f };
+    SDL_FRect helpBtnRect = { 1170.0f, 20.0f, 40.0f, 40.0f };
+
+    SDL_Texture* howToPlayTex = nullptr;
+    bool showHowToPlay = false;
 
 public:
     sceneMenu();

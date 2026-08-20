@@ -10,6 +10,7 @@
 #include "../GameObject/Enemy/enemy.h"
 #include "../GameObject/Enemy/flyer.h"
 #include "../GameObject/Enemy/walker.h"
+#include "../GameObject/Enemy/fish.h"
 #include "../engine/camera.h"
 #include "../GameObject/Tile/platform.h"
 #include "../GameObject/Tile/switch.h"
@@ -34,6 +35,7 @@ private:
     player mainPlayer;
     std::vector<flyer> flyers;
     std::vector<walker> walkers;
+    std::vector<fish> fishes;
     std::vector<platform> plat;
     std::vector<decor> decorList;
     std::vector<ladder> ladders;
@@ -74,6 +76,7 @@ public:
     void addDecor(int col, int row, std::string texKey, int srcX, int srcY);
     void addDecorAnim(int col, int row, std::string animKey);
     void addFlyer(int col, int row, int patrol);
+    void addFish(int col, int row, int patrol);
     void addWalker(int col, int row, int patrol);
     void addLadder(int col, int row, std::string texKey);
     void addSwitch(int col, int row, std::string texKey = "switch");
@@ -111,6 +114,7 @@ public:
 
     SDL_Texture* getBkg() { return bkg; }
     std::vector<flyer>& getFlyers() { return flyers; }
+    std::vector<fish>& getFishes() { return fishes; }
     std::vector<walker>& getWalkers() { return walkers; }
     std::vector<platform>& getPlatforms() { return plat; }
     std::vector<decor>& getDecors() { return decorList; }

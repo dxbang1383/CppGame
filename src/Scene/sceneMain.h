@@ -1,4 +1,4 @@
-﻿#ifndef SCENE_MAIN_H
+#ifndef SCENE_MAIN_H
 #define SCENE_MAIN_H
 
 #include <SDL3/SDL.h>
@@ -80,6 +80,8 @@ private:
     SDL_FRect resumeIconSrc = { 298.0f, 218.0f, 40.0f, 40.0f };
     SDL_FRect toggleBtnRect = { 1220.0f, 20.0f, 40.0f, 40.0f };
     SDL_FRect iconBSrc = { 397.0f, 278.0f, 40.0f, 40.0f };
+    SDL_Texture* howToPlayTex = nullptr;
+    bool showHowToPlay = false;
 
     void resetGame();
     void resetPlayer();

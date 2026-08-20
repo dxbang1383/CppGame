@@ -7,6 +7,7 @@ class SettingsMenu {
 private:
     SDL_Texture* menuTex = nullptr;
     bool open = false;
+    bool showColorBox = false;
 
     SDL_FRect settingsSrc = { 347.0f, 337.0f, 40.0f, 40.0f };
     SDL_FRect muteSrc = { 347.0f, 277.0f, 40.0f, 40.0f };
@@ -19,7 +20,7 @@ public:
     void preLoad(SDL_Renderer* renderer);
     bool handleClick(float mx, float my, float iconX, float iconY);
     void render(SDL_Renderer* renderer, float iconX, float iconY);
-    void close() { open = false; }
+    void close() { open = false; showColorBox = false; }
     bool isOpen() const { return open; }
 };
 

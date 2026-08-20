@@ -24,6 +24,7 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{ "ladder_top",  "assets/kenney_pixel-platformer/Tiles/ladder_top.png" },
 
 	{ "flyer",       "assets/kenney_pixel-platformer/Tiles/Enemy/flyer.png" },
+	{ "fish",        "assets/kenney_pixel-platformer/Tiles/Enemy/fish.png" },
 	{ "walker",      "assets/kenney_pixel-platformer/Tiles/Characters/tile_0024.png" },
 
 	{ "walker1",     "assets/kenney_pixel-platformer/Tiles/Enemy/walker1.png" },
@@ -66,7 +67,8 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{"i_doublejump",	"assets/kenney_pixel-platformer/Tiles/tile_doublejump.png" },
 	{"i_nogravity",		"assets/kenney_pixel-platformer/Tiles/tile_nogravity.png" },
 	{"coin",			"assets/kenney_pixel-platformer/Tiles/tile_coin2.png" },
-	{"diamond",		"assets/kenney_pixel-platformer/Tiles/tile_0067.png" }
+	{"diamond",		"assets/kenney_pixel-platformer/Tiles/tile_0067.png" },
+	{ "howtoplay", "assets/kenney_pixel-platformer/Howtoplay.png" }
 
 };
 

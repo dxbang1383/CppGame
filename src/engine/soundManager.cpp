@@ -4,6 +4,7 @@ SDL_AudioDeviceID soundManager::device = 0;
 
 std::map<std::string, std::string> soundManager::pathTable = {
     { "bgm",  "assets/kenney_pixel-platformer/Sounds/Playing.wav" },
+    { "menu_bgm", "assets/kenney_pixel-platformer/Sounds/Menu.wav" },
     { "click","assets/kenney_pixel-platformer/Sounds/Click.wav" },
     { "win",  "assets/kenney_pixel-platformer/Sounds/Youwin.wav" },
     { "lose", "assets/kenney_pixel-platformer/Sounds/Youlose.wav" },
@@ -15,6 +16,7 @@ std::map<std::string, std::string> soundManager::pathTable = {
     { "ladder",  "assets/kenney_pixel-platformer/Sounds/Ladder.wav" },
     { "punji",   "assets/kenney_pixel-platformer/Sounds/Punji.wav" },
     { "switch",  "assets/kenney_pixel-platformer/Sounds/Switch.wav" },
+    { "diamond", "assets/kenney_pixel-platformer/Sounds/Diamond.wav" },
 };
 
 SDL_AudioStream* soundManager::musicStream = nullptr;

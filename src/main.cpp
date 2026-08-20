@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 
     // Bien vong lap
     bool running = true;
-    bool musicOn = false;
+    std::string currentMusic = "";
 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
     // 
@@ -80,9 +80,29 @@ int main(int argc, char* argv[])
             else if (a == SCENE_QUIT)   { running = false; }
         }
 
-        bool shouldPlay = (thisScene == &mainScene || thisScene == &editorScene) && !soundManager::isMuted();
-        if (shouldPlay && !musicOn) { soundManager::playMusic("bgm"); musicOn = true; }
-        else if (!shouldPlay && musicOn) { soundManager::stopMusic(); musicOn = false; }
+        if (thisScene == &editorScene) {
+            int a = editorScene.getSceneAction();
+            if (a == SCENE_MENU)        { thisScene = &menuScene; editorScene.resetSceneAction(); }
+            else if (a == SCENE_QUIT)   { running = false; }
+        }
+
+    std::string targetMusic = "";
+    if (!soundManager::isMuted()) {
+        if (thisScene == &menuScene) {
+            targetMusic = "menu_bgm";
+        } else if (thisScene == &mainScene || thisScene == &editorScene) {
+            targetMusic = "bgm";
+        }
+    }
+
+    if (targetMusic != currentMusic) {
+        if (targetMusic.empty()) {
+            soundManager::stopMusic();
+        } else {
+            soundManager::playMusic(targetMusic);
+        }
+        currentMusic = targetMusic;
+    }
 
         // update vi tri chuan bi in ra man
         thisScene->update(dt);
