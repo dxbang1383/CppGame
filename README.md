@@ -164,16 +164,6 @@ Do đó project không phụ thuộc vào việc cài SDL3 toàn cục trên h�
 
    Các thư viện này hiện đã được tổ chức trong repository của project.
 
-5. Git nếu muốn tải source bằng dòng lệnh:
-
-   ```bash
-   git clone <repository-url>
-   ```
-
-Sau khi clone project, mở project bằng **Visual Studio**, kiểm tra cấu hình đường dẫn `Include` và `Library` của SDL nếu cần, sau đó tiến hành build và chạy chương trình.
-
-> **Lưu ý:** Các file DLL cần thiết của SDL phải có thể được chương trình tìm thấy khi chạy. Nếu project đã cấu hình copy DLL vào thư mục output thì không cần thực hiện thủ công.
-
 ---
 
 ## 3. Cấu trúc dự án
@@ -490,7 +480,6 @@ msbuild <project-name>.sln /p:Configuration=Release /p:Platform=x64
 
 **Trong Visual Studio:**
 
-* `F5` (Debug)
 * `Ctrl + F5` (Run)
 
 **Chạy file .exe:**
@@ -499,24 +488,6 @@ msbuild <project-name>.sln /p:Configuration=Release /p:Platform=x64
 cd x64\Debug
 <game-name>.exe
 ```
-
-hoặc
-
-```bash
-cd x64\Release
-<game-name>.exe
-```
-
----
-
-### Tóm tắt
-
-```bash
-msbuild <project-name>.sln /p:Configuration=Debug /p:Platform=x64
-cd x64\Debug
-<game-name>.exe
-```
-
 
 ---
 
@@ -578,13 +549,11 @@ Người chơi cần tránh spike và enemy, đồng thời thu thập **coin** 
 
 Báo cáo mô tả quá trình phân tích, thiết kế, xây dựng và hoàn thiện project.
 
-**Link báo cáo:**
-`[Xem báo cáo PDF](LINK_BAO_CAO_PDF)`
+**Link báo cáo:** https://drive.google.com/file/d/1w40VXIQwkELdxQswXbbQMPltI29r5L2E/view?usp=sharing
 
 ### 7.2. Video Demo
 
 Video trình bày các chức năng chính của game, gameplay và chế độ tạo/chỉnh sửa map.
 
-**Link video demo:**
-`[Xem video Demo](LINK_VIDEO_DEMO)`
+**Link video demo:** https://drive.google.com/file/d/1DYFZDQrw3zWb_MIQ-Oif4VdVUv9F35T2/view?usp=sharing
 
