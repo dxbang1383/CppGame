@@ -19,7 +19,6 @@ public:
 	static constexpr float TILE_SIZE = 36; // kich thuoc 1 o trong THE GIOI
 	static constexpr float TILE_MAP = 18; // kich thuoc 1 o GOC trong sheet
 
-	tile(double x, double y, double width, double height);
 	tile(int m, int n, std::string t);
 	tile(int m, int n, std::string t, int srcX, int srcY);
 

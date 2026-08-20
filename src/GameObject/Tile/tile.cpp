@@ -1,9 +1,5 @@
 #include "tile.h"
 
-tile::tile(double x, double y, double width, double height)
-	: gameObject(x, y, width, height)
-{
-}
 
 // Constructor theo dia chi o tren map
 tile::tile(int m, int n, std::string t) {
