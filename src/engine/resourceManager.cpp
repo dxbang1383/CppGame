@@ -67,7 +67,8 @@ std::map<std::string, std::string> resourceManager::pathTable = {
 	{"i_doublejump",	"assets/kenney_pixel-platformer/Tiles/tile_doublejump.png" },
 	{"i_nogravity",		"assets/kenney_pixel-platformer/Tiles/tile_nogravity.png" },
 	{"coin",			"assets/kenney_pixel-platformer/Tiles/tile_coin2.png" },
-	{"diamond",		"assets/kenney_pixel-platformer/Tiles/tile_0067.png" }
+	{"diamond",		"assets/kenney_pixel-platformer/Tiles/tile_0067.png" },
+	{ "howtoplay", "assets/kenney_pixel-platformer/Howtoplay.png" }
 
 };
 

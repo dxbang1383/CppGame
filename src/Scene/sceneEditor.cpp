@@ -15,6 +15,11 @@ void sceneEditor::preLoad(SDL_Renderer* renderer) {
     palette.preLoad(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     map.addTextures(renderer);
     map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
+
+    pauseMenu.preLoad(renderer);
+    settings.preLoad(renderer);
+    iconTex = resourceManager::getTexture(renderer, "menu");
+    howToPlayTex = resourceManager::getTexture(renderer, "howtoplay");
 }
 
 // dat tile theo layer dang chon trong palette
@@ -148,11 +153,62 @@ void sceneEditor::render(SDL_Renderer* renderer) {
         renderGrid(renderer);
     }
 
-    palette.render(renderer); 
+    palette.render(renderer);
+
+    if (paused) pauseMenu.render(renderer);
+
+    if (paused && showHowToPlay && howToPlayTex) {
+        SDL_FRect fullRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+        SDL_RenderTexture(renderer, howToPlayTex, nullptr, &fullRect);
+    }
+
+    SDL_RenderTexture(renderer, iconTex, paused ? &resumeIconSrc : &pauseIconSrc, &toggleBtnRect);
+    
+    if (paused) {
+        SDL_FRect rb = { 1220.0f - 100.0f, 20.0f, 40.0f, 40.0f };
+        SDL_RenderTexture(renderer, iconTex, &iconBSrc, &rb);
+        settings.render(renderer, 1220.0f - 50.0f, 20.0f);
+    }
 }
 
 // xử lý input của scene này
 void sceneEditor::handleInput(const SDL_Event& event) {
+    if (paused && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && event.button.button == SDL_BUTTON_LEFT) {
+        if (event.button.x >= 1120.0f && event.button.x <= 1160.0f
+            && event.button.y >= 20.0f && event.button.y <= 60.0f) {
+            showHowToPlay = !showHowToPlay;
+            return;
+        }
+        if (settings.handleClick(event.button.x, event.button.y, 1220.0f - 50.0f, 20.0f)) return;
+    }
+
+    bool clickPauseBtn = (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && event.button.button == SDL_BUTTON_LEFT
+        && event.button.x >= toggleBtnRect.x && event.button.x <= toggleBtnRect.x + toggleBtnRect.w
+        && event.button.y >= toggleBtnRect.y && event.button.y <= toggleBtnRect.y + toggleBtnRect.h);
+    bool pressP = (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_P);
+    if (clickPauseBtn || pressP) {
+        paused = !paused;
+        if (!paused) showHowToPlay = false;
+        pauseMenu.resetAction();
+        return;
+    }
+
+    if (paused) {
+        if (showHowToPlay) return;
+        if (event.type == SDL_EVENT_MOUSE_MOTION) {
+            pauseMenu.handleMouseMove(event.motion.x, event.motion.y);
+        }
+        else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && event.button.button == SDL_BUTTON_LEFT) {
+            pauseMenu.handleClick(event.button.x, event.button.y);
+            int a = pauseMenu.getAction();
+            if (a == PAUSE_RESUME)      { paused = false; showHowToPlay = false; }
+            else if (a == PAUSE_REPLAY) { map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt"); paused = false; showHowToPlay = false; }
+            else if (a == PAUSE_MENU)   { sceneAction = SCENE_MENU; paused = false; showHowToPlay = false; }
+            else if (a == PAUSE_QUIT)   { sceneAction = SCENE_QUIT; }
+            pauseMenu.resetAction();
+        }
+        return;
+    }
 
     // ---- Tab: bat/tat palette. Xu li TRUOC moi thu khac ----
     if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_TAB) {

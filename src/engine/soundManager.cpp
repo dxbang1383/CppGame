@@ -4,6 +4,7 @@ SDL_AudioDeviceID soundManager::device = 0;
 
 std::map<std::string, std::string> soundManager::pathTable = {
     { "bgm",  "assets/kenney_pixel-platformer/Sounds/Playing.wav" },
+    { "menu_bgm", "assets/kenney_pixel-platformer/Sounds/Menu.wav" },
     { "click","assets/kenney_pixel-platformer/Sounds/Click.wav" },
     { "win",  "assets/kenney_pixel-platformer/Sounds/Youwin.wav" },
     { "lose", "assets/kenney_pixel-platformer/Sounds/Youlose.wav" },
