@@ -1,4 +1,4 @@
-﻿#ifndef PLAYER_H
+#ifndef PLAYER_H
 #define PLAYER_H
 
 #include <SDL3/SDL.h>
@@ -141,6 +141,11 @@ public:
     int  getCoins()      const { return coins; }
     int  getDiamonds() const { return diamonds; }
     int  getHealth()     const { return health; }
+
+    static SDL_Color playerColor;
+    static int playerColorIndex;
+    static void nextColor();
+    static SDL_Color getPlayerColor() { return playerColor; }
 };
 
 #endif // !PLAYER_H

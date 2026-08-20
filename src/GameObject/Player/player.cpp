@@ -1,5 +1,24 @@
-﻿#include "player.h"
-#include<cmath>
+#include "player.h"
+#include <cmath>
+
+SDL_Color player::playerColor = { 255, 255, 255, 255 };
+int player::playerColorIndex = 0;
+
+void player::nextColor() {
+    static const SDL_Color colors[] = {
+        { 255, 255, 255, 255 },
+        { 255,  90,  90, 255 },
+        {  90, 150, 255, 255 },
+        { 255, 230,  80, 255 },
+        { 210, 100, 255, 255 },
+        {  80, 240, 140, 255 },
+        { 255, 140,  50, 255 },
+        { 140, 140, 140, 255 }
+    };
+    int count = sizeof(colors) / sizeof(colors[0]);
+    playerColorIndex = (playerColorIndex + 1) % count;
+    playerColor = colors[playerColorIndex];
+}
 
 player::player(double x, double y, double width, double height)
     : gameObject(x, y, width, height){
@@ -91,12 +110,14 @@ void player::render(SDL_Renderer* renderer) {
 
     if (tex != nullptr) {
         SDL_FRect srcRect = current->getSrcRect();
+        SDL_SetTextureColorMod(tex, playerColor.r, playerColor.g, playerColor.b);
         if (getDirection() == 1) {
             SDL_RenderTextureRotated(renderer, tex, &srcRect, pRect, 0.0, nullptr, SDL_FLIP_HORIZONTAL);
         }
         else {
             SDL_RenderTexture(renderer, tex, &srcRect, pRect);
         }
+        SDL_SetTextureColorMod(tex, 255, 255, 255);
     }
     else {
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
