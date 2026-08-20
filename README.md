@@ -55,7 +55,7 @@
 
 ### 1.1. Mô tả bài toán
 
-**PixelForge Adventure** là trò chơi platform 2D được xây dựng bằng C++ theo hướng lập trình hướng đối tượng. Người chơi điều khiển nhân vật di chuyển qua các khu vực của bản đồ, vượt qua địa hình và chướng ngại vật, tương tác với các đối tượng trong game, tránh hoặc xử lý các loại enemy và thu thập vật phẩm trong quá trình chơi.
+**Platform Forge** là trò chơi platform 2D được xây dựng bằng C++ theo hướng lập trình hướng đối tượng. Người chơi điều khiển nhân vật di chuyển qua các khu vực của bản đồ, vượt qua địa hình và chướng ngại vật, tương tác với các đối tượng trong game, tránh hoặc xử lý các loại enemy và thu thập vật phẩm trong quá trình chơi.
 
 Bên cạnh gameplay platform truyền thống, hệ thống còn tích hợp **chế độ chỉnh sửa bản đồ**, cho phép người dùng thay đổi các thành phần của map như platform và decor ngay trong chương trình. Qua đó, project không chỉ tập trung vào việc xây dựng gameplay mà còn hướng đến khả năng tạo và tùy chỉnh nội dung bản đồ.
 
@@ -177,20 +177,6 @@ Cấu trúc chính của project:
 ```text
 Platform Forge  /
 │
-├── assets/                         # Tài nguyên của game
-│   ├── fonts/                      # Font chữ
-│   ├── kenney_pixel-platformer/    # Sprite / tileset / hình ảnh game
-│   └── maps/                       # Dữ liệu bản đồ
-│
-├── SDL3/                           # Thư viện SDL3
-│
-├── SDL3_image/                     # Thư viện xử lý hình ảnh
-│   ├── include/
-│   └── lib/
-│
-├── SDL3_ttf/                       # Thư viện xử lý font chữ
-│   ├── include/
-│   └── lib/
 │
 ├── src/                            # Mã nguồn chính
 │   │
@@ -279,8 +265,7 @@ Platform Forge  /
 │   │
 │   └── main.cpp                    # Điểm bắt đầu chương trình
 │
-├── SDL3.dll                        # Thư viện SDL3 khi chạy
-└── .gitattributes
+└── SDL3.dll                        # Thư viện SDL3 khi chạy
 ```
 
 Trong đó:
@@ -480,7 +465,7 @@ msbuild <project-name>.sln /p:Configuration=Release /p:Platform=x64
 
 **Trong Visual Studio:**
 
-* `Ctrl + F5` (Run)
+* `Ctrl + F5` hoặc bấm dấu mũi tên ->(Run)
 
 **Chạy file .exe:**
 
