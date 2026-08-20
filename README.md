@@ -346,21 +346,17 @@ Chứa các thành phần dùng chung:
 
 ### 🔨 4.1. Biên dịch chương trình
 
-**💻 Cách 1: Visual Studio 2022**
+**💻 Cách 1: Visual Studio**
 
-1. Mở **Visual Studio 2022**.
-2. Chọn **File → Open → Folder** và chọn thư mục dự án.
-3. CMake tự động nhận diện `CMakeLists.txt`.
-4. Chọn preset **x64-release**.
-5. Chọn **Build All**.
+- ⚙️ Chọn `Build > Build Solution` hoặc nhấn `Ctrl + Shift + B`.
+- 📁 File `.exe` được tạo trong thư mục `x64/Debug` hoặc `x64/Release`.
 
-**💻 Cách 2: VS Code**
+**⌨️ Cách 2: Command Line**
 
-1. Mở folder dự án trong **VS Code**.
-2. Cài extension **C/C++** và **CMake Tools**.
-3. Chọn **CMake: Select a Kit → MSVC**.
-4. Chọn **CMake: Select Variant → Release**.
-5. Chọn **CMake: Build**.
+```bash
+msbuild <project-name>.sln /p:Configuration=Debug /p:Platform=x64
+msbuild <project-name>.sln /p:Configuration=Release /p:Platform=x64
+```
 
 ---
 
