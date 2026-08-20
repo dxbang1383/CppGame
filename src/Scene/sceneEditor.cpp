@@ -14,7 +14,7 @@ void sceneEditor::preLoad(SDL_Renderer* renderer) {
     rend = renderer;
     palette.preLoad(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     map.addTextures(renderer);
-    map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
+    map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level2.txt");
 }
 
 // dat tile theo layer dang chon trong palette
@@ -178,7 +178,7 @@ void sceneEditor::handleInput(const SDL_Event& event) {
         case SDLK_F3:     rendergrid = !rendergrid; break;
 
         case SDLK_L:
-            if (map.save(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt"))
+            if (map.save(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level2.txt"))
                 SDL_Log("Da luu map");
             break;
         }

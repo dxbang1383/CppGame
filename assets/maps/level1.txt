@@ -1,381 +1,434 @@
 <state>
-1 13 33 13
+2 27 59 11
 </state>
 <platform>
-0 14 map1 2 4
-1 14 map1 2 4
-2 14 map1 2 4
-3 14 map1 2 4
-4 14 map1 2 4
-5 14 map1 2 4
-6 14 map1 2 4
-7 14 map1 2 4
-8 14 map1 2 4
-9 14 map1 2 4
-10 14 map1 2 4
-11 14 map1 2 4
-12 14 map1 2 4
-13 14 map1 2 4
-14 14 map1 2 4
-15 14 map1 2 4
-16 14 map1 2 4
-17 14 map1 2 4
-18 14 map1 2 4
-19 14 map1 2 4
-20 14 map1 2 4
-21 14 map1 2 4
-22 14 map1 2 4
-23 14 map1 2 4
-24 14 map1 2 4
-25 14 map1 2 4
-3 13 map1 2 4
-4 12 map1 2 4
-5 11 map1 2 4
-6 10 map1 2 4
-7 10 map1 2 4
-8 10 map1 2 4
-9 10 map1 2 4
-10 10 map1 2 4
-11 10 map1 2 4
-12 10 map1 2 4
-13 9 map1 2 4
-15 7 map1 2 4
-16 7 map1 2 4
-17 7 map1 2 4
-18 7 map1 2 4
-19 7 map1 2 4
-20 7 map1 2 4
-21 7 map1 2 4
-22 8 map1 2 4
-23 9 map1 2 4
-24 10 map1 2 4
-21 11 map1 2 4
-22 11 map1 2 4
-23 11 map1 2 4
-24 11 map1 2 4
-25 11 map1 2 4
-0 14 map1 1 1
-1 14 map1 2 1
-2 14 map1 2 1
-3 14 map1 2 1
-4 14 map1 2 1
-5 14 map1 2 1
-6 14 map1 2 1
-7 14 map1 2 1
-8 14 map1 2 1
-9 14 map1 2 1
-10 14 map1 2 1
-11 14 map1 2 1
-12 14 map1 2 1
-13 14 map1 2 1
-14 14 map1 2 1
-15 14 map1 2 1
-16 14 map1 2 1
-17 14 map1 2 1
-18 14 map1 2 1
-19 14 map1 2 1
-20 14 map1 2 1
-21 14 map1 2 1
-22 14 map1 2 1
-23 14 map1 2 1
-24 14 map1 2 1
-25 14 map1 2 1
-26 14 map1 2 1
-27 14 map1 2 1
-28 14 map1 2 1
-29 14 map1 2 1
-30 14 map1 2 1
-31 14 map1 2 1
-32 14 map1 2 1
-33 14 map1 2 1
-34 14 map1 2 1
-35 14 map1 2 1
-36 14 map1 2 1
-26 1 map1 0 0
-28 5 map1 0 0
-27 7 map1 0 0
-26 9 map1 0 0
-27 10 map1 0 0
-32 10 map1 0 0
-18 12 map1 0 0
-13 12 map1 0 0
-10 12 map1 0 0
-1 8 map1 0 0
-0 11 map1 0 0
-3 7 map1 0 0
-4 5 map1 0 0
-2 4 map1 0 0
-4 4 map1 0 0
-6 3 map1 0 0
-7 2 map1 0 0
-15 2 map1 0 0
-19 1 map1 0 0
-20 1 map1 0 0
-24 3 map1 0 0
-25 4 map1 0 0
-31 3 map1 0 0
-35 3 map1 0 0
-37 7 map1 0 0
-38 10 map1 0 0
-39 12 map1 0 0
-40 14 map1 0 0
-39 16 map1 0 0
-39 16 map1 0 0
-38 15 map1 0 0
-42 15 map1 0 0
-43 14 map1 0 0
-44 14 map1 0 0
-46 14 map1 0 0
-46 14 map1 0 0
-47 14 map1 0 0
-48 14 map1 0 0
-49 14 map1 0 0
-49 14 map1 0 0
-50 13 map1 0 0
-51 10 map1 0 0
-53 13 map1 0 0
-55 10 map1 0 0
-55 8 map1 0 0
-57 11 map1 0 0
-58 12 map1 0 0
-59 14 map1 0 0
-57 14 map1 0 0
-53 14 map1 0 0
-55 12 map1 0 0
-60 13 map1 0 0
-63 13 map1 0 0
-65 15 map1 0 0
-66 11 map1 0 0
-63 11 map1 0 0
-58 9 map1 0 0
-59 14 map1 0 0
-61 14 map1 0 0
-67 13 map1 0 0
-67 12 map1 0 0
-69 7 map1 0 0
-70 15 map1 0 0
-68 8 map1 0 0
-73 14 map1 0 0
-69 10 map1 0 0
-75 13 map1 0 0
-73 13 map1 0 0
-74 11 map1 0 0
-74 9 map1 0 0
-71 13 map1 0 0
-79 13 map1 0 0
-80 15 map1 0 0
-78 8 map1 0 0
-74 13 map1 0 0
-78 7 map1 0 0
-77 12 map1 0 0
-76 10 map1 0 0
-77 17 map1 0 0
-82 11 map1 0 0
-81 11 map1 0 0
-82 14 map1 0 0
-87 10 map1 0 0
-91 13 map1 0 0
-86 12 map1 0 0
-86 7 map1 0 0
-84 14 map1 0 0
-83 10 map1 0 0
-87 15 map1 0 0
-92 13 map1 0 0
-90 8 map1 0 0
-96 13 map1 0 0
-96 8 map1 0 0
-98 9 map1 0 0
-97 11 map1 0 0
-101 12 map1 0 0
-90 8 map1 0 0
-96 13 map1 0 0
-94 9 map1 0 0
-92 12 map1 0 0
-95 14 map1 0 0
-103 17 map1 0 0
-105 13 map1 0 0
-106 10 map1 0 0
-102 13 map1 0 0
-94 2 map1 0 0
+2 25 map1 2 4
+3 25 map1 2 4
+4 25 map1 2 4
+5 25 map1 2 4
+6 25 map1 2 4
+7 25 map1 2 4
+8 25 map1 2 4
+4 21 map1 2 4
+5 21 map1 2 4
+6 21 map1 2 4
+7 21 map1 2 4
+8 21 map1 2 4
+9 21 map1 2 4
+10 21 map1 2 4
+7 17 map1 2 4
+8 17 map1 2 4
+9 17 map1 2 4
+10 17 map1 2 4
+11 17 map1 2 4
+12 17 map1 2 4
+13 17 map1 2 4
+14 24 map1 2 4
+15 23 map1 2 4
+16 22 map1 2 4
+17 21 map1 2 4
+18 20 map1 2 4
+18 20 map1 2 4
+19 20 map1 2 4
+20 20 map1 2 4
+21 20 map1 2 4
+22 20 map1 2 4
+23 20 map1 2 4
+24 20 map1 2 4
+25 20 map1 2 4
+26 20 map1 2 4
+27 20 map1 2 4
+21 16 map1 2 4
+22 16 map1 2 4
+23 16 map1 2 4
+24 16 map1 2 4
+25 16 map1 2 4
+25 12 map1 2 4
+26 12 map1 2 4
+27 12 map1 2 4
+28 12 map1 2 4
+29 12 map1 2 4
+30 12 map1 2 4
+31 12 map1 2 4
+32 20 map1 2 4
+33 20 map1 2 4
+34 20 map1 2 4
+35 20 map1 2 4
+36 20 map1 2 4
+39 20 map1 2 4
+40 20 map1 2 4
+41 20 map1 2 4
+42 20 map1 2 4
+43 20 map1 2 4
+44 20 map1 2 4
+45 20 map1 2 4
+34 15 map1 2 4
+35 15 map1 2 4
+36 15 map1 2 4
+37 15 map1 2 4
+38 15 map1 2 4
+39 15 map1 2 4
+40 15 map1 2 4
+42 15 map1 2 4
+43 15 map1 2 4
+44 15 map1 2 4
+45 15 map1 2 4
+46 15 map1 2 4
+47 15 map1 2 4
+48 15 map1 2 4
+49 15 map1 2 4
+46 10 map1 2 4
+47 10 map1 2 4
+48 10 map1 2 4
+49 10 map1 2 4
+50 10 map1 2 4
+51 10 map1 2 4
+52 10 map1 2 4
+53 10 map1 2 4
+50 20 map1 2 4
+51 20 map1 2 4
+52 20 map1 2 4
+53 20 map1 2 4
+54 20 map1 2 4
+55 20 map1 2 4
+56 20 map1 2 4
+57 20 map1 2 4
+58 20 map1 2 4
+54 16 map1 2 4
+55 16 map1 2 4
+56 16 map1 2 4
+57 16 map1 2 4
+58 16 map1 2 4
+59 16 map1 2 4
+57 12 map1 2 4
+58 12 map1 2 4
+59 12 map1 2 4
+58 29 map1 1 1
+57 29 map1 1 1
+58 29 map1 3 1
+57 29 map1 2 1
+56 29 map1 2 1
+55 29 map1 2 1
+54 29 map1 2 1
+53 29 map1 2 1
+52 29 map1 2 1
+51 29 map1 2 1
+50 29 map1 2 1
+49 29 map1 2 1
+48 29 map1 2 1
+47 29 map1 2 1
+46 29 map1 2 1
+45 29 map1 2 1
+44 29 map1 2 1
+43 29 map1 2 1
+42 29 map1 2 1
+41 29 map1 2 1
+40 29 map1 2 1
+39 29 map1 2 1
+38 29 map1 2 1
+37 29 map1 2 1
+35 29 map1 2 1
+36 29 map1 2 1
+34 29 map1 2 1
+33 29 map1 2 1
+32 29 map1 2 1
+31 29 map1 2 1
+30 29 map1 2 1
+29 29 map1 2 1
+28 29 map1 2 1
+27 29 map1 2 1
+26 29 map1 2 1
+25 29 map1 2 1
+23 29 map1 2 1
+24 29 map1 2 1
+22 29 map1 2 1
+21 29 map1 2 1
+20 29 map1 2 1
+19 29 map1 2 1
+18 29 map1 2 1
+17 29 map1 2 1
+16 29 map1 2 1
+15 29 map1 2 1
+14 29 map1 2 1
+13 29 map1 2 1
+12 29 map1 2 1
+11 29 map1 2 1
+10 29 map1 2 1
+9 29 map1 2 1
+8 29 map1 2 1
+7 29 map1 2 1
+6 29 map1 2 1
+5 29 map1 2 1
+4 29 map1 2 1
+3 29 map1 2 1
+2 29 map1 2 1
+1 30 map1 1 6
+1 29 map1 1 1
+2 30 map1 2 6
+3 30 map1 2 6
+4 30 map1 2 6
+5 30 map1 2 6
+6 30 map1 2 6
+7 30 map1 2 6
+8 30 map1 2 6
+9 30 map1 2 6
+10 30 map1 2 6
+11 30 map1 2 6
+12 30 map1 2 6
+14 30 map1 2 6
+13 30 map1 2 6
+15 30 map1 2 6
+16 30 map1 2 6
+17 30 map1 2 6
+18 30 map1 2 6
+19 30 map1 2 6
+20 30 map1 2 6
+21 30 map1 2 6
+22 30 map1 2 6
+23 30 map1 2 6
+24 30 map1 2 6
+25 30 map1 2 6
+26 30 map1 2 6
+27 30 map1 2 6
+28 30 map1 2 6
+29 30 map1 2 6
+30 30 map1 2 6
+31 30 map1 2 6
+32 30 map1 2 6
+33 30 map1 2 6
+34 30 map1 2 6
+35 30 map1 2 6
+36 30 map1 2 6
+37 30 map1 2 6
+38 30 map1 2 6
+39 30 map1 2 6
+40 30 map1 2 6
+41 30 map1 2 6
+42 30 map1 2 6
+43 30 map1 2 6
+44 30 map1 2 6
+45 30 map1 2 6
+47 30 map1 2 6
+46 30 map1 2 6
+48 30 map1 2 6
+49 30 map1 2 6
+50 30 map1 2 6
+51 30 map1 2 6
+53 30 map1 2 6
+52 30 map1 2 6
+55 30 map1 2 6
+54 30 map1 2 6
+56 30 map1 2 6
+57 30 map1 2 6
+58 30 map1 2 6
+2 31 map1 2 6
+1 31 map1 2 6
+4 31 map1 2 6
+3 31 map1 2 6
+5 31 map1 2 6
+6 31 map1 2 6
+7 31 map1 2 6
+8 31 map1 2 6
+9 31 map1 2 6
+10 31 map1 2 6
+11 31 map1 2 6
+12 31 map1 2 6
+13 31 map1 2 6
+14 31 map1 2 6
+15 31 map1 2 6
+16 31 map1 2 6
+17 31 map1 2 6
+19 31 map1 2 6
+18 31 map1 2 6
+20 31 map1 2 6
+21 31 map1 2 6
+22 31 map1 2 6
+23 31 map1 2 6
+24 31 map1 2 6
+25 31 map1 2 6
+26 31 map1 2 6
+27 31 map1 2 6
+28 31 map1 2 6
+29 31 map1 2 6
+30 31 map1 2 6
+31 31 map1 2 6
+32 31 map1 2 6
+34 31 map1 2 6
+33 31 map1 2 6
+35 31 map1 2 6
+36 31 map1 2 6
+37 31 map1 2 6
+38 31 map1 2 6
+39 31 map1 2 6
+40 31 map1 2 6
+41 31 map1 2 6
+42 31 map1 2 6
+43 31 map1 2 6
+44 31 map1 2 6
+45 31 map1 2 6
+46 31 map1 2 6
+47 31 map1 2 6
+48 31 map1 2 6
+49 31 map1 2 6
+50 31 map1 2 6
+51 31 map1 2 6
+52 31 map1 2 6
+53 31 map1 2 6
+55 31 map1 2 6
+54 31 map1 2 6
+56 31 map1 2 6
+57 31 map1 2 6
+58 31 map1 2 6
 </platform>
 <decor>
-6 13 map1 4 6
-10 9 map1 17 6
-10 8 map1 17 5
-10 7 map1 17 4
-9 7 map1 17 2
-9 6 map1 17 0
-10 6 map1 18 0
-11 6 map1 19 0
-11 7 map1 19 2
-0 15 map1 1 6
-1 15 map1 1 6
-1 15 map1 2 6
-2 15 map1 2 6
-3 15 map1 2 6
-4 15 map1 2 6
-5 15 map1 2 6
-6 15 map1 2 6
-7 15 map1 2 6
-8 15 map1 2 6
-9 15 map1 2 6
-10 15 map1 2 6
-11 15 map1 2 6
-12 15 map1 2 6
-13 15 map1 2 6
-14 15 map1 2 6
-15 15 map1 2 6
-16 15 map1 2 6
-17 15 map1 2 6
-18 15 map1 2 6
-19 15 map1 2 6
-20 15 map1 2 6
-21 15 map1 2 6
-22 15 map1 2 6
-23 15 map1 2 6
-24 15 map1 2 6
-25 15 map1 2 6
-26 15 map1 2 6
-27 15 map1 2 6
-28 15 map1 2 6
-29 15 map1 2 6
-30 15 map1 2 6
-31 15 map1 2 6
-32 15 map1 2 6
-33 15 map1 2 6
-34 15 map1 2 6
-35 15 map1 2 6
-36 15 map1 2 6
-1 16 map1 2 6
-2 16 map1 2 6
-3 16 map1 2 6
-4 16 map1 2 6
-5 16 map1 2 6
-6 16 map1 2 6
-7 16 map1 2 6
-8 16 map1 2 6
-9 16 map1 2 6
-10 16 map1 2 6
-11 16 map1 2 6
-12 16 map1 2 6
-13 16 map1 2 6
-14 16 map1 2 6
-15 16 map1 2 6
-16 16 map1 2 6
-17 16 map1 2 6
-18 16 map1 2 6
-19 16 map1 2 6
-20 16 map1 2 6
-21 16 map1 2 6
-22 16 map1 2 6
-23 16 map1 2 6
-24 16 map1 2 6
-25 16 map1 2 6
-26 16 map1 2 6
-27 16 map1 2 6
-28 16 map1 2 6
-29 16 map1 2 6
-30 16 map1 2 6
-31 16 map1 2 6
-32 16 map1 2 6
-33 16 map1 2 6
-34 16 map1 2 6
-35 16 map1 2 6
-36 16 map1 2 6
-6 9 map1 8 6
-12 9 map1 8 6
-19 6 map1 8 6
-3 12 map1 5 7
-24 13 map1 5 7
-15 6 map1 15 4
-27 13 map1 15 4
+5 28 map1 15 4
+48 14 map1 15 4
 </decor>
 <animation>
-14 8 waterfall_top
-14 9 waterfall_mid
-14 10 waterfall_bot
-18 14 waterfall_top
-18 15 waterfall_mid
-18 16 waterfall_bot
-0 16 water
-1 16 water
-2 16 water
-3 16 water
-4 16 water
-5 16 water
-6 16 water
-7 16 water
-8 16 water
-9 16 water
-10 16 water
-11 16 water
-12 16 water
-13 16 water
-14 16 water
-15 16 water
-16 16 water
-17 16 water
-18 16 water
-19 16 water
-20 16 water
-21 16 water
-22 16 water
-23 16 water
-24 16 water
-25 16 water
-26 16 water
-27 16 water
-28 16 water
-29 16 water
-30 16 water
-31 16 water
-32 16 water
-33 16 water
-34 16 water
-35 16 water
-36 16 water
+33 29 waterfall_top
+33 30 waterfall_mid
+33 31 waterfall_bot
+1 31 water
+2 31 water
+3 31 water
+4 31 water
+5 31 water
+6 31 water
+7 31 water
+8 31 water
+9 31 water
+10 31 water
+11 31 water
+12 31 water
+13 31 water
+14 31 water
+15 31 water
+19 31 water
+18 31 water
+16 31 water
+17 31 water
+20 31 water
+21 31 water
+23 31 water
+22 31 water
+24 31 water
+25 31 water
+26 31 water
+27 31 water
+28 31 water
+29 31 water
+30 31 water
+31 31 water
+32 31 water
+33 31 water
+34 31 water
+35 31 water
+36 31 water
+37 31 water
+38 31 water
+39 31 water
+40 31 water
+41 31 water
+42 31 water
+43 31 water
+44 31 water
+45 31 water
+46 31 water
+47 31 water
+48 31 water
+49 31 water
+50 31 water
+51 31 water
+52 31 water
+53 31 water
+54 31 water
+55 31 water
+57 31 water
+56 31 water
+58 31 water
 </animation>
 <enemy>
-4 4 flyer 1
-17 3 flyer 1
-6 13 walker1 1
+30 8 flyer 4
+5 24 walker1 3
+22 19 walker2 4
+44 14 walker3 3
+52 28 walker1 5
 </enemy>
 <ladder>
-10 -3 ladder
-10 -2 ladder
-10 -1 ladder
-10 0 ladder
-10 1 ladder
-10 2 ladder
-10 3 ladder
-10 4 ladder
-10 5 ladder
-10 6 ladder
-10 7 ladder
-10 8 ladder
-10 9 ladder
-7 9 ladder_down
-7 8 ladder_down
-7 7 ladder_down
-7 6 ladder_top
+12 21 ladder
+12 22 ladder
+12 23 ladder
+12 24 ladder
+12 25 ladder
+20 16 ladder
+20 17 ladder
+20 18 ladder
+20 19 ladder
+20 20 ladder
+27 12 ladder
+27 13 ladder
+27 14 ladder
+27 15 ladder
+27 16 ladder
+14 4 ladder
+14 5 ladder
+14 6 ladder
+14 7 ladder
+14 8 ladder
+14 9 ladder
+14 10 ladder
+14 11 ladder
+14 12 ladder
+14 13 ladder
+14 14 ladder
+14 15 ladder
+14 16 ladder
+14 17 ladder
+14 18 ladder
+53 15 ladder
+53 16 ladder
+53 17 ladder
+53 18 ladder
+53 19 ladder
+53 20 ladder
+35 28 ladder_down
+35 27 ladder_down
+35 26 ladder_down
+35 25 ladder_down
+35 24 ladder_down
+35 23 ladder_top
 </ladder>
 <switch>
+10 20
+27 11
+50 19
 </switch>
 <spike>
+11 20
+12 20
+13 20
+28 20
+29 20
+30 20
+31 20
+37 20
+38 20
+46 20
+47 20
+48 20
+49 20
 </spike>
 <teleport>
-15 6 1
-27 13 1
+5 28 1
+48 14 1
 </teleport>
 <box>
-29 10 item
+15 25 coin
+20 25 question
+28 25 item
+26 11 question
 </box>
 <coin>
-5 10
-7 10
-9 10
 </coin>
 <diamond>
-12 10
-15 10
 </diamond>

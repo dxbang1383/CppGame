@@ -10,7 +10,7 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
     gameRenderer = renderer;
     map.addTextures(renderer); // bkg, platform, decor, enemy, player
 
-    mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level2.txt";
+    mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt";
     if (!map.load(mapPath)) {
         SDL_Log("Khong nap duoc map: %s -> dung map mac dinh", mapPath.c_str());
     }
@@ -37,7 +37,7 @@ void sceneMain::preLoad(SDL_Renderer* renderer) {
 }
 
 void sceneMain::resetGame() {
-    std::string mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level2.txt";
+    std::string mapPath = std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt";
     if (!map.load(mapPath)) {
         SDL_Log("Khong nap duoc map: %s -> dung map mac dinh", mapPath.c_str());
     }
@@ -711,7 +711,7 @@ void sceneMain::handlePlayerKeyDown(SDL_Keycode key) {
         break;
 
     case SDLK_L:
-        map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level1.txt");
+        map.load(std::string(PROJECT_SOURCE_DIR) + "/assets/maps/level2.txt");
         std::cout << "load " << std::endl;
         break;
     }
